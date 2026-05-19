@@ -329,78 +329,244 @@ body {
 .search-results-close:hover { color: var(--text-primary); }
 
 /* ========== FULLSCREEN AI CHAT ========== */
-.ai-fullscreen-overlay {
+/* AI Global Overlay (三栏 Cowork) */
+.ai-global-overlay {
   display: none;
   position: fixed;
-  top: 0; left: 220px; right: 0; bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background: var(--bg-secondary);
-  z-index: 200;
-  flex-direction: column;
-  animation: fadeIn 0.25s;
+  z-index: 300;
+  animation: fadeIn 0.2s;
 }
-.ai-fullscreen-overlay.show { display: flex; }
-.ai-fullscreen-header {
-  display: flex; align-items: center; justify-content: space-between;
+.ai-global-overlay.show {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+}
+.ai-global-left {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.ai-global-back {
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+.ai-global-back:hover { color: var(--accent-blue); }
+.ai-global-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.ai-global-action {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  font-size: 13px; cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+.ai-global-action:hover { background: rgba(45,127,249,0.06); }
+.ai-global-action.active { background: rgba(45,127,249,0.1); color: var(--accent-blue); }
+.ai-action-icon { font-size: 15px; width: 20px; text-align: center; }
+.ai-global-history-label {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.ai-global-history {
+  flex: 1; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.ai-history-item {
+  padding: 8px 12px; border-radius: 6px;
+  font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  transition: background 0.15s;
+}
+.ai-history-item:hover { background: rgba(45,127,249,0.06); }
+.ai-history-item.active { background: rgba(45,127,249,0.1); color: var(--accent-blue); }
+.ai-global-center {
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--border);
+}
+.ai-global-chat-header {
   padding: 16px 32px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg-card);
-}
-.ai-fullscreen-header h3 {
-  font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0;
+  font-size: 14px; font-weight: 600;
   display: flex; align-items: center; gap: 8px;
 }
-.ai-fullscreen-close {
-  font-size: 22px; cursor: pointer; color: var(--text-muted); line-height: 1;
-  padding: 4px 8px; border-radius: 6px;
+.ai-global-chat-body {
+  flex: 1; overflow-y: auto;
+  padding: 32px;
+  display: flex; flex-direction: column; gap: 16px;
 }
-.ai-fullscreen-close:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); }
-.ai-fullscreen-body {
-  flex: 1; overflow-y: auto; padding: 32px;
-  max-width: 800px; margin: 0 auto; width: 100%;
-}
-.ai-fullscreen-body .chat-msg {
-  margin-bottom: 24px; display: flex; gap: 12px; align-items: flex-start;
-}
-.ai-fullscreen-body .chat-msg-avatar {
-  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
-  justify-content: center; font-size: 14px; flex-shrink: 0;
-}
-.ai-fullscreen-body .chat-msg-avatar.user { background: var(--accent-blue); color: #fff; }
-.ai-fullscreen-body .chat-msg-avatar.ai { background: linear-gradient(135deg, #00d4aa, #2d7ff9); color: #fff; }
-.ai-fullscreen-body .chat-msg-content {
-  font-size: 13px; line-height: 1.8; color: var(--text-primary); flex: 1;
-}
-.ai-fullscreen-body .chat-msg-content h4 {
-  font-size: 14px; font-weight: 600; margin: 14px 0 6px;
-}
-.ai-fullscreen-body .chat-msg-content ul {
-  margin: 6px 0; padding-left: 20px;
-}
-.ai-fullscreen-body .chat-msg-content li {
-  margin-bottom: 6px;
-}
-.ai-fullscreen-body .chat-followup {
-  background: rgba(45,127,249,0.06); border-radius: 8px; padding: 14px 18px;
-  font-size: 12px; color: var(--text-secondary); line-height: 1.8;
-}
-.ai-fullscreen-footer {
+.ai-global-chat-footer {
   border-top: 1px solid var(--border);
-  padding: 16px 32px;
+  padding: 16px 32px; background: var(--bg-card);
+}
+.ai-global-input-row {
+  display: flex; gap: 10px;
+}
+.ai-global-input-row input {
+  flex: 1; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 18px; font-size: 13px; outline: none;
+  background: var(--bg-secondary); font-family: var(--font-sans);
+}
+.ai-global-input-row input:focus { border-color: var(--accent-blue); }
+.ai-global-input-row button {
+  background: var(--accent-blue); color: #fff;
+  border: none; border-radius: 10px;
+  padding: 12px 24px; font-size: 13px;
+  cursor: pointer; font-family: var(--font-sans);
+}
+.ai-global-right {
   background: var(--bg-card);
+  padding: 20px 16px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 24px;
 }
-.ai-fullscreen-footer .input-row {
-  max-width: 800px; margin: 0 auto; display: flex; gap: 10px;
+.ai-global-right-section {
+  display: flex; flex-direction: column; gap: 8px;
 }
-.ai-fullscreen-footer input {
-  flex: 1; border: 1px solid var(--border); border-radius: 8px;
-  padding: 10px 16px; font-size: 13px; outline: none; font-family: var(--font-sans);
+.ai-global-right-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ai-progress-item {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 6px 0; border-left: 2px solid var(--border);
+  padding-left: 12px;
+}
+.ai-progress-item.active { border-left-color: var(--accent-cyan); color: var(--accent-cyan); }
+.ai-progress-item.done { border-left-color: var(--accent-cyan); color: var(--text-muted); text-decoration: line-through; }
+.ai-doc-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 6px;
+  background: var(--bg-secondary); font-size: 12px;
+  cursor: pointer; transition: background 0.15s;
+}
+.ai-doc-item:hover { background: rgba(45,127,249,0.06); }
+.ai-skill-item {
+  display: inline-block;
+  font-size: 11px; color: var(--text-secondary);
+  padding: 4px 10px; border-radius: 12px;
   background: var(--bg-secondary);
+  margin: 2px 4px 2px 0;
 }
-.ai-fullscreen-footer input:focus { border-color: var(--accent-blue); }
-.ai-fullscreen-footer button {
-  background: var(--accent-blue); color: #fff; border: none; border-radius: 8px;
-  padding: 10px 20px; font-size: 13px; cursor: pointer; font-family: var(--font-sans);
+
+/* Float group (浮球态) */
+.ai-float-group {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 240;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
+.ai-float-suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.ai-float-suggestion {
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  max-width: 260px;
+  animation: slideUp 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.15s;
+}
+.ai-float-suggestion:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+.ai-float-input-bar {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 6px 8px 6px 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  align-items: center;
+  gap: 8px;
+  width: 300px;
+}
+.ai-float-input-bar.show { display: flex; }
+.ai-float-input-bar input {
+  flex: 1; border: none; outline: none;
+  font-size: 13px; background: transparent;
+  font-family: var(--font-sans); color: var(--text-primary);
+}
+.ai-float-input-bar button {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-blue); color: #fff;
+  border: none; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Global chat messages */
+.ai-global-msg {
+  display: flex; gap: 10px; padding: 12px 0;
+}
+.ai-global-msg.user { flex-direction: row-reverse; }
+.ai-global-msg-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  background: var(--bg-secondary); color: var(--text-secondary);
+}
+.ai-global-msg.ai .ai-global-msg-avatar { background: linear-gradient(135deg, #2d7ff9, #18bfff); color: #fff; }
+.ai-global-msg.user .ai-global-msg-avatar { background: var(--accent-blue); color: #fff; }
+.ai-global-msg-text {
+  max-width: 75%; padding: 10px 14px;
+  border-radius: 12px; font-size: 13px; line-height: 1.6;
+  background: var(--bg-secondary); color: var(--text-primary);
+}
+.ai-global-msg.user .ai-global-msg-text { background: var(--accent-blue); color: #fff; border-radius: 12px 12px 4px 12px; }
+.ai-global-msg.ai .ai-global-msg-text { border-radius: 12px 12px 12px 4px; }
+
+/* Global history items */
+.ai-global-history-item {
+  padding: 8px 12px; border-radius: 6px;
+  font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; transition: background 0.15s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ai-global-history-item:hover { background: var(--bg-secondary); }
+.ai-global-history-item.active { background: rgba(45,127,249,0.08); color: var(--accent-blue); }
+
+/* Global progress & docs */
+.ai-global-progress-item {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 5px 0 5px 14px; border-left: 2px solid var(--border);
+}
+.ai-global-progress-item.done { color: var(--text-muted); text-decoration: line-through; border-left-color: var(--accent-cyan); }
+.ai-global-progress-item.active { color: var(--accent-cyan); border-left-color: var(--accent-cyan); }
+.ai-global-doc-item {
+  padding: 8px 10px; border-radius: 6px;
+  background: var(--bg-secondary); font-size: 12px;
+  cursor: pointer; transition: background 0.15s; margin-bottom: 4px;
+}
+.ai-global-doc-item:hover { background: rgba(45,127,249,0.06); }
 
 /* ========== SECTION HEADER ========== */
 .section-header {
@@ -1583,9 +1749,9 @@ body {
     <span class="nav-icon">◆</span>
     <span>个股一页纸</span>
   </div>
-  <div class="nav-item" data-page="ai-tools">
-    <span class="nav-icon">⬡</span>
-    <span>AI工具中心</span>
+  <div class="nav-item nav-item-ai" onclick="openAiGlobal()">
+    <span class="nav-icon">✦</span>
+    <span>AI投研</span>
     <span class="nav-ai-label">Cowork</span>
   </div>
   <div class="nav-section-label">设置</div>
@@ -2244,54 +2410,6 @@ body {
     </div>
   </div>
 
-  <!-- ==================== AI TOOL CENTER ==================== -->
-  <div class="page" id="page-ai-tools">
-
-    <div class="card" style="padding:16px; margin-bottom:20px; background:linear-gradient(135deg, rgba(45,127,249,0.04), rgba(0,212,170,0.03)); border-color:rgba(45,127,249,0.15);">
-      <div style="font-size:13px; font-weight:600; margin-bottom:6px;">✦ Cowork 模式</div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8;">AI作为你的协作伙伴，感知当前工作场景，在你需要时随时介入。所有AI能力统一通过右下角 AIX 面板调用，以下卡片帮你快速进入对应场景。</div>
-    </div>
-
-    <div class="ai-tools-grid">
-      <div class="card ai-tool-card" onclick="openGlobalAiPanel('general')">
-        <div class="ai-tool-icon" style="background:rgba(45,127,249,0.1); color:var(--accent-blue);">✦</div>
-        <div class="ai-tool-title">AI问答</div>
-        <div class="ai-tool-desc">通用投研问答，自动感知当前页面上下文，提供针对性回答</div>
-      </div>
-      <div class="card ai-tool-card" onclick="navigateTo('monitor'); showToast('已进入信源监控，可新建监控器')">
-        <div class="ai-tool-icon" style="background:rgba(0,212,170,0.1); color:var(--accent-cyan);">◈</div>
-        <div class="ai-tool-title">AI信源监控配置</div>
-        <div class="ai-tool-desc">智能配置关键词、数据源、推送规则，AI自动优化监控策略</div>
-      </div>
-      <div class="card ai-tool-card" onclick="openInterviewAiPanel()">
-        <div class="ai-tool-icon" style="background:rgba(255,179,71,0.1); color:var(--accent-gold);">◎</div>
-        <div class="ai-tool-title">AI智能预约</div>
-        <div class="ai-tool-desc">描述访谈需求，AI匹配专家并安排时间，自动生成访谈提纲</div>
-      </div>
-      <div class="card ai-tool-card" onclick="navigateTo('stock')">
-        <div class="ai-tool-icon" style="background:rgba(45,127,249,0.1); color:var(--accent-blue);">◆</div>
-        <div class="ai-tool-title">AI个股分析</div>
-        <div class="ai-tool-desc">输入股票代码，获取AI深度一页纸分析，含估值、催化、风险要素</div>
-      </div>
-      <div class="card ai-tool-card" onclick="openGlobalAiPanel('report')">
-        <div class="ai-tool-icon" style="background:rgba(0,212,170,0.1); color:var(--accent-cyan);">▤</div>
-        <div class="ai-tool-title">AIGC报告生成</div>
-        <div class="ai-tool-desc">通过对话式交互生成晨报、个股研报、行业周报等专业文档</div>
-      </div>
-      <div class="card ai-tool-card" onclick="openGlobalAiPanel('joke')">
-        <div class="ai-tool-icon" style="background:rgba(255,179,71,0.1); color:var(--accent-gold);">✧</div>
-        <div class="ai-tool-title">AI段子生成器</div>
-        <div class="ai-tool-desc">基于今日行情生成投研段子，缓解盯盘压力，社群传播利器</div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:16px; margin-top:20px;">
-      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">场景感知说明</div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8;">
-        AIX 面板会根据你当前所在页面自动切换工作场景：在个股页提供分析建议，在会议页提供预约和纪要协助，在信源页提供监控优化建议。正在执行任务时不会被打断，任务完成后才会更新场景。
-      </div>
-    </div>
-  </div>
 
   <!-- ==================== USER CENTER ==================== -->
   <div class="page" id="page-user">
@@ -2347,17 +2465,65 @@ body {
   </div>
 </div>
 
-<!-- FULLSCREEN AI CHAT OVERLAY -->
-<div class="ai-fullscreen-overlay" id="ai-fullscreen">
-  <div class="ai-fullscreen-header">
-    <h3><span style="color:var(--accent-cyan);">✦</span> AI 深度分析</h3>
-    <span class="ai-fullscreen-close" onclick="closeFullscreenChat()">×</span>
+<!-- AI GLOBAL FULLSCREEN (三栏 Cowork 布局) -->
+<div class="ai-global-overlay" id="ai-global">
+  <div class="ai-global-left">
+    <div class="ai-global-back" onclick="closeAiGlobal()">← 返回工作台</div>
+    <div class="ai-global-actions">
+      <div class="ai-global-action active" onclick="newAiSession('general')">
+        <span class="ai-action-icon">+</span>
+        <span>新建对话</span>
+      </div>
+      <div class="ai-global-action" onclick="newAiSession('report')">
+        <span class="ai-action-icon">📄</span>
+        <span>写研报</span>
+      </div>
+      <div class="ai-global-action" onclick="newAiSession('ppt')">
+        <span class="ai-action-icon">📊</span>
+        <span>写PPT</span>
+      </div>
+      <div class="ai-global-action" onclick="newAiSession('joke')">
+        <span class="ai-action-icon">😂</span>
+        <span>写段子</span>
+      </div>
+      <div class="ai-global-action" onclick="newAiSession('stock')">
+        <span class="ai-action-icon">📈</span>
+        <span>AI选股</span>
+      </div>
+    </div>
+    <div class="ai-global-history-label">最近</div>
+    <div class="ai-global-history" id="ai-global-history"></div>
   </div>
-  <div class="ai-fullscreen-body" id="ai-fullscreen-body"></div>
-  <div class="ai-fullscreen-footer">
-    <div class="input-row">
-      <input id="ai-fullscreen-input" placeholder="继续追问..." />
-      <button onclick="sendFullscreenChat()">发送</button>
+  <div class="ai-global-center">
+    <div class="ai-global-chat-header" id="ai-global-chat-header">
+      <span style="color:var(--accent-cyan);">✦</span> AI 投研助手
+    </div>
+    <div class="ai-global-chat-body" id="ai-global-chat-body"></div>
+    <div class="ai-global-chat-footer">
+      <div class="ai-global-input-row">
+        <input id="ai-global-input" placeholder="输入你的需求..." onkeydown="if(event.key==='Enter')sendGlobalChat()" />
+        <button onclick="sendGlobalChat()">发送</button>
+      </div>
+    </div>
+  </div>
+  <div class="ai-global-right">
+    <div class="ai-global-right-section">
+      <div class="ai-global-right-title">Progress</div>
+      <div id="ai-global-progress"></div>
+    </div>
+    <div class="ai-global-right-section">
+      <div class="ai-global-right-title">Documents</div>
+      <div id="ai-global-documents"></div>
+    </div>
+    <div class="ai-global-right-section">
+      <div class="ai-global-right-title">Skills</div>
+      <div id="ai-global-skills">
+        <div class="ai-skill-item">段子生成器</div>
+        <div class="ai-skill-item">AIGC报告</div>
+        <div class="ai-skill-item">个股分析</div>
+        <div class="ai-skill-item">选股助手</div>
+        <div class="ai-skill-item">PPT生成</div>
+      </div>
     </div>
   </div>
 </div>
@@ -2372,7 +2538,10 @@ body {
         <div style="font-size:10px; color:var(--text-muted);" id="global-ai-subtitle">用自然语言描述，AI 帮你搞定</div>
       </div>
     </div>
-    <button style="background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeGlobalAiPanel()">✕</button>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <button style="background:none; border:none; font-size:16px; color:var(--text-muted); cursor:pointer;" onclick="expandToGlobal()" title="全屏展开">⬜</button>
+      <button style="background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeGlobalAiPanel()">✕</button>
+    </div>
   </div>
   <div id="ai-chat-messages" style="height:380px; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:14px;">
     <div class="ai-chat-bubble ai-msg">
@@ -2388,8 +2557,15 @@ body {
   </div>
 </div>
 
-<!-- FIXED AI ENTRY BUTTON -->
-<button class="ai-fab" id="ai-fab" onclick="toggleGlobalAi()">✦</button>
+<!-- FLOATING AI GROUP (浮球态) -->
+<div class="ai-float-group" id="ai-float-group">
+  <div class="ai-float-suggestions" id="ai-float-suggestions"></div>
+  <div class="ai-float-input-bar" id="ai-float-input-bar">
+    <input id="ai-float-input" placeholder="快速提问..." onkeydown="if(event.key==='Enter')sendFloatChat()" />
+    <button onclick="sendFloatChat()">↑</button>
+  </div>
+  <button class="ai-fab" id="ai-fab" onclick="toggleFloatPanel()">✦</button>
+</div>
 
 <!-- ARTICLE OVERLAY -->
 <div class="detail-overlay" id="article-overlay" onclick="if(event.target===this)this.classList.remove('show')">
@@ -2478,6 +2654,7 @@ function navigateTo(pageId, subtab) {
 
   currentPageId = pageId;
   updateAixScene();
+  renderFloatSuggestions();
 }
 
 // Sidebar click handlers
@@ -3091,15 +3268,164 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target && e.target.id === 'ai-chat-input') sendAiChat();
 });
 
-// ========== GLOBAL AI PANEL ==========
-function toggleGlobalAi() {
-  const panel = document.getElementById('global-ai-panel');
-  if (panel.style.display === 'none' || panel.style.display === '') {
-    openGlobalAiPanel('general');
+// ========== AI THREE-STATE SYSTEM ==========
+const mockHistory = [
+  { id: 1, title: 'AI板块晨报生成', mode: 'report' },
+  { id: 2, title: '中科曙光深度分析', mode: 'general' },
+  { id: 3, title: '今日投研段子', mode: 'joke' },
+  { id: 4, title: 'H20产业链选股', mode: 'stock' },
+];
+const mockDocuments = [
+  { title: 'AI板块晨报 05-19', type: 'report', icon: '📄' },
+  { title: '中科曙光深度分析', type: 'report', icon: '📄' },
+  { title: '涨停板段子合集', type: 'joke', icon: '😂' },
+];
+const mockProgress = [
+  { text: '读取行情数据', status: 'done' },
+  { text: '分析板块动态', status: 'done' },
+  { text: '生成晨报正文', status: 'active' },
+  { text: '格式化输出', status: 'pending' },
+];
+
+let aiSessions = [...mockHistory];
+let currentSession = { id: 99, mode: 'general', title: '新对话', messages: [], documents: [...mockDocuments], progress: [...mockProgress] };
+let floatExpanded = false;
+
+function openAiGlobal() {
+  document.getElementById('ai-global').classList.add('show');
+  document.getElementById('ai-float-group').style.display = 'none';
+  document.getElementById('global-ai-panel').style.display = 'none';
+  renderHistory();
+  renderGlobalChat();
+  renderDocuments();
+}
+
+function closeAiGlobal() {
+  document.getElementById('ai-global').classList.remove('show');
+  document.getElementById('ai-float-group').style.display = '';
+  renderFloatSuggestions();
+}
+
+function expandToGlobal() {
+  document.getElementById('global-ai-panel').style.display = 'none';
+  openAiGlobal();
+}
+
+function newAiSession(mode) {
+  const titles = { general: '新对话', report: '研报生成', ppt: 'PPT生成', joke: '段子生成', stock: 'AI选股' };
+  currentSession = { id: Date.now(), mode, title: titles[mode] || '新对话', messages: [], documents: [...mockDocuments], progress: [] };
+  document.querySelectorAll('.ai-global-action').forEach((el, i) => {
+    const modes = ['general','report','ppt','joke','stock'];
+    el.classList.toggle('active', modes[i] === mode);
+  });
+  renderGlobalChat();
+}
+
+function toggleFloatPanel() {
+  floatExpanded = !floatExpanded;
+  document.getElementById('ai-float-input-bar').classList.toggle('show', floatExpanded);
+  if (floatExpanded) document.getElementById('ai-float-input').focus();
+}
+
+function sendFloatChat() {
+  const input = document.getElementById('ai-float-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  floatExpanded = false;
+  document.getElementById('ai-float-input-bar').classList.remove('show');
+  currentSession.messages.push({ role: 'user', text: msg });
+  openGlobalAiPanel('general');
+  const chatInput = document.getElementById('ai-chat-input');
+  if (chatInput) { chatInput.value = msg; sendAiChat(); }
+}
+
+function handleFloatSuggestion(text) {
+  currentSession.messages.push({ role: 'user', text });
+  openGlobalAiPanel('general');
+  const chatInput = document.getElementById('ai-chat-input');
+  if (chatInput) { chatInput.value = text; sendAiChat(); }
+}
+
+function renderFloatSuggestions() {
+  const scene = sceneConfig[currentPageId] || sceneConfig.home;
+  const container = document.getElementById('ai-float-suggestions');
+  if (!container) return;
+  const suggestions = scene.suggestions.slice(0, 3);
+  container.innerHTML = suggestions.map(s => `<div class="ai-float-suggestion" onclick="handleFloatSuggestion('${s}')">${s}</div>`).join('');
+}
+
+function renderHistory() {
+  const el = document.getElementById('ai-global-history');
+  if (!el) return;
+  const icons = { report: '📄', general: '💬', joke: '😂', stock: '📈', ppt: '📊' };
+  el.innerHTML = aiSessions.map(s => `<div class="ai-global-history-item${s.id === currentSession.id ? ' active' : ''}" onclick="loadSession(${s.id})">${icons[s.mode] || '💬'} ${s.title}</div>`).join('');
+}
+
+function loadSession(id) {
+  const s = aiSessions.find(x => x.id === id);
+  if (!s) return;
+  currentSession = { ...s, messages: [{ role: 'ai', text: `这是「${s.title}」的历史对话记录。` }], documents: [...mockDocuments], progress: [...mockProgress] };
+  renderGlobalChat();
+  renderHistory();
+}
+
+function renderGlobalChat() {
+  const header = document.getElementById('ai-global-chat-header');
+  const body = document.getElementById('ai-global-chat-body');
+  if (!header || !body) return;
+  header.textContent = currentSession.title;
+  if (currentSession.messages.length === 0) {
+    const modeWelcome = {
+      general: '你好！我是财跃AI投研助手，有什么可以帮你？',
+      report: '你好！我可以帮你生成各类投研报告。请描述你的需求，比如"帮我生成今天的AI板块晨报"。',
+      ppt: '你好！我可以帮你生成投研PPT。请告诉我主题和大纲要求。',
+      joke: '来点乐子！我可以根据今日行情帮你生成投研段子。想要什么风格？',
+      stock: '你好！AI选股助手为你服务。请描述选股条件，比如"近5日放量突破的半导体股票"。'
+    };
+    body.innerHTML = `<div class="ai-global-msg ai"><div class="ai-global-msg-avatar">✦</div><div class="ai-global-msg-text">${modeWelcome[currentSession.mode] || modeWelcome.general}</div></div>`;
   } else {
-    closeGlobalAiPanel();
+    body.innerHTML = currentSession.messages.map(m => `<div class="ai-global-msg ${m.role === 'user' ? 'user' : 'ai'}"><div class="ai-global-msg-avatar">${m.role === 'user' ? '张' : '✦'}</div><div class="ai-global-msg-text">${m.text}</div></div>`).join('');
+  }
+  body.scrollTop = body.scrollHeight;
+}
+
+function renderDocuments() {
+  const progressEl = document.getElementById('ai-global-progress');
+  const docsEl = document.getElementById('ai-global-documents');
+  if (progressEl) {
+    progressEl.innerHTML = mockProgress.map(p => {
+      const icon = p.status === 'done' ? '✓' : p.status === 'active' ? '●' : '○';
+      const cls = p.status === 'done' ? 'done' : p.status === 'active' ? 'active' : 'pending';
+      return `<div class="ai-global-progress-item ${cls}"><span>${icon}</span> ${p.text}</div>`;
+    }).join('');
+  }
+  if (docsEl) {
+    docsEl.innerHTML = mockDocuments.map(d => `<div class="ai-global-doc-item">${d.icon} ${d.title}</div>`).join('');
   }
 }
+
+function sendGlobalChat() {
+  const input = document.getElementById('ai-global-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  currentSession.messages.push({ role: 'user', text: msg });
+  renderGlobalChat();
+  setTimeout(() => {
+    const replies = {
+      general: `好的，让我针对「${msg}」为你做分析...\n\n基于当前市场数据，这个问题涉及多个维度。建议关注近期机构调研动向和北向资金流向。`,
+      report: `正在基于「${msg}」生成报告草稿...\n\n正在整合信源数据、个股行情和产业链逻辑。`,
+      ppt: `正在生成PPT大纲...\n\n主题：${msg}\n预计包含8-12页，涵盖行业概述、数据分析和投资建议。`,
+      joke: `「${msg}」相关段子来了：\n\n"今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。"\n\n😄 需要换个风格吗？`,
+      stock: `正在筛选符合「${msg}」条件的个股...\n\n初步筛选出5只标的，需要我进一步分析吗？`
+    };
+    currentSession.messages.push({ role: 'ai', text: replies[currentSession.mode] || replies.general });
+    renderGlobalChat();
+  }, 500);
+}
+
+// ========== GLOBAL AI PANEL ==========
 
 // ========== AIX SCENE-AWARE SYSTEM ==========
 const sceneConfig = {
@@ -3107,7 +3433,6 @@ const sceneConfig = {
   meetings: { title:'AI 会议助手', suggestions:['预约专家访谈','获取纪要摘要','推荐值得参会的会议'] },
   monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','优化配置'] },
   stock: { title:'AI 个股助手', suggestions:['深度分析当前个股','同行业对比','管理自选股'] },
-  'ai-tools': { title:'AI 工具导航', suggestions:['生成投研报告','生成段子','了解AIX功能'] },
 };
 
 let aixTaskRunning = false;
@@ -3144,9 +3469,8 @@ function openGlobalAiPanel(mode, name) {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  const fab = document.getElementById('ai-fab');
   panel.style.display = 'block';
-  fab.classList.add('hidden');
+  document.getElementById('ai-float-group').style.display = 'none';
 
   if (mode === 'edit') {
     chatMode = 'monitor';
@@ -3198,9 +3522,8 @@ function openInterviewAiPanel() {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  const fab = document.getElementById('ai-fab');
   panel.style.display = 'block';
-  fab.classList.add('hidden');
+  document.getElementById('ai-float-group').style.display = 'none';
   chatMode = 'interview';
   interviewState = { step: 0, industry: '', topic: '', expert: '' };
   title.textContent = '✦ AI 智能预约';
@@ -3224,9 +3547,8 @@ function openInterviewWithExpert(name, focus) {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  const fab = document.getElementById('ai-fab');
   panel.style.display = 'block';
-  fab.classList.add('hidden');
+  document.getElementById('ai-float-group').style.display = 'none';
   chatMode = 'interview';
   interviewState = { step: 2, industry: focus, topic: '', expert: name };
   title.textContent = '✦ AI 智能预约';
@@ -3306,7 +3628,7 @@ function showRecommendedMeetings(expertName, track) {
 
 function closeGlobalAiPanel() {
   document.getElementById('global-ai-panel').style.display = 'none';
-  document.getElementById('ai-fab').classList.remove('hidden');
+  document.getElementById('ai-float-group').style.display = '';
 }
 
 function resetAiChat(welcomeText) {
@@ -3392,64 +3714,20 @@ function closeSearchResults() {
 function openSearchDetailChat() {
   const query = searchInput.value.trim() || '中美会晤后有哪些投资机会';
   const aiContent = document.getElementById('search-ai-answer').innerHTML;
-  const sources = searchAnswers.default.sources;
-  const sourcesHtml = sources.map(s => `<div style="display:flex; align-items:flex-start; gap:8px; padding:8px 12px; background:var(--bg-primary); border-radius:6px; margin-bottom:6px;"><span style="color:var(--accent-blue); flex-shrink:0;">📄</span><div><div style="font-size:12px; font-weight:500; color:var(--text-primary); margin-bottom:2px;">${s.title}</div><div style="font-size:10px; color:var(--text-muted);">${s.source} · ${s.time}</div></div></div>`).join('');
   closeSearchResults();
-  const overlay = document.getElementById('ai-fullscreen');
-  const body = document.getElementById('ai-fullscreen-body');
-  body.innerHTML = `
-    <div class="chat-msg">
-      <div class="chat-msg-avatar user">张</div>
-      <div class="chat-msg-content">${query}</div>
-    </div>
-    <div class="chat-msg">
-      <div class="chat-msg-avatar ai">✦</div>
-      <div class="chat-msg-content">
-        ${aiContent}
-        <div style="margin-top:16px; padding-top:12px; border-top:1px solid rgba(226,230,239,0.6);">
-          <div style="font-size:11px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">📋 溯源文件</div>
-          ${sourcesHtml}
-        </div>
-      </div>
-    </div>
-    <div class="chat-msg">
-      <div class="chat-msg-avatar ai">✦</div>
-      <div class="chat-msg-content">
-        <div class="chat-followup">你可以继续追问，比如：<br>· 半导体板块中哪些个股确定性最强？<br>· 关税下调对宁德时代影响有多大？<br>· 有没有对冲地产风险的策略？</div>
-      </div>
-    </div>`;
-  overlay.classList.add('show');
-  body.scrollTop = body.scrollHeight;
-}
-
-function closeFullscreenChat() {
-  document.getElementById('ai-fullscreen').classList.remove('show');
+  currentSession = { id: Date.now(), mode: 'general', title: query, messages: [
+    { role: 'user', text: query },
+    { role: 'ai', text: aiContent + '<div style="margin-top:12px;" class="chat-followup">你可以继续追问，比如：<br>· 半导体板块中哪些个股确定性最强？<br>· 关税下调对宁德时代影响有多大？</div>' }
+  ], documents: [...mockDocuments], progress: [] };
+  openAiGlobal();
 }
 
 function sendFullscreenChat() {
-  const input = document.getElementById('ai-fullscreen-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  const body = document.getElementById('ai-fullscreen-body');
-  body.innerHTML += `
-    <div class="chat-msg">
-      <div class="chat-msg-avatar user">张</div>
-      <div class="chat-msg-content">${msg}</div>
-    </div>`;
-  setTimeout(() => {
-    body.innerHTML += `
-      <div class="chat-msg">
-        <div class="chat-msg-avatar ai">✦</div>
-        <div class="chat-msg-content">好的，让我针对「${msg}」为你做进一步分析...<br><br>基于当前市场数据和研报观点，这个问题涉及多个维度的考量。建议关注近期机构调研动向和北向资金流向变化，结合技术面形态综合判断。</div>
-      </div>`;
-    body.scrollTop = body.scrollHeight;
-  }, 600);
+  sendGlobalChat();
 }
 
-document.getElementById('ai-fullscreen-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') sendFullscreenChat();
-});
+// Init float suggestions on load
+renderFloatSuggestions();
 
 </script>
 </body>
