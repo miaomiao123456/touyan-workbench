@@ -104,8 +104,8 @@ body {
 }
 .market-item { display: flex; gap: 6px; align-items: center; }
 .market-label { color: var(--text-muted); }
-.market-val.up { color: var(--green); }
-.market-val.down { color: var(--red); }
+.market-val.up { color: var(--red); }
+.market-val.down { color: var(--green); }
 
 /* ========== SIDEBAR ========== */
 .sidebar {
@@ -824,8 +824,8 @@ body {
 .data-table tbody tr:hover { background: rgba(45,127,249,0.04); }
 
 /* ========== VALUE COLORS ========== */
-.val-up { color: var(--green); }
-.val-down { color: var(--red); }
+.val-up { color: var(--red); }
+.val-down { color: var(--green); }
 .val-flat { color: var(--text-muted); }
 .mono { font-family: var(--font-mono); }
 
@@ -1954,34 +1954,14 @@ body {
     </div>
     <!-- AI版 -->
     <div id="home-ai-view">
-    <div class="card" style="margin-bottom:20px; padding:14px 18px; border-color:rgba(0,212,170,0.2); background:linear-gradient(90deg, rgba(0,212,170,0.04), rgba(45,127,249,0.04));">
-      <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-secondary); line-height:1.8;">
-        <span style="color:var(--accent-cyan); font-size:14px; flex-shrink:0; margin-top:2px;">✦</span>
-        <div>
-          <div style="margin-bottom:6px;"><strong style="color:var(--text-primary)">今日主线：</strong><span style="font-size:10px;color:var(--text-muted);margin-left:8px;">AI生成 · 2026-05-19 09:15</span></div>
-          <div style="margin-bottom:6px;">中美贸易谈判积极信号推动半导体板块集体走强，北向资金净买入42亿元。英伟达H20获批待确认，利好算力标的。创业板量能萎缩注意高位股分歧。</div>
-          <div id="mainline-detail">
-            <div style="margin-bottom:6px;"><strong style="color:var(--text-primary)">一、半导体/算力（主攻方向）</strong>：中美贸易磋商传出H20芯片合规出口框架，商务部回应"正在评估"。资金集中涌入PCB、光模块、封测环节，中科曙光涨停带动板块情绪。关注：深南电路（载板）、中际旭创（光模块）、长电科技（封测）。</div>
-            <div style="margin-bottom:6px;"><strong style="color:var(--text-primary)">二、新能源车（政策催化）</strong>：欧盟内部文件拟将中国电动车关税从37.6%下调至17-20%区间，6月初公布方案。宁德时代匈牙利工厂投产进度超预期，比亚迪出口订单增30%。</div>
-            <div><strong style="color:var(--text-primary)">三、地产（风险警示）</strong>：万科A盘后公告拟配股融资150亿偿债，市场担忧信用传导风险。短期回避地产信用债敞口较大标的，关注政策对冲窗口。</div>
-          </div>
-          <span onclick="toggleMainline()" id="mainline-toggle" style="font-size:11px; color:var(--accent-blue); cursor:pointer; white-space:nowrap;">收起 ‹</span>
-        </div>
-      </div>
-    </div>
 
     <div class="home-grid">
       <div class="home-left">
-        <!-- 个股热点 -->
+        <!-- AI热股 -->
         <div class="card">
           <div class="section-header">
-            <div style="display:flex;gap:0;">
-              <span class="stock-hot-tab active" onclick="switchStockHotTab(this,'hot')" style="padding:4px 12px;font-size:12px;cursor:pointer;border-radius:4px;font-weight:500;background:rgba(45,127,249,0.08);color:var(--accent-blue);">热点个股</span>
-              <span class="stock-hot-tab" onclick="switchStockHotTab(this,'rise')" style="padding:4px 12px;font-size:12px;cursor:pointer;border-radius:4px;color:var(--text-muted);">大涨个股</span>
-              <span class="stock-hot-tab" onclick="switchStockHotTab(this,'watch')" style="padding:4px 12px;font-size:12px;cursor:pointer;border-radius:4px;color:var(--text-muted);">自选股</span>
-              <span class="stock-hot-tab" onclick="switchStockHotTab(this,'ai')" style="padding:4px 12px;font-size:12px;cursor:pointer;border-radius:4px;color:var(--text-muted);">AI相关个股</span>
-            </div>
-            <span class="section-more">实时更新 ›</span>
+            <div class="section-title"><span class="dot"></span>AI 热股</div>
+            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
           <div id="stock-ranking"></div>
         </div>
@@ -1990,7 +1970,7 @@ body {
         <div class="card">
           <div class="section-header">
             <div class="section-title"><span class="dot"></span>资讯热点</div>
-            <span class="section-more">更多资讯 ›</span>
+            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
           <div id="research-news"></div>
         </div>
@@ -1998,7 +1978,7 @@ body {
         <!-- Expert Meetings -->
         <div>
           <div class="section-header">
-            <div class="section-title"><span class="dot"></span>专家会议预告</div>
+            <div class="section-title"><span class="dot"></span>专家会议</div>
             <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
           </div>
           <div class="card-grid card-grid-3" id="meeting-preview"></div>
@@ -2007,7 +1987,7 @@ body {
         <!-- Source Feed -->
         <div class="card">
           <div class="section-header">
-            <div class="section-title"><span class="dot"></span>信源监控快报</div>
+            <div class="section-title"><span class="dot"></span>AI 监控快报</div>
             <span class="section-more" onclick="navigateTo('monitor')">全部记录 ›</span>
           </div>
           <div id="source-feed"></div>
@@ -2025,34 +2005,28 @@ body {
               </div>
               <div style="font-size:10px; color:var(--text-muted);">每日AI产业深度复盘与解读</div>
             </div>
-            <div class="ai-weekly-ep-num">05.19</div>
+            <div class="ai-weekly-ep-num">05.20</div>
           </div>
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">生成时间：2026-05-19 08:30</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">生成时间：2026-05-20 08:30</div>
           <div style="font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
           <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:12px;">
             本期核心观点：英伟达H20特供芯片获批是2026年AI投资的关键催化。三条主线：① 服务器集成（中科曙光、浪潮信息）② PCB/载板（深南电路、兴森科技）③ 光模块（中际旭创、新易盛）。短期看H20订单兑现，中期看国产GPU替代进程。
+          </div>
+          <div style="font-size:12px; color:var(--text-secondary); line-height:1.9; margin-bottom:12px;">
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">一、算力基建加速扩张</strong></div>
+            <p style="margin-bottom:6px;">H20芯片获批消息持续发酵，中科曙光AI服务器订单Q2环比增长60%，浪潮信息亦获大额订单。PCB载板环节深南电路ABF产品已通过英伟达认证，Q3批量供货确定性高。光模块方面，中际旭创800G产品导入头部云厂商，新易盛硅光方案进入验证阶段。</p>
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">二、国产GPU替代提速</strong></div>
+            <p style="margin-bottom:6px;">海光信息DCU四代芯片流片顺利，FP16算力较三代提升2.5倍，推理能效比接近A100。寒武纪思元590在大模型推理场景表现超预期，多家互联网厂商已启动规模测试。国产GPU生态正从"可用"向"好用"跨越。</p>
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">三、AI应用落地加速</strong></div>
+            <p>金融投研AI渗透率突破45%，智能客服、代码生成场景日调用量创新高。科大讯飞星火4.0在教育场景付费转化率达8.3%，金山办公WPS AI MAU突破5000万。应用层收入贡献正在从0→1拐点显现。</p>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
             <span class="tag tag-cyan">算力基建</span>
             <span class="tag tag-blue">H20产业链</span>
             <span class="tag tag-gold">国产替代</span>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">2026-05-16 发布</span>
+          <div style="display:flex; justify-content:flex-end; align-items:center;">
             <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
-          </div>
-        </div>
-
-        <!-- Watchlist -->
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>自选股动态</div>
-            <span class="section-more">编辑 ›</span>
-          </div>
-          <div id="watchlist"></div>
-          <div id="watchlist-summary" style="margin-top:12px; padding:10px 12px; background:linear-gradient(135deg, rgba(45,127,249,0.04), rgba(0,212,170,0.04)); border-radius:6px; border:1px solid rgba(45,127,249,0.1);">
-            <div style="font-size:11px; color:var(--accent-cyan); font-weight:600; margin-bottom:4px;">✦ AI 持仓总结</div>
-            <div style="font-size:11px; color:var(--text-secondary); line-height:1.7;">今日自选整体偏强，4涨1跌。中科曙光领涨受益H20获批催化；贵州茅台微跌受白酒库存压制。建议关注深南电路放量突破情况。</div>
           </div>
         </div>
       </div>
@@ -2061,34 +2035,32 @@ body {
 
     <!-- 市场版 -->
     <div id="home-market-view" style="display:none;">
-    <div class="card" style="margin-bottom:20px; padding:14px 18px; border-color:rgba(0,212,170,0.2); background:linear-gradient(90deg, rgba(0,212,170,0.04), rgba(45,127,249,0.04));">
-      <div style="display:flex; align-items:flex-start; gap:10px; font-size:12px; color:var(--text-secondary); line-height:1.8;">
-        <span style="color:var(--accent-cyan); font-size:14px; flex-shrink:0; margin-top:2px;">✦</span>
-        <div>
-          <div style="margin-bottom:6px;"><strong style="color:var(--text-primary)">今日主线：</strong><span style="font-size:10px;color:var(--text-muted);margin-left:8px;">AI生成 · 2026-05-19 09:15</span></div>
-          <div>中美贸易谈判积极信号推动半导体板块集体走强，北向资金净买入42亿元。英伟达H20获批待确认，利好算力标的。创业板量能萎缩注意高位股分歧。</div>
-        </div>
-      </div>
-    </div>
     <div class="home-grid">
       <div class="home-left">
         <div class="card">
           <div class="section-header">
-            <div class="section-title"><span class="dot"></span>个股热点</div>
-            <span class="section-more">实时更新 ›</span>
+            <div class="section-title"><span class="dot"></span>热点个股</div>
+            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
           <div id="stock-ranking-market"></div>
         </div>
         <div class="card">
           <div class="section-header">
+            <div class="section-title"><span class="dot"></span>大涨个股</div>
+            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
+          </div>
+          <div id="stock-rise-market"></div>
+        </div>
+        <div class="card">
+          <div class="section-header">
             <div class="section-title"><span class="dot"></span>资讯热点</div>
-            <span class="section-more">更多资讯 ›</span>
+            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
           <div id="research-news-market"></div>
         </div>
         <div>
           <div class="section-header">
-            <div class="section-title"><span class="dot"></span>专家会议预告</div>
+            <div class="section-title"><span class="dot"></span>专家会议</div>
             <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
           </div>
           <div class="card-grid card-grid-3" id="meeting-preview-market"></div>
@@ -2102,28 +2074,38 @@ body {
         </div>
       </div>
       <div class="home-right">
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>自选股动态</div>
-            <span class="section-more">编辑 ›</span>
+        <!-- 今日主线 -->
+        <div class="ai-weekly-card">
+          <div class="ai-weekly-header">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <span style="font-size:16px;">✦</span>
+                <span style="font-size:15px; font-weight:700;">今日主线</span>
+              </div>
+              <div style="font-size:10px; color:var(--text-muted);">AI生成 · 全市场热点解读</div>
+            </div>
+            <div class="ai-weekly-ep-num">05.20</div>
           </div>
-          <div id="watchlist-market"></div>
-          <div style="margin-top:12px; padding:10px 12px; background:linear-gradient(135deg, rgba(45,127,249,0.04), rgba(0,212,170,0.04)); border-radius:6px; border:1px solid rgba(45,127,249,0.1);">
-            <div style="font-size:11px; color:var(--accent-cyan); font-weight:600; margin-bottom:4px;">✦ AI 持仓总结</div>
-            <div style="font-size:11px; color:var(--text-secondary); line-height:1.7;">今日自选整体偏强，4涨1跌。中科曙光领涨受益H20获批催化；贵州茅台微跌受白酒库存压制。建议关注深南电路放量突破情况。</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">生成时间：2026-05-20 09:15</div>
+          <div style="font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.5;">半导体集体走强，北向资金净买42亿，关注高位股分歧</div>
+          <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:12px;">
+            中美贸易谈判释放积极信号，推动半导体、光模块板块集体走强。北向资金单日净买入42亿元，主要加仓算力基建方向。英伟达H20获批进度加速，产业链订单确认度进一步提升。新能源车板块受欧盟关税下调预期催化，宁德时代匈牙利工厂进度超预期。创业板量能连续两日萎缩，高位股出现分歧，注意节奏把控。
           </div>
-        </div>
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>板块热度</div>
-            <span class="section-more">更多 ›</span>
+          <div style="font-size:12px; color:var(--text-secondary); line-height:1.9; margin-bottom:12px;">
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线一：算力基建</strong></div>
+            <p style="margin-bottom:6px;">H20芯片合规出口框架推进顺利，中科曙光/浪潮信息订单充沛。PCB载板环节深南电路获英伟达认证放量，光模块中际旭创800G持续导入。板块确定性最强，建议逢低配置。</p>
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线二：新能源出海</strong></div>
+            <p style="margin-bottom:6px;">欧盟拟将中国电动车关税从37.6%下调至17-20%，6月初公布。宁德时代海外产能投放加速，储能业务收入占比突破25%。比亚迪泰国工厂已量产，出海逻辑持续兑现。</p>
+            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线三：消费修复</strong></div>
+            <p>五一社零数据超预期，免税渠道增速+22%领跑。中国中免客单价环比提升15%，叠加离岛免税政策优化预期，消费板块估值有修复空间。白酒库存压力仍在，关注Q2动销数据。</p>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:12px;">半导体</span><span style="font-size:12px;color:#e74c3c;font-weight:600;">+3.42%</span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:12px;">光模块</span><span style="font-size:12px;color:#e74c3c;font-weight:600;">+2.87%</span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:12px;">PCB</span><span style="font-size:12px;color:#e74c3c;font-weight:600;">+2.15%</span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);"><span style="font-size:12px;">新能源车</span><span style="font-size:12px;color:#e74c3c;font-weight:600;">+1.63%</span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;"><span style="font-size:12px;">白酒</span><span style="font-size:12px;color:#27ae60;font-weight:600;">-0.89%</span></div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+            <span class="tag tag-cyan">算力基建</span>
+            <span class="tag tag-blue">新能源出海</span>
+            <span class="tag tag-gold">消费修复</span>
+          </div>
+          <div style="display:flex; justify-content:flex-end; align-items:center;">
+            <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
           </div>
         </div>
       </div>
@@ -2883,11 +2865,14 @@ function switchPeerStock(el, stockKey) {
   showToast(d.name + ' 一页纸已加载');
 }
 
-// ========== STOCK RANKING ==========
+// ========== STOCK RANKING (AI版 - AI热股) ==========
 const stockRankingData = [
   {
     rank: 1,
-    title: '中科曙光（603019）+5.88%',
+    title: '中科曙光（603019）',
+    price: '58.72',
+    change: '+5.88%',
+    up: true,
     content: 'H20合规出口获突破性进展，英伟达中国区负责人已抵京确认首批交付计划。公司作为国内AI服务器龙头，算力基建订单Q2环比增长45%，PCB载板产能满载。机构一致预期上调至75元目标价。',
     tags: [
       { name: '算力基建', up: true },
@@ -2897,18 +2882,24 @@ const stockRankingData = [
   },
   {
     rank: 2,
-    title: '宁德时代（300750）+2.34%',
-    content: '欧盟内部文件显示拟将中国电动车关税从37.6%下调至17-20%区间，匈牙利工厂投产进度超预期。储能业务收入占比提升至25%，固态电池中试线良率突破85%，海外产能释放打开第二增长曲线。',
+    title: '中际旭创（300308）',
+    price: '142.50',
+    change: '+3.67%',
+    up: true,
+    content: '800G光模块大规模导入头部云厂商，Q2出货量环比增长80%。1.6T产品研发进度超预期，已完成客户端sample验证。AI算力扩张驱动光模块需求井喷，公司全球市占率稳居前三，产能利用率突破95%。',
     tags: [
-      { name: '动力电池', up: true },
-      { name: '欧盟关税', up: true },
-      { name: '储能', up: true },
+      { name: '光模块', up: true },
+      { name: 'AI算力', up: true },
+      { name: '800G', up: true },
     ]
   },
   {
     rank: 3,
-    title: '深南电路（002916）+4.21%',
-    content: 'PCB载板产能满载运行，H20订单确定性最强环节。公司ABF载板已通过英伟达认证，Q3起批量供货。叠加AI服务器迭代加速，高端PCB价值量提升30%，产品结构持续优化。',
+    title: '深南电路（002916）',
+    price: '142.30',
+    change: '+4.21%',
+    up: true,
+    content: 'PCB载板产能满载运行，H20订单确定性最强环节。ABF载板已通过英伟达认证，Q3起批量供货。叠加AI服务器迭代加速，高端PCB价值量提升30%，产品结构持续优化。国内唯一同时量产IC载板和HDI的企业。',
     tags: [
       { name: 'PCB载板', up: true },
       { name: '半导体封装', up: true },
@@ -2916,28 +2907,180 @@ const stockRankingData = [
   },
   {
     rank: 4,
-    title: '万科A（000002）-6.23%',
-    content: '盘后公告拟向不超过35名特定投资者配股融资150亿，募集资金全部用于偿还有息负债。市场担忧股权稀释叠加信用风险传导，机构下调评级至"谨慎"。需关注后续政策对冲力度和销售回款情况。',
+    title: '科大讯飞（002230）',
+    price: '56.80',
+    change: '+3.15%',
+    up: true,
+    content: '星火4.0大模型在教育场景付费转化率达8.3%，医疗AI获三类医疗器械注册证。AI学习机Q1出货量同比增长120%，占公司消费硬件收入45%。C端变现能力超预期，机构上调全年营收预期至260亿。',
+    tags: [
+      { name: 'AI应用', up: true },
+      { name: '大模型', up: true },
+      { name: '教育AI', up: true },
+    ]
+  },
+  {
+    rank: 5,
+    title: '寒武纪（688256）',
+    price: '238.60',
+    change: '+4.52%',
+    up: true,
+    content: '思元590芯片在大模型推理场景表现超预期，多家互联网厂商已启动规模测试。公司发布MLU Arch 05架构，FP16算力较上代提升3倍，软件生态兼容性大幅改善。国产算力芯片赛道最强弹性标的。',
+    tags: [
+      { name: 'AI芯片', up: true },
+      { name: '国产替代', up: true },
+      { name: '推理加速', up: true },
+    ]
+  },
+];
+
+// ========== STOCK RANKING (市场版 - 热点个股) ==========
+const marketStockRankingData = [
+  {
+    rank: 1,
+    title: '贵州茅台（600519）',
+    price: '1,652.00',
+    change: '-0.42%',
+    up: false,
+    content: '批价小幅回落至2,950元，经销商库存约4-5周偏高水平。公司启动i茅台App直销提价策略，非标产品占比提升至35%。Q2动销数据是关键验证节点，机构分歧加大，目标价区间1,500-2,000元。',
+    tags: [
+      { name: '白酒', up: false },
+      { name: '消费', up: false },
+    ]
+  },
+  {
+    rank: 2,
+    title: '中国中免（601888）',
+    price: '82.50',
+    change: '+3.15%',
+    up: true,
+    content: '五一黄金周免税渠道增速+22%领跑全行业，海南门店客单价环比提升15%。离岛免税新政落地在即，购物额度有望从10万提升至15万。公司海口国际免税城二期进入试运营，新增3万㎡经营面积。',
+    tags: [
+      { name: '免税', up: true },
+      { name: '消费复苏', up: true },
+      { name: '海南', up: true },
+    ]
+  },
+  {
+    rank: 3,
+    title: '万科A（000002）',
+    price: '8.56',
+    change: '-6.23%',
+    up: false,
+    content: '盘后公告拟向35名特定投资者配股融资150亿偿还有息负债。市场担忧股权稀释叠加信用风险传导，机构下调评级至"谨慎"。5月销售额环比回暖+12%，但绝对水平仍处低位，关注政策对冲力度。',
     tags: [
       { name: '地产', up: false },
       { name: '信用风险', up: false },
     ]
   },
+  {
+    rank: 4,
+    title: '比亚迪（002594）',
+    price: '312.80',
+    change: '+1.56%',
+    up: true,
+    content: '4月销量37.6万辆同比+28%再创新高，海外销量突破5万辆。泰国工厂投产后月产能1.5万台，巴西工厂Q3动工。智能驾驶"天神之眼"C版下放至10万级车型，技术平权战略加速推进。',
+    tags: [
+      { name: '新能源车', up: true },
+      { name: '出海', up: true },
+      { name: '智驾', up: true },
+    ]
+  },
+  {
+    rank: 5,
+    title: '片仔癀（600436）',
+    price: '268.90',
+    change: '+2.08%',
+    up: true,
+    content: '核心产品片仔癀锭剂提价8%至760元/粒，终端零售价突破1,000元。化妆品子公司营收同比增长35%，皇后牌系列成为新增长极。原材料天然牛黄库存充裕可支撑2年，成本端压力可控。',
+    tags: [
+      { name: '中药', up: true },
+      { name: '提价', up: true },
+      { name: '消费升级', up: true },
+    ]
+  },
+];
+
+// ========== STOCK RANKING (市场版 - 大涨个股) ==========
+const marketStockRiseData = [
+  {
+    rank: 1,
+    title: '中科曙光（603019）',
+    price: '58.72',
+    change: '+5.88%',
+    up: true,
+    content: 'H20产业链核心标的，AI服务器订单大幅增长。英伟达确认首批交付计划后股价放量涨停，成交额45亿创近3月新高。技术面突破前高压力位，均线多头排列，短线强势。',
+    tags: [
+      { name: '涨停', up: true },
+      { name: '放量突破', up: true },
+    ]
+  },
+  {
+    rank: 2,
+    title: '寒武纪（688256）',
+    price: '238.60',
+    change: '+4.52%',
+    up: true,
+    content: '思元590推理芯片获多家互联网厂商测试验证，国产GPU替代逻辑持续强化。成交额突破80亿，北向资金单日净买入2.3亿。股价逼近历史新高区域，市场关注能否有效突破。',
+    tags: [
+      { name: '国产芯片', up: true },
+      { name: '放量', up: true },
+    ]
+  },
+  {
+    rank: 3,
+    title: '深南电路（002916）',
+    price: '142.30',
+    change: '+4.21%',
+    up: true,
+    content: 'ABF载板通过英伟达认证催化股价放量上涨，封板率超85%。PCB载板高景气周期确立，公司作为国内唯一量产IC载板企业受益确定性最高。技术面连续3日放量，MACD金叉确认。',
+    tags: [
+      { name: '突破新高', up: true },
+      { name: 'PCB', up: true },
+    ]
+  },
+  {
+    rank: 4,
+    title: '中际旭创（300308）',
+    price: '142.50',
+    change: '+3.67%',
+    up: true,
+    content: '800G光模块出货量创季度新高，1.6T新品通过客户验证。AI算力扩张周期光模块需求持续超预期，公司全球市占率稳居前三。机构纷纷上调目标价，最高看至180元。',
+    tags: [
+      { name: '光模块', up: true },
+      { name: '量价齐升', up: true },
+    ]
+  },
+  {
+    rank: 5,
+    title: '中国中免（601888）',
+    price: '82.50',
+    change: '+3.15%',
+    up: true,
+    content: '五一免税数据超预期催化股价反弹，连续2日大幅上涨。海南离岛免税新政预期叠加客单价提升，板块估值修复逻辑确立。股价站上60日均线，量能配合良好。',
+    tags: [
+      { name: '消费复苏', up: true },
+      { name: '反弹', up: true },
+    ]
+  },
 ];
 
 const stockRankingEl = document.getElementById('stock-ranking');
-stockRankingData.forEach(item => {
-  const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
-  stockRankingEl.innerHTML += `
-    <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-        <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
-        <span style="font-size:13px; font-weight:600;">${item.title}</span>
-      </div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
-      <div style="padding-left:30px;">${tagsHtml}</div>
-    </div>`;
-});
+if (stockRankingEl) {
+  stockRankingData.forEach(item => {
+    const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
+    stockRankingEl.innerHTML += `
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
+          <span style="font-size:13px; font-weight:600;">${item.title}</span>
+          <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
+          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
+        <div style="padding-left:30px;">${tagsHtml}</div>
+      </div>`;
+  });
+}
 
 // ========== RESEARCH NEWS ==========
 const researchNewsData = [
@@ -2977,42 +3120,119 @@ const researchNewsData = [
       { name: '万科A', change: '-6.23%', up: false },
     ]
   },
+  {
+    rank: 5,
+    title: '国产GPU生态加速，寒武纪/海光获大单验证',
+    content: '寒武纪思元590在大模型推理场景表现超预期，3家头部互联网厂商启动千卡规模测试。海光信息DCU四代芯片流片顺利，FP16算力较三代提升2.5倍。国产GPU正从"可用"向"好用"跨越，生态壁垒逐步建立。',
+    stocks: [
+      { name: '寒武纪', change: '+4.52%', up: true },
+      { name: '海光信息', change: '+2.87%', up: true },
+    ]
+  },
+];
+
+// ========== RESEARCH NEWS (市场版) ==========
+const marketResearchNewsData = [
+  {
+    rank: 1,
+    title: '中美贸易谈判释放积极信号，北向资金净买42亿',
+    content: '双方就农产品贸易、科技合作达成多项共识。北向资金连续3日净买入累计超百亿，主要加仓半导体和新能源板块。A股情绪指标回升至60分位以上，市场风险偏好明显改善。',
+    stocks: [
+      { name: '中科曙光', change: '+5.88%', up: true },
+      { name: '宁德时代', change: '+2.34%', up: true },
+    ]
+  },
+  {
+    rank: 2,
+    title: '央行降准25bp落地，流动性宽松预期增强',
+    content: '央行宣布全面降准0.25个百分点，释放长期资金约5500亿元。市场预计年内仍有1-2次降准空间。银行间市场DR007回落至1.65%附近，流动性环境对权益资产形成支撑。',
+    stocks: [
+      { name: '招商银行', change: '+1.23%', up: true },
+      { name: '中国平安', change: '+0.87%', up: true },
+    ]
+  },
+  {
+    rank: 3,
+    title: '医保谈判结果公布，创新药迎来放量窗口',
+    content: '本轮医保谈判新增87个品种，平均降幅52%。GLP-1类减重药首次纳入乙类目录，市场空间打开至千亿级别。创新药企业放量确定性显著增强，关注Q3处方量兑现节奏。',
+    stocks: [
+      { name: '恒瑞医药', change: '+2.45%', up: true },
+      { name: '药明康德', change: '+1.89%', up: true },
+    ]
+  },
+  {
+    rank: 4,
+    title: '地产新政落地一周，二手房成交回暖但持续性待观察',
+    content: '一线城市二手房周成交面积环比+35%，但绝对水平仅恢复至2023年均值80%。开发商拿地意愿仍偏弱，TOP10房企5月拿地金额同比-28%。政策效果边际递减，市场底部仍需确认。',
+    stocks: [
+      { name: '万科A', change: '-6.23%', up: false },
+      { name: '保利发展', change: '-2.15%', up: false },
+    ]
+  },
+  {
+    rank: 5,
+    title: '军工订单集中释放，装备列装进入加速期',
+    content: '国防军工板块近期获密集催化：卫星互联网二期招标启动，低轨卫星产能扩张确认。中航沈飞/中航西飞订单饱满，四代机列装进度超预期。板块估值处于近5年20%分位，安全边际充足。',
+    stocks: [
+      { name: '中航沈飞', change: '+3.28%', up: true },
+      { name: '航发动力', change: '+2.15%', up: true },
+    ]
+  },
 ];
 
 const researchNewsEl = document.getElementById('research-news');
-researchNewsData.forEach(item => {
-  const stocksHtml = item.stocks.map(s => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${s.name}</span> <span class="${s.up ? 'val-up' : 'val-down'}">${s.change}</span></span>`).join('');
-  researchNewsEl.innerHTML += `
-    <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-        <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
-        <span style="font-size:13px; font-weight:600;">${item.title}</span>
-      </div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
-      <div style="padding-left:30px;">${stocksHtml}</div>
-    </div>`;
-});
+if (researchNewsEl) {
+  researchNewsData.forEach(item => {
+    const stocksHtml = item.stocks.map(s => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${s.name}</span> <span class="${s.up ? 'val-up' : 'val-down'}">${s.change}</span></span>`).join('');
+    researchNewsEl.innerHTML += `
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
+          <span style="font-size:13px; font-weight:600; flex:1;">${item.title}</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
+        <div style="padding-left:30px;">${stocksHtml}</div>
+      </div>`;
+  });
+}
 
-// ========== MEETING PREVIEW ==========
-const meetingsPreview = [
-  { time: '今日 16:00', title: '光伏组件价格拐点与产业链博弈', expert: '李伟 · 中信建投新能源首席', status: 'live', label: '进行中', tag: '新能源', attendees: 142 },
-  { time: '明日 10:00', title: '医保谈判后创新药投资机会梳理', expert: '王璐 · 广发证券医药首席', status: 'upcoming', label: '即将开始', tag: '医药', attendees: 89 },
-  { time: '05/16 14:00', title: '消费复苏逻辑下的免税板块机会', expert: '赵杰 · 国盛证券消费首席', status: 'upcoming', label: '报名中', tag: '消费', attendees: 67 },
+// ========== MEETING PREVIEW (AI版) ==========
+const meetingsPreviewAi = [
+  { time: '今日 15:00', title: '国产GPU三足鼎立：海光/寒武纪/摩尔线程', expert: '周磊 · 中金公司TMT首席', status: 'upcoming', label: '即将开始', tag: 'AI芯片', attendees: 298 },
+  { time: '明日 10:00', title: '人形机器人量产元年：产业链机会梳理', expert: '赵伟 · 广发证券机械首席', status: 'upcoming', label: '报名中', tag: '机器人', attendees: 445 },
+  { time: '05/22 14:00', title: 'AI Agent爆发期：通用智能体的投资地图', expert: '李晓峰 · 华锐技术AI院长', status: 'upcoming', label: '报名中', tag: 'AI应用', attendees: 534 },
 ];
 
+// ========== MEETING PREVIEW (市场版) ==========
+const meetingsPreviewMarket = [
+  { time: '今日 16:00', title: '光伏组件价格拐点与产业链博弈', expert: '李伟 · 中信建投新能源首席', status: 'live', label: '进行中', tag: '新能源', attendees: 142 },
+  { time: '明日 10:00', title: '医保谈判后创新药投资机会梳理', expert: '王璐 · 广发证券医药首席', status: 'upcoming', label: '即将开始', tag: '医药', attendees: 89 },
+  { time: '05/23 10:00', title: '白酒行业中期策略：复苏节奏与估值重塑', expert: '范劲松 · 华创证券食饮首席', status: 'upcoming', label: '报名中', tag: '消费', attendees: 289 },
+];
+
+function renderMeetingPreviewCards(data, container) {
+  if (!container) return;
+  container.innerHTML = '';
+  data.forEach(m => {
+    container.innerHTML += `
+      <div class="card" style="padding:14px; cursor:pointer;" onclick="navigateTo('meetings')">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <span class="tag tag-blue" style="font-size:10px;">${m.tag}</span>
+          <span style="font-size:10px; color:${m.status === 'live' ? 'var(--red)' : 'var(--accent-blue)'}; font-weight:500;">${m.label}</span>
+        </div>
+        <div style="font-size:13px; font-weight:600; margin-bottom:6px; line-height:1.4;">${m.title}</div>
+        <div style="font-size:11px; color:var(--text-muted);">${m.expert}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <span style="font-size:10px; color:var(--text-muted);">${m.time}</span>
+          <span style="font-size:10px; color:var(--text-muted);">${m.attendees}人关注</span>
+        </div>
+      </div>`;
+  });
+}
+
 const meetingPreviewEl = document.getElementById('meeting-preview');
-meetingsPreview.forEach(m => {
-  meetingPreviewEl.innerHTML += `
-    <div class="card meeting-card ${m.status}" onclick="navigateTo('meetings')">
-      <div class="meeting-time">${m.time}</div>
-      <div class="meeting-title">${m.title}</div>
-      <div class="meeting-expert">${m.expert}</div>
-      <div class="meeting-meta">
-        <span class="tag tag-${m.status === 'live' ? 'green' : 'blue'}">${m.label}</span>
-        <span class="meeting-attendees">${m.attendees} 人</span>
-      </div>
-    </div>`;
-});
+renderMeetingPreviewCards(meetingsPreviewAi, meetingPreviewEl);
 
 // ========== SOURCE FEED ==========
 const feedData = [
@@ -3046,15 +3266,17 @@ const watchlistData = [
 ];
 
 const watchlistEl = document.getElementById('watchlist');
-watchlistData.forEach(w => {
-  watchlistEl.innerHTML += `
-    <div class="watchlist-item" onclick="navigateTo('stock')">
-      <span class="wl-name">${w.name}</span>
-      <span class="wl-price mono">${w.price}</span>
-      <span class="wl-change ${w.up ? 'val-up' : 'val-down'}">${w.change}</span>
-      <span style="text-align:right;">${w.update ? `<span class="wl-update">● ${w.update}</span>` : ''}</span>
-    </div>`;
-});
+if (watchlistEl) {
+  watchlistData.forEach(w => {
+    watchlistEl.innerHTML += `
+      <div class="watchlist-item" onclick="navigateTo('stock')">
+        <span class="wl-name">${w.name}</span>
+        <span class="wl-price mono">${w.price}</span>
+        <span class="wl-change ${w.up ? 'val-up' : 'val-down'}">${w.change}</span>
+        <span style="text-align:right;">${w.update ? `<span class="wl-update">● ${w.update}</span>` : ''}</span>
+      </div>`;
+  });
+}
 
 // ========== AI MEETING CARDS ==========
 const meetingCardsData = [
@@ -4234,65 +4456,56 @@ function switchHomeVersion(version) {
   document.getElementById('home-ai-view').style.display = version === 'ai' ? '' : 'none';
   document.getElementById('home-market-view').style.display = version === 'market' ? '' : 'none';
   if (version === 'market') {
-    const mktStock = document.getElementById('stock-ranking-market');
-    if (mktStock && !mktStock.innerHTML) {
-      mktStock.innerHTML = document.getElementById('stock-ranking').innerHTML;
-    }
-    const mktNews = document.getElementById('research-news-market');
-    if (mktNews && !mktNews.innerHTML) {
-      mktNews.innerHTML = document.getElementById('research-news').innerHTML;
-    }
-    const mktMeeting = document.getElementById('meeting-preview-market');
-    if (mktMeeting && !mktMeeting.innerHTML) {
-      mktMeeting.innerHTML = document.getElementById('meeting-preview').innerHTML;
-    }
+    renderMarketStockRanking('stock-ranking-market', marketStockRankingData);
+    renderMarketStockRanking('stock-rise-market', marketStockRiseData);
+    renderMarketNewsRanking('research-news-market', marketResearchNewsData);
+    renderMeetingPreviewCards(meetingsPreviewMarket, document.getElementById('meeting-preview-market'));
     const mktFeed = document.getElementById('source-feed-market');
     if (mktFeed && !mktFeed.innerHTML) {
-      mktFeed.innerHTML = document.getElementById('source-feed').innerHTML;
-    }
-    const mktWatch = document.getElementById('watchlist-market');
-    if (mktWatch && !mktWatch.innerHTML) {
-      mktWatch.innerHTML = document.getElementById('watchlist').innerHTML;
+      const srcFeed = document.getElementById('source-feed');
+      if (srcFeed) mktFeed.innerHTML = srcFeed.innerHTML;
     }
   }
 }
 
-function switchStockHotTab(el, tab) {
-  el.parentElement.querySelectorAll('.stock-hot-tab').forEach(t => {
-    t.style.background = 'transparent'; t.style.color = 'var(--text-muted)';
+function renderMarketStockRanking(containerId, data) {
+  const el = document.getElementById(containerId);
+  if (!el || el.innerHTML) return;
+  data.forEach(item => {
+    const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
+    el.innerHTML += `
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
+          <span style="font-size:13px; font-weight:600;">${item.title}</span>
+          <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
+          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
+        <div style="padding-left:30px;">${tagsHtml}</div>
+      </div>`;
   });
-  el.style.background = 'rgba(45,127,249,0.08)'; el.style.color = 'var(--accent-blue)';
-  const container = document.getElementById('stock-ranking');
-  const extraData = {
-    rise: [
-      { rank:1, title:'中科曙光（603019）+5.88%', tags:[{name:'涨停',up:true}] },
-      { rank:2, title:'深南电路（002916）+4.21%', tags:[{name:'突破',up:true}] },
-      { rank:3, title:'中际旭创（300308）+3.67%', tags:[{name:'放量',up:true}] },
-    ],
-    watch: [
-      { rank:1, title:'中科曙光（603019）+5.88%', tags:[{name:'自选',up:true}] },
-      { rank:2, title:'贵州茅台（600519）-0.32%', tags:[{name:'自选',up:false}] },
-    ],
-    ai: [
-      { rank:1, title:'科大讯飞（002230）+3.15%', tags:[{name:'AI应用',up:true}] },
-      { rank:2, title:'金山办公（688111）+2.67%', tags:[{name:'AI办公',up:true}] },
-      { rank:3, title:'寒武纪（688256）+4.52%', tags:[{name:'AI芯片',up:true}] },
-    ]
-  };
-  if (tab === 'hot') {
-    container.innerHTML = '';
-    stockRankingData.forEach(item => {
-      const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px;margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up?'val-up':'val-down'}">${t.up?'↑':'↓'}</span></span>`).join('');
-      container.innerHTML += `<div style="padding:12px 0;border-bottom:1px solid rgba(226,230,239,0.6);cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="hotlist-rank ${item.rank<=3?'top3':'normal'}" style="font-size:11px;">${item.rank}</span><span style="font-size:13px;font-weight:600;">${item.title}</span></div><div style="font-size:11px;color:var(--text-secondary);line-height:1.7;margin-bottom:8px;padding-left:30px;">${item.content}</div><div style="padding-left:30px;">${tagsHtml}</div></div>`;
-    });
-  } else {
-    const data = extraData[tab] || [];
-    container.innerHTML = data.map(item => {
-      const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px;margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up?'val-up':'val-down'}">${t.up?'↑':'↓'}</span></span>`).join('');
-      return `<div style="padding:12px 0;border-bottom:1px solid rgba(226,230,239,0.6);cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="hotlist-rank ${item.rank<=3?'top3':'normal'}" style="font-size:11px;">${item.rank}</span><span style="font-size:13px;font-weight:600;">${item.title}</span></div><div style="padding-left:30px;">${tagsHtml}</div></div>`;
-    }).join('');
-  }
 }
+
+function renderMarketNewsRanking(containerId, data) {
+  const el = document.getElementById(containerId);
+  if (!el || el.innerHTML) return;
+  data.forEach(item => {
+    const stocksHtml = item.stocks.map(s => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${s.name}</span> <span class="${s.up ? 'val-up' : 'val-down'}">${s.change}</span></span>`).join('');
+    el.innerHTML += `
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
+          <span style="font-size:13px; font-weight:600; flex:1;">${item.title}</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
+        <div style="padding-left:30px;">${stocksHtml}</div>
+      </div>`;
+  });
+}
+
+// switchStockHotTab and toggleMainline removed — no longer used
 
 function sendFloatBarChat() {
   const input = document.getElementById('float-bar-input');
@@ -4523,7 +4736,7 @@ function sendRightChat() {
 
 // ========== AIX SCENE-AWARE SYSTEM ==========
 const sceneConfig = {
-  home: { title:'AI 投研助手', suggestions:['解读今日主线','分析热门个股','查看自选股AI总结'] },
+  home: { title:'AI 投研助手', suggestions:['宁德时代扩产的边际效应分析','H20获批后算力产业链机会梳理','免税板块五一数据超预期怎么看'] },
   meetings: { title:'AI 会议助手', suggestions:['预约专家访谈','获取纪要摘要','推荐值得参会的会议'] },
   monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','优化配置'] },
   stock: { title:'AI 个股助手', suggestions:['深度分析当前个股','查看相关信源','查看调研数据'] },
@@ -4744,18 +4957,7 @@ function openArticle(source, time, kw, text) {
   document.getElementById('article-overlay').classList.add('show');
 }
 
-// ========== MAINLINE TOGGLE ==========
-function toggleMainline() {
-  const detail = document.getElementById('mainline-detail');
-  const toggle = document.getElementById('mainline-toggle');
-  if (detail.style.display === 'none') {
-    detail.style.display = 'block';
-    toggle.textContent = '收起 ‹';
-  } else {
-    detail.style.display = 'none';
-    toggle.textContent = '展开详情 ›';
-  }
-}
+// toggleMainline removed — 今日主线 is now in market version right sidebar
 
 // ========== SEARCH Q&A ==========
 const searchInput = document.getElementById('main-search');
