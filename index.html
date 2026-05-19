@@ -481,6 +481,8 @@ body {
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
+  margin-right: 60px;
+  margin-bottom: 4px;
 }
 .ai-float-suggestion {
   padding: 8px 14px;
@@ -567,6 +569,25 @@ body {
   cursor: pointer; transition: background 0.15s; margin-bottom: 4px;
 }
 .ai-global-doc-item:hover { background: rgba(45,127,249,0.06); }
+
+.ai-global-empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  color: var(--text-muted); padding-bottom: 80px;
+}
+.ai-global-empty-icon {
+  font-size: 48px; opacity: 0.3;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.ai-global-empty-slogan {
+  font-size: 18px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.ai-global-empty-sub {
+  font-size: 12px; color: var(--text-muted);
+}
 
 /* ========== SECTION HEADER ========== */
 .section-header {
@@ -2515,21 +2536,11 @@ body {
       <div class="ai-global-right-title">Documents</div>
       <div id="ai-global-documents"></div>
     </div>
-    <div class="ai-global-right-section">
-      <div class="ai-global-right-title">Skills</div>
-      <div id="ai-global-skills">
-        <div class="ai-skill-item">段子生成器</div>
-        <div class="ai-skill-item">AIGC报告</div>
-        <div class="ai-skill-item">个股分析</div>
-        <div class="ai-skill-item">选股助手</div>
-        <div class="ai-skill-item">PPT生成</div>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- GLOBAL AI PANEL (floating) -->
-<div id="global-ai-panel" style="display:none; position:fixed; bottom:20px; right:20px; width:420px; max-height:580px; background:var(--bg-secondary); border:1px solid var(--border); border-radius:14px; box-shadow:0 8px 40px rgba(0,0,0,0.18); z-index:250; overflow:hidden; animation:slideUp 0.25s;">
+<div id="global-ai-panel" style="display:none; position:fixed; top:calc(var(--header-height) + 12px); bottom:20px; right:20px; width:420px; background:var(--bg-secondary); border:1px solid var(--border); border-radius:14px; box-shadow:0 8px 40px rgba(0,0,0,0.18); z-index:250; overflow:hidden; animation:slideUp 0.25s; display:none; flex-direction:column;">
   <div style="padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; background:linear-gradient(90deg, rgba(45,127,249,0.04), rgba(0,184,148,0.04));">
     <div style="display:flex; align-items:center; gap:8px;">
       <span style="font-size:16px; color:var(--accent-cyan);">✦</span>
@@ -2539,11 +2550,11 @@ body {
       </div>
     </div>
     <div style="display:flex; align-items:center; gap:6px;">
-      <button style="background:none; border:none; font-size:16px; color:var(--text-muted); cursor:pointer;" onclick="expandToGlobal()" title="全屏展开">⬜</button>
+      <button style="background:rgba(45,127,249,0.08); border:1px solid rgba(45,127,249,0.2); font-size:11px; color:var(--accent-blue); cursor:pointer; border-radius:6px; padding:4px 10px; font-weight:600; display:flex; align-items:center; gap:4px;" onclick="expandToGlobal()" title="全屏展开">⬜ 全屏</button>
       <button style="background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeGlobalAiPanel()">✕</button>
     </div>
   </div>
-  <div id="ai-chat-messages" style="height:380px; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:14px;">
+  <div id="ai-chat-messages" style="flex:1; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:14px;">
     <div class="ai-chat-bubble ai-msg">
       <div class="ai-chat-avatar">✦</div>
       <div class="ai-chat-content">
@@ -2560,11 +2571,7 @@ body {
 <!-- FLOATING AI GROUP (浮球态) -->
 <div class="ai-float-group" id="ai-float-group">
   <div class="ai-float-suggestions" id="ai-float-suggestions"></div>
-  <div class="ai-float-input-bar" id="ai-float-input-bar">
-    <input id="ai-float-input" placeholder="快速提问..." onkeydown="if(event.key==='Enter')sendFloatChat()" />
-    <button onclick="sendFloatChat()">↑</button>
-  </div>
-  <button class="ai-fab" id="ai-fab" onclick="toggleFloatPanel()">✦</button>
+  <button class="ai-fab" id="ai-fab" onclick="openGlobalAiPanel('general')">✦</button>
 </div>
 
 <!-- ARTICLE OVERLAY -->
@@ -3270,10 +3277,22 @@ document.addEventListener('keydown', (e) => {
 
 // ========== AI THREE-STATE SYSTEM ==========
 const mockHistory = [
-  { id: 1, title: 'AI板块晨报生成', mode: 'report' },
-  { id: 2, title: '中科曙光深度分析', mode: 'general' },
-  { id: 3, title: '今日投研段子', mode: 'joke' },
-  { id: 4, title: 'H20产业链选股', mode: 'stock' },
+  { id: 1, title: 'AI板块晨报生成', mode: 'report', messages: [
+    { role: 'user', text: '帮我生成今天的AI板块晨报' },
+    { role: 'ai', text: '好的，正在为你生成AI板块晨报...\n\n📊 **AI板块晨报 2026.05.19**\n\n【核心观点】AI算力链延续强势，中科曙光、浪潮信息涨超3%。英伟达中国区负责人抵京，市场对国内GPU供应链预期改善。光模块板块集体走强，中际旭创、新易盛获北向资金净流入。\n\n【今日关注】\n1. 中科曙光(603019)：智算中心订单加速落地，Q1净利润同比+42%\n2. 浪潮信息(000977)：服务器出货量创新高，AI服务器占比提升至35%\n3. 中际旭创(300308)：800G光模块量产爬坡，海外订单持续放量\n\n已为你保存完整报告。' }
+  ]},
+  { id: 2, title: '中科曙光深度分析', mode: 'general', messages: [
+    { role: 'user', text: '帮我分析一下中科曙光最近的基本面和技术面' },
+    { role: 'ai', text: '📈 **中科曙光(603019) 深度分析**\n\n**基本面：**\n- 最新市值：1,285亿 | PE(TTM)：48.6x | PB：6.2x\n- Q1营收128.3亿(+31.2%)，净利润12.7亿(+42.1%)\n- 智算中心业务高速增长，海光信息贡献投资收益\n- 在手订单充裕，政务+运营商智算采购加速\n\n**技术面：**\n- 当前价格54.8元，5日均线上方运行\n- MACD金叉，量能温和放大\n- 压力位58.5元（前高），支撑位51.2元（20日均线）\n\n**机构评级：** 近30天6家机构给出"买入"评级，一致目标价62.5元\n\n需要我进一步分析产业链关联个股吗？' }
+  ]},
+  { id: 3, title: '今日投研段子', mode: 'joke', messages: [
+    { role: 'user', text: '根据今天的涨停板生成几个段子' },
+    { role: 'ai', text: '😂 **今日涨停板段子精选**\n\n1. "今天追了AI板块，账户绿得像刚做完光合作用。朋友问我炒股赚了多少，我说：赚了不少经验值。"\n\n2. "散户三大幻觉：这次不一样、明天会反弹、我不会是最后一个。今天A股完美验证了第二条——它确实反弹了，但只反弹给了主力。"\n\n3. "今天涨停板里一半是AI，一半是机器人。作为一个普通散户，我终于理解了什么叫「人工」智能——我负责人工，主力负责智能。"\n\n4. "基金经理早上说看好消费复苏，中午说关注科技主线，收盘说现金为王。这就是传说中的「一日三迁，全面覆盖」。"\n\n需要换个风格吗？讽刺系、鸡汤系还是自嘲系？' }
+  ]},
+  { id: 4, title: 'H20产业链选股', mode: 'stock', messages: [
+    { role: 'user', text: '帮我筛选H20产业链相关的受益标的' },
+    { role: 'ai', text: '📈 **H20产业链受益标的筛选**\n\n根据英伟达H20芯片国内供应链映射，筛选出以下标的：\n\n| 股票 | 代码 | 关联度 | 逻辑 |\n|------|------|--------|------|\n| 中科曙光 | 603019 | ⭐⭐⭐ | H20服务器主要集成商 |\n| 浪潮信息 | 000977 | ⭐⭐⭐ | AI服务器出货量领先 |\n| 中际旭创 | 300308 | ⭐⭐ | 配套光模块供应商 |\n| 沪电股份 | 002463 | ⭐⭐ | 高端PCB配套 |\n| 工业富联 | 601138 | ⭐⭐ | 代工组装环节 |\n\n**筛选条件：** 近20日北向资金净流入 > 1亿，机构评级"买入"数 ≥ 3\n\n需要我对某只个股做进一步分析吗？' }
+  ]},
 ];
 const mockDocuments = [
   { title: 'AI板块晨报 05-19', type: 'report', icon: '📄' },
@@ -3289,7 +3308,6 @@ const mockProgress = [
 
 let aiSessions = [...mockHistory];
 let currentSession = { id: 99, mode: 'general', title: '新对话', messages: [], documents: [...mockDocuments], progress: [...mockProgress] };
-let floatExpanded = false;
 
 function openAiGlobal() {
   document.getElementById('ai-global').classList.add('show');
@@ -3321,25 +3339,6 @@ function newAiSession(mode) {
   renderGlobalChat();
 }
 
-function toggleFloatPanel() {
-  floatExpanded = !floatExpanded;
-  document.getElementById('ai-float-input-bar').classList.toggle('show', floatExpanded);
-  if (floatExpanded) document.getElementById('ai-float-input').focus();
-}
-
-function sendFloatChat() {
-  const input = document.getElementById('ai-float-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  floatExpanded = false;
-  document.getElementById('ai-float-input-bar').classList.remove('show');
-  currentSession.messages.push({ role: 'user', text: msg });
-  openGlobalAiPanel('general');
-  const chatInput = document.getElementById('ai-chat-input');
-  if (chatInput) { chatInput.value = msg; sendAiChat(); }
-}
-
 function handleFloatSuggestion(text) {
   currentSession.messages.push({ role: 'user', text });
   openGlobalAiPanel('general');
@@ -3365,7 +3364,7 @@ function renderHistory() {
 function loadSession(id) {
   const s = aiSessions.find(x => x.id === id);
   if (!s) return;
-  currentSession = { ...s, messages: [{ role: 'ai', text: `这是「${s.title}」的历史对话记录。` }], documents: [...mockDocuments], progress: [...mockProgress] };
+  currentSession = { ...s, messages: s.messages ? [...s.messages] : [{ role: 'ai', text: `这是「${s.title}」的历史对话记录。` }], documents: [...mockDocuments], progress: [...mockProgress] };
   renderGlobalChat();
   renderHistory();
 }
@@ -3376,14 +3375,11 @@ function renderGlobalChat() {
   if (!header || !body) return;
   header.textContent = currentSession.title;
   if (currentSession.messages.length === 0) {
-    const modeWelcome = {
-      general: '你好！我是财跃AI投研助手，有什么可以帮你？',
-      report: '你好！我可以帮你生成各类投研报告。请描述你的需求，比如"帮我生成今天的AI板块晨报"。',
-      ppt: '你好！我可以帮你生成投研PPT。请告诉我主题和大纲要求。',
-      joke: '来点乐子！我可以根据今日行情帮你生成投研段子。想要什么风格？',
-      stock: '你好！AI选股助手为你服务。请描述选股条件，比如"近5日放量突破的半导体股票"。'
-    };
-    body.innerHTML = `<div class="ai-global-msg ai"><div class="ai-global-msg-avatar">✦</div><div class="ai-global-msg-text">${modeWelcome[currentSession.mode] || modeWelcome.general}</div></div>`;
+    body.innerHTML = `<div class="ai-global-empty">
+      <div class="ai-global-empty-icon">✦</div>
+      <div class="ai-global-empty-slogan">最懂AI的投研平台</div>
+      <div class="ai-global-empty-sub">输入你的需求，AI 帮你搞定一切</div>
+    </div>`;
   } else {
     body.innerHTML = currentSession.messages.map(m => `<div class="ai-global-msg ${m.role === 'user' ? 'user' : 'ai'}"><div class="ai-global-msg-avatar">${m.role === 'user' ? '张' : '✦'}</div><div class="ai-global-msg-text">${m.text}</div></div>`).join('');
   }
@@ -3469,7 +3465,7 @@ function openGlobalAiPanel(mode, name) {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  panel.style.display = 'block';
+  panel.style.display = 'flex';
   document.getElementById('ai-float-group').style.display = 'none';
 
   if (mode === 'edit') {
@@ -3522,7 +3518,7 @@ function openInterviewAiPanel() {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  panel.style.display = 'block';
+  panel.style.display = 'flex';
   document.getElementById('ai-float-group').style.display = 'none';
   chatMode = 'interview';
   interviewState = { step: 0, industry: '', topic: '', expert: '' };
@@ -3547,7 +3543,7 @@ function openInterviewWithExpert(name, focus) {
   const panel = document.getElementById('global-ai-panel');
   const title = document.getElementById('global-ai-title');
   const subtitle = document.getElementById('global-ai-subtitle');
-  panel.style.display = 'block';
+  panel.style.display = 'flex';
   document.getElementById('ai-float-group').style.display = 'none';
   chatMode = 'interview';
   interviewState = { step: 2, industry: focus, topic: '', expert: name };
