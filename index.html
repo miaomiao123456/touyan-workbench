@@ -401,6 +401,10 @@ body {
 .ai-global-center {
   display: flex; flex-direction: column;
   border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+.ai-global-chat-initial {
+  display: flex; flex-direction: column; flex: 1; overflow: hidden;
 }
 .ai-global-chat-header {
   padding: 16px 32px;
@@ -416,6 +420,7 @@ body {
 .ai-global-chat-footer {
   border-top: 1px solid var(--border);
   padding: 16px 32px; background: var(--bg-card);
+  flex-shrink: 0;
 }
 .ai-global-input-row {
   display: flex; gap: 10px;
@@ -830,6 +835,15 @@ body {
 .mono { font-family: var(--font-mono); }
 
 /* ========== HOME PAGE ========== */
+.home-top {
+  margin-bottom: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(45,127,249,0.2);
+  background: linear-gradient(135deg, rgba(45,127,249,0.04), rgba(0,184,148,0.03));
+  border-radius: 10px;
+  max-height: 180px;
+  overflow: hidden;
+}
 .home-grid {
   display: grid;
   grid-template-columns: 1fr 360px;
@@ -1222,6 +1236,93 @@ body {
   animation: fadeIn 0.2s;
 }
 .detail-overlay.show { display: flex; }
+#detail-overlay.show { display: flex; }
+#detail-overlay {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.45);
+  z-index: 250; display:none;
+  align-items:center; justify-content:center;
+  animation: fadeIn 0.2s;
+}
+.detail-overlay-inner {
+  width: calc(100vw - 80px); max-width: 1400px;
+  height: calc(100vh - 80px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 240px 1fr 360px;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  animation: slideUp 0.25s;
+}
+.do-header {
+  grid-column: 1/-1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+.do-list {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+.do-list-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(226,230,239,0.4);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: background 0.15s;
+}
+.do-list-item:hover { background: rgba(45,127,249,0.04); }
+.do-list-item.active {
+  background: rgba(45,127,249,0.08);
+  border-left: 3px solid var(--accent-blue);
+}
+.do-content {
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+.do-chat {
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  background: var(--bg-primary);
+}
+.do-chat-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px; font-weight: 600;
+}
+.do-chat-messages {
+  flex: 1; overflow-y: auto;
+  padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.do-chat-input-area {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+.do-chat-input-area input {
+  flex:1; border:1px solid var(--border); border-radius:8px;
+  padding:8px 12px; font-size:12px; outline:none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.do-chat-bubble {
+  max-width: 85%; padding: 8px 12px;
+  border-radius: 10px; font-size: 12px; line-height: 1.7;
+}
+.do-chat-bubble.user {
+  align-self: flex-end;
+  background: var(--accent-blue); color: #fff;
+}
+.do-chat-bubble.ai {
+  align-self: flex-start;
+  background: rgba(45,127,249,0.08); color: var(--text-primary);
+}
 .detail-panel {
   width: 820px;
   max-height: calc(100vh - 100px);
@@ -1420,8 +1521,12 @@ body {
 .tl-source { font-size: 11px; font-weight: 500; }
 .tl-keyword { background: rgba(45,127,249,0.12); color: var(--accent-blue); padding: 1px 6px; border-radius: 2px; font-size: 10px; }
 .tl-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
-.tl-link { font-size: 10px; color: var(--accent-blue); cursor: pointer; margin-top: 4px; display: inline-block; }
+.tl-link { font-size: 10px; color: var(--accent-blue); cursor: pointer; margin-top: 4px; display: inline-block; text-decoration:none; }
+.tl-link:hover { text-decoration: underline; }
 .tl-researcher { font-size: 10px; color: var(--accent-cyan); background: rgba(0,184,148,0.08); padding: 1px 6px; border-radius: 2px; }
+.ref-mark { font-size: 10px; font-weight: 700; color: var(--accent-blue); background: rgba(45,127,249,0.1); width: 16px; height: 16px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 2px; vertical-align: super; line-height: 1; }
+.ref-mark:hover { background: rgba(45,127,249,0.25); }
+.ref-item.highlighted { border-left-color: var(--accent-blue) !important; background: rgba(45,127,249,0.06) !important; }
 
 .ai-daily {
   position: sticky;
@@ -1926,15 +2031,26 @@ body {
     <span>AI投研</span>
     <span class="nav-ai-label">Cowork</span>
   </div>
-  <div class="nav-section-label">设置</div>
   <div class="sidebar-footer">
-    <div class="sidebar-user" onclick="navigateTo('user')" style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 0; margin-bottom:8px;">
+    <div class="sidebar-user" onclick="toggleUserPopover(event)" style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:8px 0; margin-bottom:8px; position:relative;">
       <div style="width:32px; height:32px; border-radius:50%; background:var(--bg-elevated); border:2px solid var(--border-active); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--accent-blue);">张</div>
       <div style="flex:1;">
         <div style="font-size:12px; font-weight:600;">张明远</div>
         <div style="font-size:10px; color:var(--text-muted);">TMT研究员</div>
       </div>
       <span style="font-size:14px; color:var(--text-muted);">⚙</span>
+      <div class="user-popover" id="user-popover" onclick="event.stopPropagation()" style="display:none; position:absolute; bottom:calc(100% + 8px); left:0; width:200px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.12); padding:16px; z-index:300;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border-active);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent-blue);">张</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;">张明远</div>
+            <div style="font-size:11px;color:var(--text-muted);">TMT研究员 · 投研部</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;">
+          <div style="font-size:12px;color:var(--text-secondary);cursor:pointer;padding:6px 0;" onmouseover="this.style.color='var(--accent-blue)'" onmouseout="this.style.color='var(--text-secondary)'" onclick="showToast('已退出登录');document.getElementById('user-popover').style.display='none'">退出登录</div>
+        </div>
+      </div>
     </div>
     <div class="sidebar-status">
       <span class="status-dot"></span>
@@ -1954,37 +2070,52 @@ body {
     </div>
     <!-- AI版 -->
     <div id="home-ai-view">
+    <!-- AI每日谈 - 顶部全宽精简版 -->
+    <div class="home-top">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-size:16px;">✦</span>
+        <span style="font-size:15px; font-weight:700;">AI 每日谈</span>
+        <span style="font-size:10px; color:var(--text-muted); margin-left:8px;">生成时间：2026-05-20 08:30</span>
+      </div>
+      <div style="font-size:13px; font-weight:600; margin-bottom:6px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+        本期核心观点：英伟达H20特供芯片获批是2026年AI投资的关键催化。三条主线：① 服务器集成（中科曙光、浪潮信息）② PCB/载板（深南电路、兴森科技）③ 光模块（中际旭创、新易盛）。短期看H20订单兑现，中期看国产GPU替代进程。
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="tag tag-cyan">算力基建</span>
+          <span class="tag tag-blue">H20产业链</span>
+          <span class="tag tag-gold">国产替代</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
+      </div>
+    </div>
 
     <div class="home-grid">
       <div class="home-left">
-        <!-- AI热股 -->
+        <!-- AI热股 / AI资讯热点 tab切换 -->
         <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>AI 热股</div>
-            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
+          <div style="display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); margin:-16px -16px 12px; padding:0 16px;">
+            <div class="ai-hot-tab active" onclick="switchAiHotTab('stock')" style="padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue); color:var(--accent-blue);">AI 热股</div>
+            <div class="ai-hot-tab" onclick="switchAiHotTab('news')" style="padding:10px 16px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">AI 资讯热点</div>
+            <span class="section-more" style="margin-left:auto;" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
           <div id="stock-ranking"></div>
+          <div id="research-news" style="display:none;"></div>
         </div>
+      </div>
 
-        <!-- 资讯热点 -->
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>资讯热点</div>
-            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
-          </div>
-          <div id="research-news"></div>
-        </div>
-
-        <!-- Expert Meetings -->
+      <div class="home-right">
+        <!-- 专家会议 -->
         <div>
           <div class="section-header">
             <div class="section-title"><span class="dot"></span>专家会议</div>
             <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
           </div>
-          <div class="card-grid card-grid-3" id="meeting-preview"></div>
+          <div class="card-grid card-grid-3" id="meeting-preview" style="grid-template-columns:1fr;"></div>
         </div>
 
-        <!-- Source Feed -->
+        <!-- AI监控快报 -->
         <div class="card">
           <div class="section-header">
             <div class="section-title"><span class="dot"></span>AI 监控快报</div>
@@ -1993,120 +2124,65 @@ body {
           <div id="source-feed"></div>
         </div>
       </div>
-
-      <div class="home-right">
-        <!-- AI每日谈 -->
-        <div class="ai-weekly-card">
-          <div class="ai-weekly-header">
-            <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span style="font-size:16px;">✦</span>
-                <span style="font-size:15px; font-weight:700;">AI 每日谈</span>
-              </div>
-              <div style="font-size:10px; color:var(--text-muted);">每日AI产业深度复盘与解读</div>
-            </div>
-            <div class="ai-weekly-ep-num">05.20</div>
-          </div>
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">生成时间：2026-05-20 08:30</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
-          <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:12px;">
-            本期核心观点：英伟达H20特供芯片获批是2026年AI投资的关键催化。三条主线：① 服务器集成（中科曙光、浪潮信息）② PCB/载板（深南电路、兴森科技）③ 光模块（中际旭创、新易盛）。短期看H20订单兑现，中期看国产GPU替代进程。
-          </div>
-          <div style="font-size:12px; color:var(--text-secondary); line-height:1.9; margin-bottom:12px;">
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">一、算力基建加速扩张</strong></div>
-            <p style="margin-bottom:6px;">H20芯片获批消息持续发酵，中科曙光AI服务器订单Q2环比增长60%，浪潮信息亦获大额订单。PCB载板环节深南电路ABF产品已通过英伟达认证，Q3批量供货确定性高。光模块方面，中际旭创800G产品导入头部云厂商，新易盛硅光方案进入验证阶段。</p>
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">二、国产GPU替代提速</strong></div>
-            <p style="margin-bottom:6px;">海光信息DCU四代芯片流片顺利，FP16算力较三代提升2.5倍，推理能效比接近A100。寒武纪思元590在大模型推理场景表现超预期，多家互联网厂商已启动规模测试。国产GPU生态正从"可用"向"好用"跨越。</p>
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">三、AI应用落地加速</strong></div>
-            <p>金融投研AI渗透率突破45%，智能客服、代码生成场景日调用量创新高。科大讯飞星火4.0在教育场景付费转化率达8.3%，金山办公WPS AI MAU突破5000万。应用层收入贡献正在从0→1拐点显现。</p>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-            <span class="tag tag-cyan">算力基建</span>
-            <span class="tag tag-blue">H20产业链</span>
-            <span class="tag tag-gold">国产替代</span>
-          </div>
-          <div style="display:flex; justify-content:flex-end; align-items:center;">
-            <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
-          </div>
-        </div>
-      </div>
     </div>
     </div><!-- end home-ai-view -->
 
     <!-- 市场版 -->
     <div id="home-market-view" style="display:none;">
+    <!-- 今日主线 - 顶部全宽精简版 -->
+    <div class="home-top">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-size:16px;">✦</span>
+        <span style="font-size:15px; font-weight:700;">今日主线</span>
+        <span style="font-size:10px; color:var(--text-muted); margin-left:8px;">生成时间：2026-05-20 09:15</span>
+      </div>
+      <div style="font-size:13px; font-weight:600; margin-bottom:6px; line-height:1.5;">半导体集体走强，北向资金净买42亿，关注高位股分歧</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+        中美贸易谈判释放积极信号，推动半导体、光模块板块集体走强。北向资金单日净买入42亿元，主要加仓算力基建方向。英伟达H20获批进度加速，产业链订单确认度进一步提升。新能源车板块受欧盟关税下调预期催化，宁德时代匈牙利工厂进度超预期。创业板量能连续两日萎缩，高位股出现分歧，注意节奏把控。
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="tag tag-cyan">算力基建</span>
+          <span class="tag tag-blue">新能源出海</span>
+          <span class="tag tag-gold">消费修复</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
+      </div>
+    </div>
+
     <div class="home-grid">
       <div class="home-left">
+        <!-- 热点个股/大涨个股/自选股/资讯热点 tab切换 -->
         <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>热点个股</div>
-            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
+          <div style="display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); margin:-16px -16px 12px; padding:0 16px; flex-wrap:wrap;">
+            <div class="market-hot-tab active" onclick="switchMarketHotTab('hot')" style="padding:10px 12px; font-size:13px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue); color:var(--accent-blue);">热点个股</div>
+            <div class="market-hot-tab" onclick="switchMarketHotTab('rise')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">大涨个股</div>
+            <div class="market-hot-tab" onclick="switchMarketHotTab('watchlist')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">自选股</div>
+            <div class="market-hot-tab" onclick="switchMarketHotTab('news')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">资讯热点</div>
+            <span class="section-more" style="margin-left:auto;" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
           </div>
-          <div id="stock-ranking-market"></div>
+          <div id="market-tab-hot"></div>
+          <div id="market-tab-rise" style="display:none;"></div>
+          <div id="market-tab-watchlist" style="display:none;"></div>
+          <div id="market-tab-news" style="display:none;"></div>
         </div>
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>大涨个股</div>
-            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
-          </div>
-          <div id="stock-rise-market"></div>
-        </div>
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title"><span class="dot"></span>资讯热点</div>
-            <span class="section-more" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
-          </div>
-          <div id="research-news-market"></div>
-        </div>
+      </div>
+      <div class="home-right">
+        <!-- 专家会议 -->
         <div>
           <div class="section-header">
             <div class="section-title"><span class="dot"></span>专家会议</div>
             <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
           </div>
-          <div class="card-grid card-grid-3" id="meeting-preview-market"></div>
+          <div class="card-grid card-grid-3" id="meeting-preview-market" style="grid-template-columns:1fr;"></div>
         </div>
+        <!-- 信源监控快报 -->
         <div class="card">
           <div class="section-header">
             <div class="section-title"><span class="dot"></span>信源监控快报</div>
             <span class="section-more" onclick="navigateTo('monitor')">全部记录 ›</span>
           </div>
           <div id="source-feed-market"></div>
-        </div>
-      </div>
-      <div class="home-right">
-        <!-- 今日主线 -->
-        <div class="ai-weekly-card">
-          <div class="ai-weekly-header">
-            <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span style="font-size:16px;">✦</span>
-                <span style="font-size:15px; font-weight:700;">今日主线</span>
-              </div>
-              <div style="font-size:10px; color:var(--text-muted);">AI生成 · 全市场热点解读</div>
-            </div>
-            <div class="ai-weekly-ep-num">05.20</div>
-          </div>
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">生成时间：2026-05-20 09:15</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:8px; line-height:1.5;">半导体集体走强，北向资金净买42亿，关注高位股分歧</div>
-          <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:12px;">
-            中美贸易谈判释放积极信号，推动半导体、光模块板块集体走强。北向资金单日净买入42亿元，主要加仓算力基建方向。英伟达H20获批进度加速，产业链订单确认度进一步提升。新能源车板块受欧盟关税下调预期催化，宁德时代匈牙利工厂进度超预期。创业板量能连续两日萎缩，高位股出现分歧，注意节奏把控。
-          </div>
-          <div style="font-size:12px; color:var(--text-secondary); line-height:1.9; margin-bottom:12px;">
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线一：算力基建</strong></div>
-            <p style="margin-bottom:6px;">H20芯片合规出口框架推进顺利，中科曙光/浪潮信息订单充沛。PCB载板环节深南电路获英伟达认证放量，光模块中际旭创800G持续导入。板块确定性最强，建议逢低配置。</p>
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线二：新能源出海</strong></div>
-            <p style="margin-bottom:6px;">欧盟拟将中国电动车关税从37.6%下调至17-20%，6月初公布。宁德时代海外产能投放加速，储能业务收入占比突破25%。比亚迪泰国工厂已量产，出海逻辑持续兑现。</p>
-            <div style="margin-bottom:8px;"><strong style="color:var(--text-primary);">主线三：消费修复</strong></div>
-            <p>五一社零数据超预期，免税渠道增速+22%领跑。中国中免客单价环比提升15%，叠加离岛免税政策优化预期，消费板块估值有修复空间。白酒库存压力仍在，关注Q2动销数据。</p>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-            <span class="tag tag-cyan">算力基建</span>
-            <span class="tag tag-blue">新能源出海</span>
-            <span class="tag tag-gold">消费修复</span>
-          </div>
-          <div style="display:flex; justify-content:flex-end; align-items:center;">
-            <button class="btn btn-primary btn-sm" onclick="openAiGlobal();showProductView('doc-1')">查看完整解读 ›</button>
-          </div>
         </div>
       </div>
     </div>
@@ -2190,6 +2266,31 @@ body {
   </div>
 
   <!-- Meeting Detail Overlay -->
+  <!-- Detail Overlay (三栏浮层) -->
+  <div id="detail-overlay" onclick="if(event.target===this)closeDetailOverlay()">
+    <div class="detail-overlay-inner">
+      <div class="do-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="do-header-title" style="font-size:15px; font-weight:700;"></span>
+          <span id="do-header-count" style="font-size:11px; color:var(--text-muted);"></span>
+        </div>
+        <button class="detail-close" onclick="closeDetailOverlay()">✕</button>
+      </div>
+      <div class="do-list" id="do-list"></div>
+      <div class="do-content" id="do-content"></div>
+      <div class="do-chat">
+        <div class="do-chat-header" id="do-chat-title">AI 对话</div>
+        <div class="do-chat-messages" id="do-chat-messages">
+          <div class="do-chat-bubble ai">你好！我可以帮你分析这条内容。有什么想了解的？</div>
+        </div>
+        <div class="do-chat-input-area">
+          <input type="text" id="do-chat-input" placeholder="输入问题..." onkeydown="if(event.key==='Enter')sendDetailChat()">
+          <button class="btn btn-primary btn-sm" onclick="sendDetailChat()">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="detail-overlay" id="meeting-detail">
     <div class="detail-panel" id="meeting-detail-panel" style="width:960px;">
     </div>
@@ -2225,7 +2326,7 @@ body {
     <!-- Records View -->
     <div class="monitor-view active" id="tab-records">
       <div class="records-layout">
-        <div class="card" style="max-height:calc(100vh - 220px); overflow-y:auto;">
+        <div class="card">
           <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;" id="monitor-filter-chips">
             <span class="filter-chip active" style="font-size:10px; padding:3px 8px;" onclick="filterMonitorByIndustry('all')">全部</span>
             <span class="filter-chip" style="font-size:10px; padding:3px 8px;" onclick="filterMonitorByIndustry('ai')">AI产业</span>
@@ -2240,7 +2341,7 @@ body {
         </div>
         <div class="ai-daily">
           <div class="card ai-daily-card">
-            <div class="ai-daily-title"><span style="color:var(--accent-cyan)">✦</span> AI 信源日报</div>
+            <div class="ai-daily-title"><span style="color:var(--accent-cyan)">✦</span> <span id="ai-daily-title-text">信源日报</span> <button class="btn btn-cyan btn-sm" style="margin-left:auto; font-size:10px; padding:3px 10px;" onclick="openAiGlobal();newAiSession('joke')">✦ 生成点评</button></div>
             <div class="ai-daily-date">2026-05-14 · 基于今日 47 条监控触发</div>
             <div class="ai-daily-content">
               <p><strong>半导体：</strong>英伟达H20获批消息持续发酵，产业链上游PCB厂商排产饱满。中科曙光获大额服务器订单（约12亿），浪潮信息亦传出类似消息。</p>
@@ -2248,9 +2349,6 @@ body {
               <p><strong>消费：</strong>五一黄金周消费数据今日公布，社零同比+6.8%超预期，免税板块催化明确。</p>
               <p><strong>风险信号：</strong>地产板块多只个股触及跌停，万科A盘后公告拟配股融资，注意信用风险传导。</p>
             </div>
-            <button class="btn btn-cyan" onclick="document.getElementById('joke-modal').classList.add('show')">✦ 一键生成段子</button>
-            <button class="btn btn-outline btn-sm" style="margin-left:8px;" onclick="showToast('已推送至微信')">推送微信</button>
-          </div>
         </div>
       </div>
     </div>
@@ -2265,7 +2363,8 @@ body {
         <input class="stock-search" placeholder="搜索股票代码或名称..." />
       </div>
       <div class="stock-recent">
-        <div class="stock-chip active" onclick="switchPeerStock(this,'曙光')">中科曙光</div>
+        <span style="font-size:11px; color:var(--text-muted); margin-right:4px;">同业对比</span>
+        <div class="stock-chip active" onclick="switchPeerStock(this,'千里')">千里科技 <span class="tag tag-cyan" style="font-size:9px; padding:1px 4px; margin-left:4px;">阶跃生态圈</span></div>
         <div class="stock-chip" onclick="switchPeerStock(this,'浪潮')">浪潮信息</div>
         <div class="stock-chip" onclick="switchPeerStock(this,'新华三')">新华三</div>
         <div class="stock-chip" onclick="switchPeerStock(this,'紫光')">紫光股份</div>
@@ -2276,22 +2375,22 @@ body {
       <div class="stock-main">
         <div class="card stock-hero">
           <div class="stock-name-block">
-            <div class="stock-code">603019.SH</div>
-            <div class="stock-name-lg">中科曙光</div>
+            <div class="stock-code">688XXX.SH</div>
+            <div class="stock-name-lg">千里科技</div>
             <div style="display:flex; gap:6px; margin-top:6px;">
-              <span class="tag tag-blue">半导体</span>
-              <span class="tag tag-cyan">算力</span>
-              <span class="tag tag-gold">国产替代</span>
+              <span class="tag tag-blue">AI应用</span>
+              <span class="tag tag-cyan">阶跃生态圈</span>
+              <span class="tag tag-gold">智能终端</span>
             </div>
           </div>
           <div class="stock-price-block">
-            <div class="stock-price-lg val-up">58.72</div>
-            <div class="stock-change-lg val-up">+3.26 (+5.88%)</div>
+            <div class="stock-price-lg val-up">126.35</div>
+            <div class="stock-change-lg val-up">+8.62 (+7.32%)</div>
             <div class="stock-meta-row">
-              <div class="stock-meta-item"><div class="stock-meta-label">市值</div><div class="stock-meta-value">868亿</div></div>
-              <div class="stock-meta-item"><div class="stock-meta-label">PE(TTM)</div><div class="stock-meta-value">42.3x</div></div>
-              <div class="stock-meta-item"><div class="stock-meta-label">PB</div><div class="stock-meta-value">5.8x</div></div>
-              <div class="stock-meta-item"><div class="stock-meta-label">PS</div><div class="stock-meta-value">3.2x</div></div>
+              <div class="stock-meta-item"><div class="stock-meta-label">市值</div><div class="stock-meta-value">320亿</div></div>
+              <div class="stock-meta-item"><div class="stock-meta-label">PE(TTM)</div><div class="stock-meta-value">55.8x</div></div>
+              <div class="stock-meta-item"><div class="stock-meta-label">PB</div><div class="stock-meta-value">8.2x</div></div>
+              <div class="stock-meta-item"><div class="stock-meta-label">PS</div><div class="stock-meta-value">6.5x</div></div>
             </div>
           </div>
         </div>
@@ -2300,7 +2399,7 @@ body {
           <div class="rating-score">82</div>
           <div class="rating-info">
             <div class="rating-label">AI 综合投研评分</div>
-            <div class="rating-text">基于 23 篇研报、4 场AI专家会议纪要、187 条信源、12 条一线调研数据 — 中科曙光受益英伟达H20特供芯片获批，服务器集成业务订单能见度至Q4，短期具备向上催化，但估值已处历史80%分位，建议逢低布局。</div>
+            <div class="rating-text">基于 18 篇研报、3 场AI专家会议纪要、142 条信源、8 条一线调研数据 — 千里科技作为阶跃星辰核心生态企业，受益大模型端侧部署加速，智能终端出货量Q2环比增长85%，短期催化明确，但估值已处历史高位，建议逢低分批布局。<sup class="ref-mark" onclick="highlightRef(1)">1</sup></div>
           </div>
         </div>
 
@@ -2335,10 +2434,10 @@ body {
               <span class="analysis-arrow">▼</span>
             </div>
             <div class="analysis-body open">
-              <p>中科曙光是国内领先的高性能计算与服务器厂商，核心业务包括：</p>
-              <p style="margin-top:8px;"><strong style="color:var(--text-primary);">1. 高端计算机（占比58%）：</strong>AI服务器、超算中心建设，主要客户为政府、科研院所和大型云厂商。2025年AI服务器收入同比增长47%。</p>
-              <p style="margin-top:6px;"><strong style="color:var(--text-primary);">2. 存储（占比22%）：</strong>海光信息（持股32%）为核心利润来源，海光DCU芯片在国产GPU中市占率第一。</p>
-              <p style="margin-top:6px;"><strong style="color:var(--text-primary);">3. 云计算服务（占比20%）：</strong>曙光云在多个城市落地智算中心，政务云市占率Top5。</p>
+              <p>千里科技是阶跃星辰核心生态企业，专注于AI智能终端与端侧大模型部署，核心业务包括：<sup class="ref-mark" onclick="highlightRef(2)">2</sup></p>
+              <p style="margin-top:8px;"><strong style="color:var(--text-primary);">1. AI智能终端（占比52%）：</strong>基于阶跃Step系列模型的端侧AI设备，覆盖智能音箱、车载终端、教育硬件。2025年出货量同比增长120%。<sup class="ref-mark" onclick="highlightRef(3)">3</sup></p>
+              <p style="margin-top:6px;"><strong style="color:var(--text-primary);">2. 模型适配服务（占比28%）：</strong>为企业客户提供大模型端侧部署、微调与适配服务，客户包括多家头部车企和消费电子厂商。<sup class="ref-mark" onclick="highlightRef(4)">4</sup></p>
+              <p style="margin-top:6px;"><strong style="color:var(--text-primary);">3. 数据服务（占比20%）：</strong>AI训练数据标注与质量管理平台，为阶跃等大模型厂商提供高质量语料支持。<sup class="ref-mark" onclick="highlightRef(5)">5</sup></p>
             </div>
           </div>
           <div class="analysis-section">
@@ -2353,8 +2452,8 @@ body {
                 <div class="bar-col"><div class="bar-value val-up mono">+34%</div><div class="bar" style="height:72px; background:var(--accent-blue);"></div><div class="bar-label">2024</div></div>
                 <div class="bar-col"><div class="bar-value val-up mono">+47%</div><div class="bar" style="height:92px; background:linear-gradient(var(--accent-cyan), var(--accent-blue));"></div><div class="bar-label">2025E</div></div>
               </div>
-              <p style="margin-top:12px;">营收增速：连续4年保持双位数增长，2025年预计营收280亿元（+34%）。毛利率稳定在22-24%区间，净利率受海光投资收益波动影响较大。</p>
-              <p style="margin-top:8px;">现金流：经营性现金流净额15.2亿（+62%），资本开支主要投向智算中心建设。资产负债率42%，财务状况健康。</p>
+              <p style="margin-top:12px;">营收增速：连续3年保持高增长，2025年预计营收68亿元（+82%）。毛利率稳定在35-38%区间，端侧AI设备毛利高于行业平均。<sup class="ref-mark" onclick="highlightRef(6)">6</sup></p>
+              <p style="margin-top:8px;">现金流：经营性现金流净额8.5亿（+95%），资本开支主要投向端侧芯片研发和产线扩建。资产负债率28%，财务结构稳健。<sup class="ref-mark" onclick="highlightRef(7)">7</sup></p>
             </div>
           </div>
           <div class="analysis-section">
@@ -2363,8 +2462,8 @@ body {
               <span class="analysis-arrow">▼</span>
             </div>
             <div class="analysis-body">
-              <p>国内AI服务器市场格局：浪潮信息（30%）> 新华三（18%）> 中科曙光（15%）> 联想（12%）。曙光在政府/科研领域市占率第一，正加速向互联网客户渗透。</p>
-              <p style="margin-top:8px;">核心竞争优势：① 海光信息（国产x86 CPU + DCU GPU）形成芯片级自主可控能力 ② 智算中心一体化交付能力 ③ 政府客户粘性强。</p>
+              <p>国内AI智能终端市场格局：千里科技（22%）> 科大讯飞（18%）> 商汤绝影（12%）> 思必驰（8%）。千里科技在端侧大模型部署领域市占率第一，依托阶跃Step系列模型形成差异化优势。<sup class="ref-mark" onclick="highlightRef(8)">8</sup></p>
+              <p style="margin-top:8px;">核心竞争优势：① 阶跃生态独家合作，Step系列模型端侧首发 ② 自研NPU芯片实现端云协同 ③ 车企客户绑定深，定点项目锁定3年需求。<sup class="ref-mark" onclick="highlightRef(9)">9</sup></p>
             </div>
           </div>
           <div class="analysis-section">
@@ -2386,9 +2485,9 @@ body {
             </div>
             <div class="analysis-body">
               <p><strong style="color:var(--accent-cyan);">短期催化（1-3个月）：</strong></p>
-              <p>① 英伟达H20特供芯片正式获批交付 ② Q2业绩预告（市场预期净利润+40%）③ 国家智算中心第二批招标启动</p>
+              <p>① 阶跃Step-3模型端侧版正式发布 ② Q2业绩预告（市场预期净利润+120%）③ 新一代车载AI终端获头部车企定点<sup class="ref-mark" onclick="highlightRef(10)">10</sup></p>
               <p style="margin-top:10px;"><strong style="color:var(--accent-cyan);">中长期逻辑（6-12个月）：</strong></p>
-              <p>① 海光DCU第四代芯片流片 ② AI推理需求爆发带动服务器换机潮 ③ 信创2.0政策推动国产替代加速</p>
+              <p>① 阶跃万亿参数模型开放端侧API ② AI眼镜/耳机品类爆发带动出货量 ③ 海外市场开拓（东南亚+中东）</p>
             </div>
           </div>
           <div class="analysis-section">
@@ -2481,62 +2580,117 @@ body {
           <div class="source-refs">
             <span class="source-ref">📄 华泰证券 · 深度报告 · 2026.05.12</span>
             <span class="source-ref">📄 中信证券 · 点评 · 2026.05.10</span>
-            <span class="source-ref">🎙 AI专家会议 · H20产业链解读 · 2026.05.14</span>
-            <span class="source-ref">🎙 AI专家会议 · 算力产业趋势 · 2026.05.08</span>
+            <span class="source-ref">🎙 AI专家会议 · 千里科技端侧AI解读 · 2026.05.14</span>
+            <span class="source-ref">🎙 AI专家会议 · 智能终端趋势 · 2026.05.08</span>
             <span class="source-ref">📢 上市公司公告 · 2026Q1业绩快报</span>
-            <span class="source-ref">📊 一线调研 · Q2订单数据 · 12条</span>
+            <span class="source-ref">📊 一线调研 · Q2出货数据 · 8条</span>
           </div>
         </div>
       </div>
 
       <div class="stock-sidebar">
-        <div class="card" style="padding:12px;">
-          <div class="text-xs mb-8" style="color:var(--text-muted);">日K线（近30日）</div>
-          <svg viewBox="0 0 260 80" style="width:100%; height:80px;">
-            <defs><linearGradient id="kg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(34,197,94,0.3)"/><stop offset="100%" stop-color="rgba(34,197,94,0)"/></linearGradient></defs>
-            <path d="M0,60 L9,55 L18,52 L27,58 L36,50 L45,45 L54,48 L63,42 L72,38 L81,40 L90,35 L99,32 L108,36 L117,30 L126,28 L135,32 L144,25 L153,22 L162,26 L171,20 L180,18 L189,22 L198,15 L207,12 L216,16 L225,10 L234,8 L243,12 L252,5 L260,2" fill="url(#kg)" stroke="none"/>
-            <path d="M0,60 L9,55 L18,52 L27,58 L36,50 L45,45 L54,48 L63,42 L72,38 L81,40 L90,35 L99,32 L108,36 L117,30 L126,28 L135,32 L144,25 L153,22 L162,26 L171,20 L180,18 L189,22 L198,15 L207,12 L216,16 L225,10 L234,8 L243,12 L252,5 L260,2" fill="none" stroke="var(--green)" stroke-width="1.5"/>
-          </svg>
-        </div>
-
-
-        <div class="card" style="padding:12px;">
-          <div class="text-xs mb-8" style="color:var(--text-muted);">相关AI专家会议</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" onclick="navigateTo('meetings')">
-              <div class="text-xs" style="color:var(--text-muted); font-family:var(--font-mono);">05-14 14:00</div>
-              <div style="font-size:11px; margin-top:2px;">英伟达中国特供芯片深度解读</div>
-            </div>
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" onclick="navigateTo('meetings')">
-              <div class="text-xs" style="color:var(--text-muted); font-family:var(--font-mono);">05-08 10:00</div>
-              <div style="font-size:11px; margin-top:2px;">算力产业2026年趋势展望</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="padding:12px;">
-          <div class="text-xs mb-8" style="color:var(--text-muted);">相关信源信息</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" onclick="navigateTo('page-monitor')">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <span class="text-xs" style="color:var(--text-muted); font-family:var(--font-mono);">14:58</span>
-                <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">财联社电报</span>
+        <div class="card" style="padding:16px;">
+          <div style="font-size:13px; font-weight:700; margin-bottom:12px;">参考资料</div>
+          <div id="stock-ref-list" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="ref-item" id="ref-1" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">1</span>
+                <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">研报</span>
+                <span style="font-size:10px; color:var(--text-muted);">华泰证券</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-12</span>
               </div>
-              <div style="font-size:11px; margin-top:3px; line-height:1.4;">英伟达中国区负责人已抵京，首批H20芯片已通过海关审批</div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技深度：端侧大模型的最优载体</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">阶跃生态核心标的，端侧AI终端出货量高增，上调目标价至160元...</div>
             </div>
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" onclick="navigateTo('page-monitor')">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <span class="text-xs" style="color:var(--text-muted); font-family:var(--font-mono);">11:30</span>
-                <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">华泰证券</span>
+            <div class="ref-item" id="ref-2" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">2</span>
+                <span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">互联网</span>
+                <span style="font-size:10px; color:var(--text-muted);">36氪</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-11</span>
               </div>
-              <div style="font-size:11px; margin-top:3px; line-height:1.4;">中科曙光Q2 AI服务器订单环比增长60%，主要来自互联网大厂</div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">独家丨千里科技完成C轮融资，阶跃星辰领投</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">知情人士透露，千里科技C轮融资由阶跃星辰领投，估值突破300亿...</div>
             </div>
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" onclick="navigateTo('page-monitor')">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <span class="text-xs" style="color:var(--text-muted); font-family:var(--font-mono);">12:45</span>
-                <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">财联社电报</span>
+            <div class="ref-item" id="ref-3" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">3</span>
+                <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">公告</span>
+                <span style="font-size:10px; color:var(--text-muted);">上交所</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-10</span>
               </div>
-              <div style="font-size:11px; margin-top:3px; line-height:1.4;">中芯国际天津28nm产线扩产至月产5万片，国产算力供应链受益</div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技2026Q1业绩快报：营收18.5亿，同比+120%</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">端侧AI终端出货量超预期，模型适配服务收入环比增长65%...</div>
+            </div>
+            <div class="ref-item" id="ref-4" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">4</span>
+                <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">研报</span>
+                <span style="font-size:10px; color:var(--text-muted);">中信证券</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-09</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技跟踪：车载终端定点项目超预期</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">头部车企定点项目落地，锁定未来3年需求，维持买入评级...</div>
+            </div>
+            <div class="ref-item" id="ref-5" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">5</span>
+                <span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">互联网</span>
+                <span style="font-size:10px; color:var(--text-muted);">机器之心</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-08</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技数据标注平台获阶跃星辰年度大单</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">高质量语料供应，年度合同金额超2亿，数据服务业务增长确定性强...</div>
+            </div>
+            <div class="ref-item" id="ref-6" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">6</span>
+                <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">公告</span>
+                <span style="font-size:10px; color:var(--text-muted);">上交所</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-06</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技2025年报：营收37.5亿，净利4.8亿</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">毛利率37.2%，经营现金流8.5亿，资产负债率28%，财务结构稳健...</div>
+            </div>
+            <div class="ref-item" id="ref-7" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">7</span>
+                <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">研报</span>
+                <span style="font-size:10px; color:var(--text-muted);">国泰君安</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-05</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技：端侧芯片自研进展超预期</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">NPU芯片流片成功，端云协同能力再上台阶，给予买入评级...</div>
+            </div>
+            <div class="ref-item" id="ref-8" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">8</span>
+                <span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">点评</span>
+                <span style="font-size:10px; color:var(--text-muted);">量子位</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-03</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">AI智能终端市场格局：千里科技份额升至22%</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">端侧大模型部署领域市占率第一，阶跃Step模型独家绑定形成壁垒...</div>
+            </div>
+            <div class="ref-item" id="ref-9" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">9</span>
+                <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">调研</span>
+                <span style="font-size:10px; color:var(--text-muted);">一线调研</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">05-01</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">千里科技深圳总部实地调研纪要</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">自研NPU芯片端云协同能力验证通过，车企定点3年需求锁定...</div>
+            </div>
+            <div class="ref-item" id="ref-10" style="padding:10px; background:var(--bg-primary); border-radius:6px; border-left:3px solid transparent; transition:border-color 0.3s;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; font-weight:700; color:var(--accent-blue); background:rgba(45,127,249,0.1); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;">10</span>
+                <span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">互联网</span>
+                <span style="font-size:10px; color:var(--text-muted);">财联社</span>
+                <span style="font-size:10px; color:var(--text-muted); margin-left:auto; font-family:var(--font-mono);">04-28</span>
+              </div>
+              <div style="font-size:11px; font-weight:500; line-height:1.5;">阶跃星辰Step-3端侧版将于Q2发布，千里科技首发搭载</div>
+              <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-top:3px;">万亿参数模型端侧蒸馏版，推理速度提升3倍，千里科技独家首发...</div>
             </div>
           </div>
         </div>
@@ -2603,7 +2757,7 @@ body {
 <!-- AI GLOBAL FULLSCREEN (三栏 Cowork 布局) -->
 <div class="ai-global-overlay" id="ai-global">
   <div class="ai-global-left">
-    <div class="ai-global-back" onclick="closeAiGlobal()">← 返回工作台</div>
+    <div class="ai-global-back" onclick="closeAiGlobal()">← 返回主页</div>
     <div class="ai-global-actions">
       <div class="ai-global-action active" onclick="newAiSession('general')">
         <span class="ai-action-icon">+</span>
@@ -2618,8 +2772,8 @@ body {
         <span>写PPT</span>
       </div>
       <div class="ai-global-action" onclick="newAiSession('joke')">
-        <span class="ai-action-icon">😂</span>
-        <span>写段子</span>
+        <span class="ai-action-icon">✦</span>
+        <span>写点评</span>
       </div>
       <div class="ai-global-action" onclick="newAiSession('monitor-center')">
         <span class="ai-action-icon">📡</span>
@@ -2674,7 +2828,7 @@ body {
       </div>
     </div>
     <!-- 产物模式: 右侧变为聊天 -->
-    <div class="ai-global-right-chat" id="ai-global-right-chat" style="display:none;">
+    <div class="ai-global-right-chat" id="ai-global-right-chat" style="display:none; flex-direction:column;">
       <div style="padding:12px 16px; border-bottom:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text-muted);">对话</div>
       <div class="ai-global-right-chat-body" id="ai-global-right-chat-body"></div>
       <div class="ai-global-right-products" id="ai-global-right-products"></div>
@@ -2767,22 +2921,21 @@ body {
   <div class="detail-panel" style="width:560px;">
     <div class="detail-header">
       <div>
-        <div style="font-size:16px; font-weight:700;">✦ 段子生成结果</div>
+        <div style="font-size:16px; font-weight:700;">✦ 点评生成结果</div>
         <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">基于今日47条监控信源 AI 生成</div>
       </div>
       <button class="detail-close" onclick="document.getElementById('joke-modal').classList.remove('show')">✕</button>
     </div>
     <div class="detail-body">
       <div style="background:var(--bg-primary); border-radius:8px; padding:20px; font-size:13px; color:var(--text-primary); line-height:2; margin-bottom:16px;">
-        <p>【今日A股段子】</p>
-        <p style="margin-top:8px;">英伟达老板飞北京了，半导体板块先涨为敬。中科曙光涨了快6个点，股民高呼"曙光在前"。</p>
-        <p style="margin-top:8px;">隔壁万科配股融资150亿还债，地产股集体跌停。有人说这叫"拆东墙补西墙"，万科说"我是拆股东的墙补债主的墙"。</p>
-        <p style="margin-top:8px;">今天最精分的是茅台股民——五一消费数据超预期，喝酒的人变多了，但茅台就是不涨。有人总结：消费复苏利好一切，除了白酒。</p>
-        <p style="margin-top:8px;">北向资金净买入42亿，终于不当"北向渣男"了，希望这次能多待几天。</p>
+        <p>【今日AI产业点评】</p>
+        <p style="margin-top:8px;">🔹 <b>千里科技(688XXX)</b>：智算集群订单持续放量，Q1净利润+58% YoY，阶跃星辰深度合作落地带来增量。目标价看150e，当前126仍有空间。核心关注Q2大单兑现节奏。</p>
+        <p style="margin-top:8px;">🔹 <b>英伟达H20获批</b>：算力链利好兑现，但市场预期已较充分。浪潮信息、中科曙光短期或有获利了结压力，建议关注回调后的布局机会。</p>
+        <p style="margin-top:8px;">🔹 <b>消费板块</b>：五一数据超预期，免税/酒店/航空修复逻辑确认。中国中免(601888)估值修复至35xPE，但海南离岛免税政策红利收窄，后续看暑期旺季验证。</p>
+        <p style="margin-top:8px;">🔹 <b>地产风险提示</b>：万科配股融资150亿还债，信用风险未消。地产链整体建议规避，关注代建/物管等轻资产方向。</p>
       </div>
       <div style="display:flex; gap:8px;">
         <button class="btn btn-primary btn-sm" onclick="showToast('已复制到剪贴板'); document.getElementById('joke-modal').classList.remove('show');">复制内容</button>
-        <button class="btn btn-cyan btn-sm" onclick="showToast('已推送至微信'); document.getElementById('joke-modal').classList.remove('show');">推送微信</button>
         <button class="btn btn-outline btn-sm" onclick="showToast('正在重新生成...')">换一版</button>
       </div>
     </div>
@@ -2931,6 +3084,66 @@ const stockRankingData = [
       { name: '推理加速', up: true },
     ]
   },
+  {
+    rank: 6,
+    title: '金山办公（688111）',
+    price: '328.50',
+    change: '+3.22%',
+    up: true,
+    content: 'WPS AI MAU突破5000万，企业版ARPU提升40%。AI写作、PPT生成等功能日均调用量超200万次，付费转化率持续攀升。国产办公软件AI化标杆，C端+B端双轮驱动增长。',
+    tags: [
+      { name: 'AI应用', up: true },
+      { name: 'SaaS', up: true },
+    ]
+  },
+  {
+    rank: 7,
+    title: '海光信息（688041）',
+    price: '92.15',
+    change: '+2.87%',
+    up: true,
+    content: 'DCU四代芯片流片顺利，FP16算力较三代提升2.5倍，推理能效比接近A100。多个国产大模型已完成适配，软件生态持续完善。国产GPU替代主线核心受益标的。',
+    tags: [
+      { name: '国产GPU', up: true },
+      { name: '算力芯片', up: true },
+    ]
+  },
+  {
+    rank: 8,
+    title: '浪潮信息（000977）',
+    price: '36.80',
+    change: '+3.42%',
+    up: true,
+    content: 'AI服务器出货量全球前三，H20订单确认后Q2出货环比增长50%。公司液冷服务器技术领先，新一代PF5模块散热效率提升30%，满足大规模AI训练集群部署需求。',
+    tags: [
+      { name: 'AI服务器', up: true },
+      { name: '液冷', up: true },
+    ]
+  },
+  {
+    rank: 9,
+    title: '兴森科技（002436）',
+    price: '28.45',
+    change: '+2.95%',
+    up: true,
+    content: 'IC载板扩产项目进度超预期，珠海新厂Q3投产后月产能翻倍。ABF载板配合英伟达H20验证工作加速推进，有望成为第二家通过认证的国内企业。半导体封装升级核心受益。',
+    tags: [
+      { name: 'IC载板', up: true },
+      { name: '半导体封装', up: true },
+    ]
+  },
+  {
+    rank: 10,
+    title: '新易盛（300502）',
+    price: '86.20',
+    change: '+2.68%',
+    up: true,
+    content: '硅光方案进入头部云厂商验证阶段，800G产品出货量Q2环比增长60%。公司在硅光集成领域布局领先，1.6T产品预计Q4送样。光模块赛道高弹性标的，AI算力扩张核心受益。',
+    tags: [
+      { name: '光模块', up: true },
+      { name: '硅光', up: true },
+    ]
+  },
 ];
 
 // ========== STOCK RANKING (市场版 - 热点个股) ==========
@@ -2998,6 +3211,67 @@ const marketStockRankingData = [
       { name: '消费升级', up: true },
     ]
   },
+  {
+    rank: 6,
+    title: '招商银行（600036）',
+    price: '38.52',
+    change: '+1.23%',
+    up: true,
+    content: '降准释放长期资金约5500亿，银行间流动性宽松。招行零售AUM突破14万亿，财富管理手续费收入Q1同比+18%。高股息策略持续吸引险资配置，估值修复逻辑清晰。',
+    tags: [
+      { name: '银行', up: true },
+      { name: '高股息', up: true },
+    ]
+  },
+  {
+    rank: 7,
+    title: '宁德时代（300750）',
+    price: '218.50',
+    change: '+2.34%',
+    up: true,
+    content: '匈牙利工厂投产进度超预期，储能业务收入占比提升至25%。固态电池中试线进展良好，全固态样品能量密度达500Wh/kg。欧盟关税下调预期催化出海逻辑进一步强化。',
+    tags: [
+      { name: '锂电', up: true },
+      { name: '出海', up: true },
+      { name: '固态电池', up: true },
+    ]
+  },
+  {
+    rank: 8,
+    title: '恒瑞医药（600276）',
+    price: '52.30',
+    change: '+2.45%',
+    up: true,
+    content: 'GLP-1类减重药首次纳入医保乙类目录，公司GLP-1管线进度国内领先。创新药收入占比突破50%，海外License-out交易金额累计超30亿美元。创新药放量窗口打开。',
+    tags: [
+      { name: '创新药', up: true },
+      { name: 'GLP-1', up: true },
+    ]
+  },
+  {
+    rank: 9,
+    title: '中航沈飞（600760）',
+    price: '48.65',
+    change: '+3.28%',
+    up: true,
+    content: '四代机列装进度超预期，订单饱满支撑未来3年业绩增长。卫星互联网二期招标启动叠加低轨卫星扩产，军工板块催化密集。估值处于近5年20%分位，安全边际充足。',
+    tags: [
+      { name: '军工', up: true },
+      { name: '航空装备', up: true },
+    ]
+  },
+  {
+    rank: 10,
+    title: '中国平安（601318）',
+    price: '52.80',
+    change: '+0.87%',
+    up: true,
+    content: '寿险新业务价值Q1同比+15%，代理人产能提升策略见效。财产险综合成本率优化至96.8%。降准宽松环境下保险资金配置压力缓解，高股息+低估值双重吸引力。',
+    tags: [
+      { name: '保险', up: true },
+      { name: '高股息', up: true },
+    ]
+  },
 ];
 
 // ========== STOCK RANKING (市场版 - 大涨个股) ==========
@@ -3062,19 +3336,79 @@ const marketStockRiseData = [
       { name: '反弹', up: true },
     ]
   },
+  {
+    rank: 6,
+    title: '金山办公（688111）',
+    price: '328.50',
+    change: '+3.22%',
+    up: true,
+    content: 'WPS AI月活突破5000万带动股价连续走强，机构集中上调评级。AI功能付费转化率持续攀升，SaaS模式护城河加深。技术面突破半年线压制，量能有效放大。',
+    tags: [
+      { name: 'AI应用', up: true },
+      { name: '突破', up: true },
+    ]
+  },
+  {
+    rank: 7,
+    title: '科大讯飞（002230）',
+    price: '56.80',
+    change: '+3.15%',
+    up: true,
+    content: '星火4.0大模型教育场景付费转化率达8.3%，AI学习机出货量同比增长120%。C端变现能力超预期催化股价放量上涨。短线3日涨幅超10%，成交额持续放大。',
+    tags: [
+      { name: 'AI教育', up: true },
+      { name: '放量上涨', up: true },
+    ]
+  },
+  {
+    rank: 8,
+    title: '浪潮信息（000977）',
+    price: '36.80',
+    change: '+3.42%',
+    up: true,
+    content: 'H20订单确认后AI服务器出货环比增长50%，液冷新品发布催化股价走强。北向资金连续2日加仓，市场看好算力基建主线持续性。技术面均线多头排列，趋势良好。',
+    tags: [
+      { name: '算力基建', up: true },
+      { name: '北向加仓', up: true },
+    ]
+  },
+  {
+    rank: 9,
+    title: '兴森科技（002436）',
+    price: '28.45',
+    change: '+2.95%',
+    up: true,
+    content: 'IC载板扩产项目进度超预期催化股价补涨。公司是H20产业链PCB板块弹性最大标的之一，ABF载板认证进展顺利。成交额较前期温和放大，筹码结构健康。',
+    tags: [
+      { name: 'IC载板', up: true },
+      { name: '补涨', up: true },
+    ]
+  },
+  {
+    rank: 10,
+    title: '海光信息（688041）',
+    price: '92.15',
+    change: '+2.87%',
+    up: true,
+    content: 'DCU四代芯片流片消息催化，国产GPU替代逻辑持续强化。多家大模型厂商完成适配验证，软件生态护城河逐步建立。股价突破前期平台整理区间，放量创新高。',
+    tags: [
+      { name: '国产GPU', up: true },
+      { name: '创新高', up: true },
+    ]
+  },
 ];
 
 const stockRankingEl = document.getElementById('stock-ranking');
 if (stockRankingEl) {
-  stockRankingData.forEach(item => {
+  stockRankingData.forEach((item, idx) => {
     const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
     stockRankingEl.innerHTML += `
-      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('stock',${idx})">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
           <span style="font-size:13px; font-weight:600;">${item.title}</span>
           <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
-          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
         </div>
         <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
         <div style="padding-left:30px;">${tagsHtml}</div>
@@ -3129,6 +3463,51 @@ const researchNewsData = [
       { name: '海光信息', change: '+2.87%', up: true },
     ]
   },
+  {
+    rank: 6,
+    title: 'AI Agent应用爆发，金山办公WPS AI月活破5000万',
+    content: '金山办公WPS AI功能月活突破5000万，日均AI调用量超200万次。AI写作、PPT生成、数据分析三大场景渗透率最高。企业版ARPU值提升40%，AI功能已成为SaaS续费核心驱动力。',
+    stocks: [
+      { name: '金山办公', change: '+3.22%', up: true },
+      { name: '科大讯飞', change: '+3.15%', up: true },
+    ]
+  },
+  {
+    rank: 7,
+    title: 'AI算力液冷渗透加速，浪潮信息新模块效率提升30%',
+    content: '浪潮信息发布新一代PF5液冷模块，散热效率较上代提升30%，支持50kW单机柜功耗。液冷渗透率在AI训练集群中已超40%，预计2027年达80%。液冷产业链进入放量拐点。',
+    stocks: [
+      { name: '浪潮信息', change: '+3.42%', up: true },
+      { name: '英维克', change: '+2.15%', up: true },
+    ]
+  },
+  {
+    rank: 8,
+    title: '硅光模块进入验证期，1.6T产品2027年量产在即',
+    content: '新易盛硅光方案通过头部云厂商实验室验证，中际旭创1.6T产品Q4送样。硅光集成技术将光模块成本降低40%，是下一代AI算力互联的核心方向。行业从800G向1.6T切换窗口打开。',
+    stocks: [
+      { name: '新易盛', change: '+2.68%', up: true },
+      { name: '中际旭创', change: '+3.67%', up: true },
+    ]
+  },
+  {
+    rank: 9,
+    title: 'IC载板国产化突破，兴森科技ABF产品加速认证',
+    content: '兴森科技ABF载板配合英伟达验证工作加速推进，有望成为继深南电路后第二家通过认证的国内企业。珠海新厂Q3投产，月产能翻倍。半导体先进封装升级带动IC载板需求高增。',
+    stocks: [
+      { name: '兴森科技', change: '+2.95%', up: true },
+      { name: '深南电路', change: '+4.21%', up: true },
+    ]
+  },
+  {
+    rank: 10,
+    title: 'Transformer架构再迭代，阶跃星辰Step-3模型超预期',
+    content: '阶跃星辰发布Step-3万亿参数MoE模型，在多项基准测试中超越GPT-4o。视频生成能力突出，支持60秒高清视频一次性生成。国产大模型第一梯队实力进一步巩固，关注相关算力需求拉动。',
+    stocks: [
+      { name: '中科曙光', change: '+5.88%', up: true },
+      { name: '寒武纪', change: '+4.52%', up: true },
+    ]
+  },
 ];
 
 // ========== RESEARCH NEWS (市场版) ==========
@@ -3178,18 +3557,76 @@ const marketResearchNewsData = [
       { name: '航发动力', change: '+2.15%', up: true },
     ]
   },
+  {
+    rank: 6,
+    title: '光伏组件价格拐点将至，龙头企业加速出清',
+    content: '隆基绿能、天合光能Q2排产环比减少15%，行业产能出清加速。组件价格跌至0.8元/W底部区域，亏损倒逼落后产能退出。N型TOPCon电池效率突破26.5%，技术迭代推动行业洗牌。',
+    stocks: [
+      { name: '隆基绿能', change: '-1.52%', up: false },
+      { name: '天合光能', change: '+0.85%', up: true },
+    ]
+  },
+  {
+    rank: 7,
+    title: '人形机器人量产元年，特斯拉Optimus进展超预期',
+    content: '特斯拉宣布Optimus二代机器人将于2026年底在工厂内部署1000台，外部销售2027年启动。国内三花智控、拓普集团已进入供应链验证，谐波减速器、力传感器环节国产替代空间巨大。',
+    stocks: [
+      { name: '三花智控', change: '+2.56%', up: true },
+      { name: '拓普集团', change: '+1.89%', up: true },
+    ]
+  },
+  {
+    rank: 8,
+    title: '白酒库存压力未解，Q2动销数据成关键验证',
+    content: '渠道调研显示飞天茅台批价小幅回落至2950元，五粮液普五批价稳定在980元附近。经销商库存约4-5周偏高水平，端午旺季动销数据将决定下半年节奏。机构分歧加大，等待拐点信号。',
+    stocks: [
+      { name: '贵州茅台', change: '-0.42%', up: false },
+      { name: '五粮液', change: '-0.28%', up: false },
+    ]
+  },
+  {
+    rank: 9,
+    title: '锂电材料价格企稳，碳酸锂期货止跌回升',
+    content: '碳酸锂期货主力合约回升至8.2万元/吨，较底部反弹12%。下游电池厂补库需求释放，叠加青海盐湖提锂产量受天气影响减产。锂矿股超跌修复行情或持续，但供给过剩格局未根本改变。',
+    stocks: [
+      { name: '天齐锂业', change: '+1.75%', up: true },
+      { name: '赣锋锂业', change: '+1.42%', up: true },
+    ]
+  },
+  {
+    rank: 10,
+    title: '半导体设备国产化率提升，北方华创订单创新高',
+    content: '北方华创Q1新签订单超60亿创历史新高，刻蚀机、薄膜设备国产化率突破35%。中芯国际扩产叠加存储厂商资本开支回暖，国产半导体设备进入订单兑现加速期。',
+    stocks: [
+      { name: '北方华创', change: '+2.32%', up: true },
+      { name: '中微公司', change: '+1.67%', up: true },
+    ]
+  },
+];
+
+const watchlistStockData = [
+  { rank: 1, title: '中科曙光（603019）', price: '58.72', change: '+5.88%', up: true, content: 'H20合规出口获突破性进展，AI服务器订单大幅增长。算力基建主线核心标的，机构一致预期上调。', tags: [{ name: '算力基建', up: true }, { name: 'H20', up: true }] },
+  { rank: 2, title: '宁德时代（300750）', price: '218.50', change: '+2.34%', up: true, content: '匈牙利工厂投产超预期，储能收入占比提升至25%。欧盟关税下调预期催化出海逻辑。', tags: [{ name: '锂电', up: true }, { name: '出海', up: true }] },
+  { rank: 3, title: '贵州茅台（600519）', price: '1,652.00', change: '-0.42%', up: false, content: '批价回落至2950元，经销商库存偏高。i茅台直销提价策略推进中，关注Q2动销数据。', tags: [{ name: '白酒', up: false }, { name: '消费', up: false }] },
+  { rank: 4, title: '比亚迪（002594）', price: '312.80', change: '+1.56%', up: true, content: '4月销量37.6万辆同比+28%再创新高，海外出货突破5万辆。智驾天神之眼下放10万级车型。', tags: [{ name: '新能源车', up: true }, { name: '智驾', up: true }] },
+  { rank: 5, title: '中际旭创（300308）', price: '142.50', change: '+3.67%', up: true, content: '800G光模块大规模导入头部云厂商，1.6T产品研发进度超预期。AI算力扩张核心受益。', tags: [{ name: '光模块', up: true }, { name: '800G', up: true }] },
+  { rank: 6, title: '招商银行（600036）', price: '38.52', change: '+1.23%', up: true, content: '零售AUM突破14万亿，财富管理手续费Q1同比+18%。高股息策略持续吸引配置。', tags: [{ name: '银行', up: true }, { name: '高股息', up: true }] },
+  { rank: 7, title: '恒瑞医药（600276）', price: '52.30', change: '+2.45%', up: true, content: 'GLP-1减重药纳入医保乙类目录，公司管线进度国内领先。创新药收入占比突破50%。', tags: [{ name: '创新药', up: true }, { name: 'GLP-1', up: true }] },
+  { rank: 8, title: '寒武纪（688256）', price: '238.60', change: '+4.52%', up: true, content: '思元590推理芯片获多家验证，MLU Arch 05架构FP16算力提升3倍。国产算力最强弹性。', tags: [{ name: 'AI芯片', up: true }, { name: '国产替代', up: true }] },
+  { rank: 9, title: '深南电路（002916）', price: '142.30', change: '+4.21%', up: true, content: 'ABF载板通过英伟达认证，Q3批量供货确定性高。国内唯一同时量产IC载板和HDI的企业。', tags: [{ name: 'PCB载板', up: true }, { name: '半导体封装', up: true }] },
+  { rank: 10, title: '片仔癀（600436）', price: '268.90', change: '+2.08%', up: true, content: '锭剂提价8%至760元/粒，化妆品子公司营收同比增长35%。天然牛黄库存充裕。', tags: [{ name: '中药', up: true }, { name: '提价', up: true }] },
 ];
 
 const researchNewsEl = document.getElementById('research-news');
 if (researchNewsEl) {
-  researchNewsData.forEach(item => {
+  researchNewsData.forEach((item, idx) => {
     const stocksHtml = item.stocks.map(s => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${s.name}</span> <span class="${s.up ? 'val-up' : 'val-down'}">${s.change}</span></span>`).join('');
     researchNewsEl.innerHTML += `
-      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('news',${idx})">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
           <span style="font-size:13px; font-weight:600; flex:1;">${item.title}</span>
-          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
         </div>
         <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
         <div style="padding-left:30px;">${stocksHtml}</div>
@@ -3303,18 +3740,20 @@ function renderMeetingCards(group, sub) {
     return;
   }
   meetingCardsEl.innerHTML = filtered.map(m => {
-    const statusLabel = m.status === '直播中' ? '<span class="mc-card-status live">● LIVE</span>' :
-      m.status === '即将开始' ? '<span class="mc-card-status upcoming">即将开始</span>' :
-      m.status === '报名中' ? '<span class="mc-card-status upcoming">报名中</span>' :
+    const isLive = m.status === '直播中';
+    const isEnded = m.status === '已结束';
+    const isPreview = m.status === '即将开始' || m.status === '报名中';
+    const statusLabel = isLive ? '<span class="mc-card-status live">● LIVE</span>' :
+      isPreview ? '<span class="mc-card-status upcoming">预告</span>' :
       '<span class="mc-card-status ended">已结束</span>';
-    const registerBtn = m.status === '已结束' ? '' :
-      m.registered ? '<span class="mc-card-register"><span class="btn-registered">✓ 已加入日程</span></span>' :
-      `<span class="mc-card-register"><button class="btn-register" onclick="event.stopPropagation(); this.outerHTML='<span class=\\'btn-registered\\'>✓ 已加入日程</span>'; showToast('已添加到会议日程')">添加日程</button></span>`;
+    const registerBtn = isEnded ? '' :
+      isLive ? '' :
+      m.registered ? `<button class="btn btn-sm" style="font-size:10px; padding:4px 10px; opacity:0.7; pointer-events:none;">✓ 已报名</button>` :
+      `<button class="btn btn-gradient" style="font-size:10px; padding:4px 10px;" onclick="event.stopPropagation(); this.outerHTML='<button class=\\'btn btn-sm\\' style=\\'font-size:10px; padding:4px 10px; opacity:0.7; pointer-events:none;\\'>✓ 已报名</button>'; createScheduleTask(${JSON.stringify(m).replace(/'/g,"\\'")}); showToast('报名成功，开会前10分钟提醒您')">报名</button>`;
     return `<div class="mc-card" onclick="openMeetingDetail('${m.title.replace(/'/g, "\\'")}')">
       <div class="mc-card-cover" style="background-image:url('${m.coverImg}')">
         ${statusLabel}
-        <span class="mc-card-attendees">👤 ${m.attendees}人${m.status === '已结束' ? '参会' : '报名'}</span>
-        ${registerBtn}
+        <span class="mc-card-attendees">👤 ${m.attendees}人${isEnded ? '参会' : '报名'}</span>
       </div>
       <div class="mc-card-body">
         <div class="mc-card-title">${m.title}</div>
@@ -3323,6 +3762,7 @@ function renderMeetingCards(group, sub) {
           <div class="mc-card-tags"><span class="tag ${m.tagClass}">${m.tag}</span></div>
           <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${m.date}</span>
         </div>
+        ${registerBtn ? `<div style="margin-top:8px; text-align:right;">${registerBtn}</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -3347,6 +3787,11 @@ const researchGroups = {
 // ========== AI EXPERT DIRECTORY ==========
 const expertData = [
   // AI 产业 — 大模型（国内）
+  { name: '印奇', identity: '阶跃星辰董事长/旷视科技创始人', field: 'AI战略/计算机视觉', tags: ['AI+终端','旷视科技'], region: '国内', group: 'ai', subgroup: '大模型', headline: '阶跃星辰董事长，AI视觉四小龙旷视创始人' },
+  { name: '姜大昕', identity: '阶跃星辰创始人兼CEO', field: '数据挖掘/NLP/大模型', tags: ['万亿参数模型','Step系列模型'], region: '国内', group: 'ai', subgroup: '大模型', headline: '前微软全球副总裁，IEEE 2025 Fellow' },
+  { name: '张祥雨', identity: '阶跃星辰首席科学家', field: '深度学习模型架构/计算机视觉', tags: ['ResNet第一作者','模型压缩'], region: '国内', group: 'ai', subgroup: '大模型', headline: 'ResNet第一作者，未来科学大奖获得者' },
+  { name: '朱亦博', identity: '阶跃星辰联合创始人/CTO', field: 'AI系统/软硬协同', tags: ['万卡集群','分布式训练'], region: '国内', group: 'ai', subgroup: '大模型', headline: '曾为字节搭建万卡集群，系统架构专家' },
+  { name: '焦斌星', identity: '阶跃星辰数据负责人', field: '数据挖掘/搜索算法/NLP', tags: ['数据质量','搜索优化'], region: '国内', group: 'ai', subgroup: '大模型', headline: '前微软Bing核心搜索团队负责人' },
   { name: '唐杰', identity: '智谱AI创始人、清华教授', field: '大模型基座/知识图谱', tags: ['国产大模型领军','产业落地'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国产大模型领军人物' },
   { name: '杨植麟', identity: '月之暗面Kimi创始人', field: '长文本大模型/推理能力', tags: ['长文本标杆','轻量化大模型'], region: '国内', group: 'ai', subgroup: '大模型', headline: '长文本大模型标杆' },
   { name: '梁文锋', identity: 'DeepSeek创始人', field: '通用大模型/MoE架构', tags: ['国产开源顶流','算力效率优化'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国产开源大模型顶流' },
@@ -3531,9 +3976,64 @@ function buildEndedMeetingHTML(m) {
   const score = ((h % 10) + 40) / 10;
   const duration = (h % 40) + 30;
 
+  const stockCardsHtml = `
+    <div class="minutes-section">
+      <div class="minutes-section-title">◆ 相关个股</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="card" style="padding:10px; cursor:pointer;" onclick="closeMeetingDetail(); navigateTo('stock')">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; font-weight:600;">龙头股份A</div>
+              <div style="font-size:10px; color:var(--text-muted);">600XXX · ${m.tag}龙头</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="text-align:right;">
+                <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 8) + 1).toFixed(2)}%</div>
+                <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 25) + 15}x</div>
+              </div>
+              <span style="font-size:14px; color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">行业龙头，市占率领先，受益于${m.tag}景气度上行。近期催化：产能扩张+订单放量。</div>
+        </div>
+        <div class="card" style="padding:10px; cursor:pointer;" onclick="closeMeetingDetail(); navigateTo('stock')">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; font-weight:600;">上游材料B</div>
+              <div style="font-size:10px; color:var(--text-muted);">300XXX · 核心供应商</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="text-align:right;">
+                <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 5) + 0.5).toFixed(2)}%</div>
+                <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 20) + 20}x</div>
+              </div>
+              <span style="font-size:14px; color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">上游核心材料供应商，技术壁垒高，客户绑定深。估值处于历史低位，安全边际充足。</div>
+        </div>
+        <div class="card" style="padding:10px; cursor:pointer;" onclick="closeMeetingDetail(); navigateTo('stock')">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; font-weight:600;">新锐科技C</div>
+              <div style="font-size:10px; color:var(--text-muted);">688XXX · 弹性标的</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="text-align:right;">
+                <div style="font-size:13px; font-weight:700; color:#22c55e;">-${((h % 3) + 0.2).toFixed(2)}%</div>
+                <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 30) + 25}x</div>
+              </div>
+              <span style="font-size:14px; color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">高弹性成长标的，新产品放量在即。关注点：Q3业绩拐点确认。</div>
+        </div>
+      </div>
+    </div>`;
+
   return `
-    <div class="detail-header">
-      <div>
+    <div class="detail-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div style="flex:1;">
         <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;">${m.date}</div>
         <div style="font-size:20px; font-weight:700; margin-bottom:6px;">${m.title}</div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
@@ -3543,7 +4043,10 @@ function buildEndedMeetingHTML(m) {
           <span style="font-size:11px; color:var(--text-muted);">${m.attendees}人参会 · ${duration}分钟</span>
         </div>
       </div>
-      <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+        <button class="btn btn-cyan btn-sm" onclick="this.textContent='✓ 已订阅';this.style.background='var(--bg-secondary)';this.style.color='var(--text-muted)';this.onclick=null;showToast('已订阅此系列会议')">订阅此系列会议</button>
+        <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
+      </div>
     </div>
     <div class="detail-body" style="display:flex; gap:24px;">
       <div style="flex:1; min-width:0;">
@@ -3564,7 +4067,7 @@ function buildEndedMeetingHTML(m) {
           <div class="minutes-tab-btn active" onclick="switchMinutesTab(this, 'minutes-summary')" style="padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue);">纪要总结</div>
           <div class="minutes-tab-btn" onclick="switchMinutesTab(this, 'minutes-detail')" style="padding:8px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;">纪要明细</div>
         </div>
-        <div id="minutes-summary">
+        <div id="minutes-summary" style="min-height:500px;">
           <div class="minutes-section">
             <div class="minutes-section-title">◆ 核心观点</div>
             <div class="minutes-content">
@@ -3589,59 +4092,8 @@ function buildEndedMeetingHTML(m) {
               <li><strong>风险提示：</strong>需关注政策变化与市场波动风险</li>
             </div>
           </div>
-          <div class="minutes-section">
-            <div class="minutes-section-title">◆ 相关个股</div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <div style="font-size:12px; font-weight:600;">龙头股份A</div>
-                    <div style="font-size:10px; color:var(--text-muted);">600XXX · ${m.tag}龙头</div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 8) + 1).toFixed(2)}%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 25) + 15}x</div>
-                  </div>
-                </div>
-                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">行业龙头，市占率领先，受益于${m.tag}景气度上行。近期催化：产能扩张+订单放量。</div>
-              </div>
-              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <div style="font-size:12px; font-weight:600;">上游材料B</div>
-                    <div style="font-size:10px; color:var(--text-muted);">300XXX · 核心供应商</div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 5) + 0.5).toFixed(2)}%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 20) + 20}x</div>
-                  </div>
-                </div>
-                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">上游核心材料供应商，技术壁垒高，客户绑定深。估值处于历史低位，安全边际充足。</div>
-              </div>
-              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <div style="font-size:12px; font-weight:600;">新锐科技C</div>
-                    <div style="font-size:10px; color:var(--text-muted);">688XXX · 弹性标的</div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div style="font-size:13px; font-weight:700; color:#22c55e;">-${((h % 3) + 0.2).toFixed(2)}%</div>
-                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 30) + 25}x</div>
-                  </div>
-                </div>
-                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">高弹性成长标的，新产品放量在即。关注点：Q3业绩拐点确认。</div>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top:20px;">
-            <div class="text-xs mb-8" style="color:var(--text-muted);">相关主题会议</div>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">${m.tag}产业链深度研讨 · 近期</div>
-            </div>
-            <button class="btn btn-cyan btn-sm" style="margin-top:10px;" onclick="showToast('已订阅此系列会议'); closeMeetingDetail();">订阅此系列会议</button>
-          </div>
         </div>
-        <div id="minutes-detail" style="display:none;">
+        <div id="minutes-detail" style="display:none; min-height:500px;">
           <div class="minutes-chat">
             <div class="minutes-chat-item">
               <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">主持人</span><span class="minutes-chat-time">00:00</span></div>
@@ -3697,18 +4149,20 @@ function buildEndedMeetingHTML(m) {
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
             <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:600; flex-shrink:0;">${expertName[0]}</div>
             <div>
-              <div style="font-size:13px; font-weight:600;">${expertName}</div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:13px; font-weight:600;">${expertName}</span>
+                <button class="btn btn-sm" style="font-size:10px; padding:2px 8px;" onclick="showToast('已订阅${expertName}')">+ 订阅专家</button>
+              </div>
               <div style="font-size:10px; color:var(--text-muted);">${expertIdentity}</div>
             </div>
           </div>
           <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:12px;">
             ${expertName}，${expertIdentity}，深耕${m.tag}领域研究多年。覆盖行业核心标的，多次准确预判行业拐点。
           </div>
-          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px;">
+          <div style="display:flex; gap:4px; flex-wrap:wrap;">
             <span class="tag tag-blue" style="font-size:10px;">${m.tag}</span>
             <span class="tag tag-blue" style="font-size:10px;">${m.subgroup || m.tag}</span>
           </div>
-          <button class="btn btn-sm" style="width:100%;" onclick="showToast('已关注${expertName}')">+ 关注专家</button>
         </div>
         <div class="card" style="padding:16px;">
           <div style="font-size:12px; font-weight:600; margin-bottom:12px;">专家影响力</div>
@@ -3719,6 +4173,13 @@ function buildEndedMeetingHTML(m) {
             <div><div style="font-size:18px; font-weight:700; color:var(--accent-blue);">${score}</div><div style="font-size:10px; color:var(--text-muted);">综合评分</div></div>
           </div>
         </div>
+        ${stockCardsHtml}
+        <div style="margin-top:12px;">
+          <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">相关主题会议</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">${m.tag}产业链深度研讨 · 近期</div>
+          </div>
+        </div>
       </div>
     </div>`;
 }
@@ -3726,21 +4187,18 @@ function buildEndedMeetingHTML(m) {
 function buildUpcomingMeetingHTML(m) {
   const expertName = m.expert.split('·')[0].trim();
   const expertIdentity = m.expert.replace(expertName, '').replace(/^[\s·]+/, '').trim();
-  const statusTag = m.status === '报名中' ? '<span class="tag tag-green">报名中</span>' : '<span class="tag tag-gold">即将开始</span>';
   const actionBtn = m.registered
-    ? '<button class="btn btn-sm" style="width:100%; opacity:0.7;" disabled>✓ 已加入日程</button>'
-    : '<button class="btn btn-gradient" style="width:100%;" onclick="showToast(\'已添加到会议日程\')">添加到会议日程</button>';
+    ? '<button class="btn btn-sm" style="padding:6px 20px; opacity:0.7; pointer-events:none;">✓ 已报名</button>'
+    : `<button class="btn btn-gradient" style="padding:6px 20px;" onclick="createScheduleTask(window._currentMeetingData); this.outerHTML='<button class=\\'btn btn-sm\\' style=\\'padding:6px 20px; opacity:0.7; pointer-events:none;\\'>✓ 已报名</button>'; showToast('报名成功，开会前10分钟提醒您')">报名</button>`;
 
   return `
     <div class="detail-header">
       <div>
-        <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;">${m.date}</div>
         <div style="font-size:20px; font-weight:700; margin-bottom:6px;">${m.title}</div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <span class="tag ${m.tagClass}">${m.tag}</span>
-          ${statusTag}
+          <span class="tag tag-gold">预告</span>
           <span style="font-size:11px; color:var(--text-secondary);">主讲：${m.expert}</span>
-          <span style="font-size:11px; color:var(--text-muted);">${m.attendees}人已报名</span>
         </div>
       </div>
       <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
@@ -3748,6 +4206,14 @@ function buildUpcomingMeetingHTML(m) {
     <div class="detail-body">
       <div style="border-radius:8px; overflow:hidden; margin-bottom:16px;">
         <img src="${m.coverImg}" style="width:100%; height:220px; object-fit:cover; display:block;">
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <span style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono);">${m.date}</span>
+        ${actionBtn}
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <span style="font-size:11px; color:var(--text-secondary);">${m.attendees}人已报名</span>
+        <span class="tag ${m.tagClass}">${m.tag}</span>
       </div>
       <div class="card" style="padding:16px; margin-bottom:16px;">
         <div style="font-size:13px; font-weight:600; margin-bottom:10px;">会议介绍</div>
@@ -3778,7 +4244,6 @@ function buildUpcomingMeetingHTML(m) {
           <div style="display:flex; gap:12px; align-items:baseline;"><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10px; flex-shrink:0;">15:00</span><span>Q&A 互动环节</span></div>
         </div>
       </div>
-      ${actionBtn}
     </div>`;
 }
 
@@ -3884,6 +4349,7 @@ function buildLiveMeetingHTML(m) {
 function openMeetingDetail(title) {
   let m = meetingCardsData.find(item => item.title === title);
   if (!m) { m = meetingCardsData[0]; }
+  window._currentMeetingData = m;
   const panel = document.getElementById('meeting-detail-panel');
   if (m.status === '已结束') {
     panel.style.width = '960px';
@@ -3899,6 +4365,11 @@ function openMeetingDetail(title) {
 }
 function closeMeetingDetail() {
   document.getElementById('meeting-detail').classList.remove('show');
+}
+const scheduleTasks = [];
+function createScheduleTask(m) {
+  if (!m) return;
+  scheduleTasks.push({ title: m.title, date: m.date, type: 'meeting', remindBefore: 10 });
 }
 function switchMinutesTab(el, tabId) {
   el.parentElement.querySelectorAll('.minutes-tab-btn').forEach(t => {
@@ -4064,16 +4535,16 @@ document.querySelectorAll('.monitor-tab').forEach(tab => {
 
 // ========== TIMELINE DATA ==========
 const timelineData = [
-  { time: '14:58', source: '财联社电报', kw: '英伟达', researcher: '陈明远', industry: 'tech', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节。据产业链人士透露，首批H20芯片已通过海关审批。' },
-  { time: '14:42', source: '中信证券', kw: '宁德时代', researcher: '刘思远', industry: 'manufacture', text: '中信证券发布深度报告，上调宁德时代目标价至280元，核心逻辑：① 欧盟关税下调预期 ② 储能业务收入占比提升至25% ③ 固态电池中试线进展超预期。' },
-  { time: '14:15', source: '上交所公告', kw: '万科A', researcher: '', industry: 'finance', text: '万科A(000002)：拟向不超过35名特定投资者配股，募集资金总额不超过人民币150亿元，全部用于偿还公司有息负债。' },
-  { time: '13:50', source: '财联社电报', kw: '光伏', researcher: '刘思远', industry: 'manufacture', text: '隆基绿能内部人士确认将下调组件报价5-8%，目标是夺回东南亚市场份额。此举可能引发新一轮价格战。通威股份、晶科能源盘中一度跳水。' },
-  { time: '13:22', source: '商务部', kw: '消费', researcher: '', industry: 'consume', text: '商务部公布五一黄金周消费数据：社零同比+6.8%（前值+4.2%），其中免税渠道增速最快+22%，餐饮+12.3%，汽车+8.7%。' },
-  { time: '12:45', source: '财联社电报', kw: '半导体', researcher: '周磊', industry: 'tech', text: '中芯国际天津工厂传出扩产消息，成熟制程28nm产线月产能将从3万片提升至5万片，预计Q4达产。' },
-  { time: '11:30', source: '华泰证券', kw: '中科曙光', researcher: '陈明远', industry: 'ai', text: '华泰证券电子团队调研纪要：中科曙光Q2 AI服务器订单环比增长60%，主要来自互联网大厂和政府智算中心项目。' },
-  { time: '10:15', source: '财联社电报', kw: '地产', researcher: '', industry: 'finance', text: '住建部：将研究出台新一轮房地产支持政策，重点关注一线城市限购松绑和房贷利率下调空间。' },
-  { time: '09:42', source: '路透社', kw: '中美', researcher: '张峰', industry: 'ai', text: '据路透社援引知情人士，中美双方已就部分科技领域合作达成初步共识，涉及AI安全和半导体供应链。正式声明预计本周五发布。' },
-  { time: '09:15', source: '财联社电报', kw: '新能源', researcher: '刘思远', industry: 'manufacture', text: '欧盟内部文件显示，拟将中国电动车关税从当前的37.6%下调至17-20%区间，具体税率将在6月初公布。宁德时代、比亚迪盘前竞价涨幅均超2%。' },
+  { time: '14:58', source: '财联社电报', kw: '英伟达', researcher: '陈明远', industry: 'tech', title: '英伟达中国区负责人抵京，H20芯片合规出口推进', url: 'https://www.cls.cn/detail/1234567', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节。据产业链人士透露，首批H20芯片已通过海关审批。' },
+  { time: '14:42', source: '中信证券研报', kw: '宁德时代', researcher: '刘思远', industry: 'manufacture', title: '中信上调宁德时代目标价至280元', url: 'https://www.cs.com.cn/report/202605', text: '中信证券发布深度报告，上调宁德时代目标价至280元，核心逻辑：① 欧盟关税下调预期 ② 储能业务收入占比提升至25% ③ 固态电池中试线进展超预期。' },
+  { time: '14:15', source: '上交所公告', kw: '万科A', researcher: '', industry: 'finance', title: '万科A拟配股融资150亿偿还有息负债', url: 'https://www.sse.com.cn/disclosure/bond/announcement/c/9876543.shtml', text: '万科A(000002)：拟向不超过35名特定投资者配股，募集资金总额不超过人民币150亿元，全部用于偿还公司有息负债。' },
+  { time: '13:50', source: '机器之心', kw: '光伏', researcher: '刘思远', industry: 'manufacture', title: '隆基绿能下调组件报价5-8%，价格战风险加剧', url: 'https://www.jiqizhixin.com/articles/20260520-pv', text: '隆基绿能内部人士确认将下调组件报价5-8%，目标是夺回东南亚市场份额。此举可能引发新一轮价格战。通威股份、晶科能源盘中一度跳水。' },
+  { time: '13:22', source: '商务部官网', kw: '消费', researcher: '', industry: 'consume', title: '五一黄金周社零同比+6.8%超预期', url: 'https://www.mofcom.gov.cn/article/ae/sjjd/202605/20260503456789.shtml', text: '商务部公布五一黄金周消费数据：社零同比+6.8%（前值+4.2%），其中免税渠道增速最快+22%，餐饮+12.3%，汽车+8.7%。' },
+  { time: '12:45', source: '量子位', kw: '半导体', researcher: '周磊', industry: 'tech', title: '中芯国际天津28nm产线扩产至月产5万片', url: 'https://www.qbitai.com/2026/05/semiconductor-smic.html', text: '中芯国际天津工厂传出扩产消息，成熟制程28nm产线月产能将从3万片提升至5万片，预计Q4达产。' },
+  { time: '11:30', source: '华泰证券研报', kw: '中科曙光', researcher: '陈明远', industry: 'ai', title: '中科曙光Q2 AI服务器订单环比增长60%', url: 'https://www.htsc.com.cn/research/detail/202605201130', text: '华泰证券电子团队调研纪要：中科曙光Q2 AI服务器订单环比增长60%，主要来自互联网大厂和政府智算中心项目。' },
+  { time: '10:15', source: 'Wind资讯', kw: '地产', researcher: '', industry: 'finance', title: '住建部研究新一轮房地产支持政策', url: 'https://www.wind.com.cn/news/202605/property-policy.html', text: '住建部：将研究出台新一轮房地产支持政策，重点关注一线城市限购松绑和房贷利率下调空间。' },
+  { time: '09:42', source: '路透社', kw: '中美', researcher: '张峰', industry: 'ai', title: '中美就AI安全和半导体供应链达成初步共识', url: 'https://www.reuters.com/technology/us-china-tech-cooperation-2026-05-20', text: '据路透社援引知情人士，中美双方已就部分科技领域合作达成初步共识，涉及AI安全和半导体供应链。正式声明预计本周五发布。' },
+  { time: '09:15', source: '财联社电报', kw: '新能源', researcher: '刘思远', industry: 'manufacture', title: '欧盟拟将中国电动车关税下调至17-20%', url: 'https://www.cls.cn/detail/1234590', text: '欧盟内部文件显示，拟将中国电动车关税从当前的37.6%下调至17-20%区间，具体税率将在6月初公布。宁德时代、比亚迪盘前竞价涨幅均超2%。' },
 ];
 
 const timelineFeedEl = document.getElementById('timeline-feed');
@@ -4093,7 +4564,7 @@ timelineData.forEach((t, i) => {
           ${researcherTag}
         </div>
         <div class="tl-text">${t.text}</div>
-        <span class="tl-link" onclick="openArticle('${t.source}', '${t.time}', '${t.kw}', \`${t.text}\`)">查看原文 →</span>
+        <a class="tl-link" href="${t.url}" target="_blank">${t.title} →</a>
       </div>
     </div>`;
 });
@@ -4177,7 +4648,7 @@ function filterMonitorByIndustry(industry) {
             ${researcherTag}
           </div>
           <div class="tl-text">${t.text}</div>
-          <span class="tl-link" onclick="openArticle('${t.source}', '${t.time}', '${t.kw}', \`${t.text}\`)">查看原文 →</span>
+          <a class="tl-link" href="${t.url}" target="_blank">${t.title} →</a>
         </div>
       </div>`;
   });
@@ -4187,6 +4658,9 @@ function filterMonitorByIndustry(industry) {
 function updateAiDaily(category) {
   const contentEl = document.querySelector('.ai-daily-content');
   if (!contentEl) return;
+  const titleMap = { all:'信源日报', ai:'AI产业日报', tech:'科技日报', finance:'金融日报', consume:'消费日报', health:'医疗健康日报', manufacture:'先进制造日报', material:'能源材料日报' };
+  const titleEl = document.getElementById('ai-daily-title-text');
+  if (titleEl) titleEl.textContent = titleMap[category] || '信源日报';
   const count = category === 'all' ? 47 : Math.floor(Math.random() * 15) + 5;
   const dateEl = document.querySelector('.ai-daily-date');
   if (dateEl) dateEl.textContent = `2026-05-20 · 基于今日 ${count} 条监控触发`;
@@ -4198,6 +4672,16 @@ function toggleAnalysis(header) {
   header.classList.toggle('expanded');
   const body = header.nextElementSibling;
   body.classList.toggle('open');
+}
+
+function highlightRef(n) {
+  document.querySelectorAll('.ref-item').forEach(el => el.classList.remove('highlighted'));
+  const target = document.getElementById('ref-' + n);
+  if (target) {
+    target.classList.add('highlighted');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => target.classList.remove('highlighted'), 3000);
+  }
 }
 
 // ========== FILTER CHIPS ==========
@@ -4223,6 +4707,13 @@ function showToast(msg) {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
+
+function toggleUserPopover(e) {
+  e.stopPropagation();
+  const pop = document.getElementById('user-popover');
+  pop.style.display = pop.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', () => { const p = document.getElementById('user-popover'); if (p) p.style.display = 'none'; });
 
 // ========== AI CHAT SYSTEM ==========
 function getChatEl() { return document.getElementById('ai-chat-messages'); }
@@ -4345,7 +4836,7 @@ function sendAiChat() {
       }, 3000);
     } else if (chatMode === 'joke') {
       setAixTaskRunning(true);
-      addChatBubble(`正在基于「${msg}」生成段子...<br><br>「今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。」<br><br>😄 段子已出炉：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">😂</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 投研段子</div><div class="ai-chat-artifact-meta">AI 生成 · 3 条段子 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
+      addChatBubble(`正在基于「${msg}」生成点评...<br><br>已分析今日信源，为你提炼核心投资观点：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">✦</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 投研点评</div><div class="ai-chat-artifact-meta">AI 生成 · 4 条点评 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
       setTimeout(() => setAixTaskRunning(false), 1000);
     } else {
       addChatBubble(`好的，我来帮你分析「${msg}」...<br><br>基于当前市场数据和 AI 模型分析，已为你生成分析摘要：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📊</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 分析报告</div><div class="ai-chat-artifact-meta">AI 生成 · 综合分析 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
@@ -4367,9 +4858,9 @@ const mockHistory = [
     { role: 'user', text: '帮我分析一下中科曙光最近的基本面和技术面' },
     { role: 'ai', text: '📈 **中科曙光(603019) 深度分析**\n\n**基本面：**\n- 最新市值：1,285亿 | PE(TTM)：48.6x | PB：6.2x\n- Q1营收128.3亿(+31.2%)，净利润12.7亿(+42.1%)\n- 智算中心业务高速增长，海光信息贡献投资收益\n- 在手订单充裕，政务+运营商智算采购加速\n\n**技术面：**\n- 当前价格54.8元，5日均线上方运行\n- MACD金叉，量能温和放大\n- 压力位58.5元（前高），支撑位51.2元（20日均线）\n\n**机构评级：** 近30天6家机构给出"买入"评级，一致目标价62.5元\n\n分析报告已生成：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📊</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">中科曙光深度分析报告</div><div class="ai-chat-artifact-meta">AI 生成 · 综合分析 · 今天 10:32</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
-  { id: 3, title: '今日投研段子', mode: 'joke', messages: [
-    { role: 'user', text: '根据今天的涨停板生成几个段子' },
-    { role: 'ai', text: '😂 **今日涨停板段子精选**\n\n1. "今天追了AI板块，账户绿得像刚做完光合作用。朋友问我炒股赚了多少，我说：赚了不少经验值。"\n\n2. "散户三大幻觉：这次不一样、明天会反弹、我不会是最后一个。今天A股完美验证了第二条——它确实反弹了，但只反弹给了主力。"\n\n3. "今天涨停板里一半是AI，一半是机器人。作为一个普通散户，我终于理解了什么叫「人工」智能——我负责人工，主力负责智能。"\n\n4. "基金经理早上说看好消费复苏，中午说关注科技主线，收盘说现金为王。这就是传说中的「一日三迁，全面覆盖」。"\n\n段子已打包：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">😂</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">涨停板段子合集</div><div class="ai-chat-artifact-meta">AI 生成 · 4 条段子 · 今天 11:05</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
+  { id: 3, title: '今日投研点评', mode: 'joke', messages: [
+    { role: 'user', text: '根据今天的涨停板生成点评' },
+    { role: 'ai', text: '✦ **今日涨停板点评**\n\n🔹 **AI算力链**：英伟达H20获批催化，中科曙光(603019)+5.8%、浪潮信息(000977)+4.2%。算力扩张逻辑延续，但短期需关注获利盘兑现压力。\n\n🔹 **机器人板块**：特斯拉Optimus量产预期升温，绿的谐波、鸣志电器涨停。产业链从主题炒作走向基本面验证阶段，建议聚焦有实际订单的核心零部件标的。\n\n🔹 **消费修复**：五一数据超预期提振信心，免税板块中国中免+3.6%。短期催化已兑现，后续关注暑期旺季数据能否接力。\n\n🔹 **风险提示**：地产链持续承压，万科配股融资150亿信号偏负面。建议回避高负债房企，关注代建/物管轻资产方向。\n\n点评已生成：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">✦</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">涨停板投研点评</div><div class="ai-chat-artifact-meta">AI 生成 · 4 条点评 · 今天 11:05</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
   { id: 4, title: 'H20产业链选股', mode: 'stock', messages: [
     { role: 'user', text: '帮我筛选H20产业链相关的受益标的' },
@@ -4379,7 +4870,7 @@ const mockHistory = [
 const mockDocuments = [
   { title: 'AI板块晨报 05-19', type: 'report', icon: '📄' },
   { title: '中科曙光深度分析', type: 'report', icon: '📄' },
-  { title: '涨停板段子合集', type: 'joke', icon: '😂' },
+  { title: '涨停板投研点评', type: 'joke', icon: '✦' },
 ];
 const mockProgress = [
   { text: '读取行情数据', status: 'done' },
@@ -4397,6 +4888,10 @@ function openAiGlobal() {
   if (!overlay.classList.contains('has-product')) overlay.classList.add('no-product');
   document.getElementById('ai-float-group').style.display = 'none';
   document.getElementById('global-ai-panel').style.display = 'none';
+  if (!currentSession.messages || currentSession.messages.length === 0) {
+    currentSession = { id: Date.now(), mode: 'general', title: '新对话', messages: [], documents: [], progress: [] };
+    document.querySelectorAll('.ai-global-action').forEach((el, i) => el.classList.toggle('active', i === 0));
+  }
   renderHistory();
   renderGlobalChat();
   renderDocuments();
@@ -4420,7 +4915,7 @@ function expandToGlobal() {
 }
 
 function newAiSession(mode) {
-  const titles = { general: '新对话', report: '文档生成', ppt: 'PPT生成', joke: '段子生成', 'monitor-center': '信源监控中心', schedule: '定时任务' };
+  const titles = { general: '新对话', report: '文档生成', ppt: 'PPT生成', joke: '点评生成', 'monitor-center': '信源监控中心', schedule: '定时任务' };
   currentSession = { id: Date.now(), mode, title: titles[mode] || '新对话', messages: [], documents: [...mockDocuments], progress: [] };
   const modes = ['general','report','ppt','joke','monitor-center','schedule'];
   document.querySelectorAll('.ai-global-action').forEach((el, i) => {
@@ -4456,9 +4951,7 @@ function switchHomeVersion(version) {
   document.getElementById('home-ai-view').style.display = version === 'ai' ? '' : 'none';
   document.getElementById('home-market-view').style.display = version === 'market' ? '' : 'none';
   if (version === 'market') {
-    renderMarketStockRanking('stock-ranking-market', marketStockRankingData);
-    renderMarketStockRanking('stock-rise-market', marketStockRiseData);
-    renderMarketNewsRanking('research-news-market', marketResearchNewsData);
+    renderMarketTabContent('hot');
     renderMeetingPreviewCards(meetingsPreviewMarket, document.getElementById('meeting-preview-market'));
     const mktFeed = document.getElementById('source-feed-market');
     if (mktFeed && !mktFeed.innerHTML) {
@@ -4468,18 +4961,64 @@ function switchHomeVersion(version) {
   }
 }
 
-function renderMarketStockRanking(containerId, data) {
+function renderMarketTabContent(tab) {
+  const mapping = {
+    hot: { id: 'market-tab-hot', data: marketStockRankingData, type: 'stock', overlayType: 'market-hot' },
+    rise: { id: 'market-tab-rise', data: marketStockRiseData, type: 'stock', overlayType: 'market-rise' },
+    watchlist: { id: 'market-tab-watchlist', data: watchlistStockData, type: 'stock', overlayType: 'market-watchlist' },
+    news: { id: 'market-tab-news', data: marketResearchNewsData, type: 'news', overlayType: 'market-news' },
+  };
+  const cfg = mapping[tab];
+  if (!cfg) return;
+  const el = document.getElementById(cfg.id);
+  if (!el || el.innerHTML) return;
+  if (cfg.type === 'stock') {
+    renderMarketStockRanking(cfg.id, cfg.data, cfg.overlayType);
+  } else {
+    renderMarketNewsRanking(cfg.id, cfg.data, cfg.overlayType);
+  }
+}
+
+function switchAiHotTab(tab) {
+  const tabs = document.querySelectorAll('.ai-hot-tab');
+  tabs.forEach(t => { t.style.borderBottomColor = 'transparent'; t.style.color = 'var(--text-muted)'; t.style.fontWeight = '500'; });
+  const idx = tab === 'stock' ? 0 : 1;
+  tabs[idx].style.borderBottomColor = 'var(--accent-blue)';
+  tabs[idx].style.color = 'var(--accent-blue)';
+  tabs[idx].style.fontWeight = '600';
+  document.getElementById('stock-ranking').style.display = tab === 'stock' ? '' : 'none';
+  document.getElementById('research-news').style.display = tab === 'news' ? '' : 'none';
+}
+
+function switchMarketHotTab(tab) {
+  const tabs = document.querySelectorAll('.market-hot-tab');
+  tabs.forEach(t => { t.style.borderBottomColor = 'transparent'; t.style.color = 'var(--text-muted)'; t.style.fontWeight = '500'; });
+  const tabOrder = ['hot', 'rise', 'watchlist', 'news'];
+  const idx = tabOrder.indexOf(tab);
+  if (idx >= 0) {
+    tabs[idx].style.borderBottomColor = 'var(--accent-blue)';
+    tabs[idx].style.color = 'var(--accent-blue)';
+    tabs[idx].style.fontWeight = '600';
+  }
+  tabOrder.forEach(t => {
+    const el = document.getElementById('market-tab-' + t);
+    if (el) el.style.display = t === tab ? '' : 'none';
+  });
+  renderMarketTabContent(tab);
+}
+
+function renderMarketStockRanking(containerId, data, overlayType) {
   const el = document.getElementById(containerId);
   if (!el || el.innerHTML) return;
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
     el.innerHTML += `
-      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('${overlayType}',${idx})">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
           <span style="font-size:13px; font-weight:600;">${item.title}</span>
           <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
-          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
         </div>
         <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
         <div style="padding-left:30px;">${tagsHtml}</div>
@@ -4487,17 +5026,17 @@ function renderMarketStockRanking(containerId, data) {
   });
 }
 
-function renderMarketNewsRanking(containerId, data) {
+function renderMarketNewsRanking(containerId, data, overlayType) {
   const el = document.getElementById(containerId);
   if (!el || el.innerHTML) return;
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     const stocksHtml = item.stocks.map(s => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${s.name}</span> <span class="${s.up ? 'val-up' : 'val-down'}">${s.change}</span></span>`).join('');
     el.innerHTML += `
-      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openAiGlobal();showProductView('doc-1')">
+      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('${overlayType}',${idx})">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
           <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
           <span style="font-size:13px; font-weight:600; flex:1;">${item.title}</span>
-          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">😂 AI段子</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
         </div>
         <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
         <div style="padding-left:30px;">${stocksHtml}</div>
@@ -4506,6 +5045,145 @@ function renderMarketNewsRanking(containerId, data) {
 }
 
 // switchStockHotTab and toggleMainline removed — no longer used
+
+// ========== DETAIL OVERLAY (三栏浮层) ==========
+let _doType = '';
+let _doData = [];
+let _doActiveIdx = 0;
+let _doChatHistory = {};
+
+function openDetailOverlay(type, idx) {
+  _doType = type;
+  _doActiveIdx = idx || 0;
+  if (type === 'stock') {
+    _doData = stockRankingData;
+    document.getElementById('do-header-title').textContent = 'AI 热股';
+  } else if (type === 'news') {
+    _doData = researchNewsData;
+    document.getElementById('do-header-title').textContent = 'AI 资讯热点';
+  } else if (type === 'market-hot') {
+    _doData = marketStockRankingData;
+    document.getElementById('do-header-title').textContent = '热点个股';
+  } else if (type === 'market-rise') {
+    _doData = marketStockRiseData;
+    document.getElementById('do-header-title').textContent = '大涨个股';
+  } else if (type === 'market-watchlist') {
+    _doData = watchlistStockData;
+    document.getElementById('do-header-title').textContent = '自选股';
+  } else if (type === 'market-news') {
+    _doData = marketResearchNewsData;
+    document.getElementById('do-header-title').textContent = '资讯热点';
+  }
+  document.getElementById('do-header-count').textContent = _doData.length + ' 条';
+  renderDoList();
+  switchDetailItem(_doActiveIdx);
+  document.getElementById('detail-overlay').classList.add('show');
+}
+
+function closeDetailOverlay() {
+  document.getElementById('detail-overlay').classList.remove('show');
+}
+
+function renderDoList() {
+  const el = document.getElementById('do-list');
+  el.innerHTML = _doData.map((item, i) => {
+    const title = item.title;
+    const isActive = i === _doActiveIdx ? ' active' : '';
+    const rankHtml = item.rank ? `<span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:10px; margin-right:6px;">${item.rank}</span>` : '';
+    const change = item.change ? `<span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:10px;">${item.change}</span>` : '';
+    return `<div class="do-list-item${isActive}" onclick="switchDetailItem(${i})">
+      <div style="display:flex; align-items:center; gap:4px;">
+        ${rankHtml}
+        <span style="font-weight:500; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${title}</span>
+        ${change}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function switchDetailItem(idx) {
+  _doActiveIdx = idx;
+  const items = document.querySelectorAll('.do-list-item');
+  items.forEach((el, i) => { el.classList.toggle('active', i === idx); });
+  const item = _doData[idx];
+  if (!item) return;
+
+  const isStock = !!item.tags;
+  const isNews = !!item.stocks;
+  let html = '';
+
+  html += `<div style="font-size:18px; font-weight:700; margin-bottom:12px; line-height:1.4;">${item.title}</div>`;
+
+  if (isStock && item.price) {
+    html += `<div style="display:flex; align-items:baseline; gap:12px; margin-bottom:16px;">
+      <span class="mono" style="font-size:24px; font-weight:700;">${item.price}</span>
+      <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:16px; font-weight:600;">${item.change}</span>
+    </div>`;
+  }
+
+  html += `<div class="card" style="padding:16px; margin-bottom:16px;">
+    <div style="font-size:13px; font-weight:600; margin-bottom:8px;">内容摘要</div>
+    <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">${item.content}</div>
+  </div>`;
+
+  if (isStock && item.tags) {
+    const tagsHtml = item.tags.map(t => `<span class="tag ${t.up ? 'tag-blue' : 'tag-gold'}" style="font-size:10px;">${t.name} ${t.up ? '↑' : '↓'}</span>`).join(' ');
+    html += `<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;">${tagsHtml}</div>`;
+  }
+
+  if (isNews && item.stocks) {
+    html += `<div class="card" style="padding:16px; margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:600; margin-bottom:10px;">关联个股</div>`;
+    item.stocks.forEach(s => {
+      html += `<div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(226,230,239,0.4);">
+        <span style="font-size:12px; font-weight:500;">${s.name}</span>
+        <span class="mono ${s.up ? 'val-up' : 'val-down'}" style="font-size:12px; font-weight:600;">${s.change}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div style="display:flex; gap:8px; margin-top:16px;">
+    <button class="btn btn-primary btn-sm" onclick="closeDetailOverlay();openAiGlobal();showProductView('doc-1')">查看一页纸 ›</button>
+    <button class="btn btn-sm" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</button>
+  </div>`;
+
+  document.getElementById('do-content').innerHTML = html;
+
+  const chatTitle = item.title.length > 20 ? item.title.substring(0, 20) + '...' : item.title;
+  document.getElementById('do-chat-title').textContent = '关于「' + chatTitle + '」的AI对话';
+
+  const chatKey = _doType + '-' + idx;
+  if (!_doChatHistory[chatKey]) {
+    _doChatHistory[chatKey] = [{ role: 'ai', text: '你好！我可以帮你深入分析「' + item.title + '」。你想了解什么？' }];
+  }
+  renderDoChatMessages(chatKey);
+}
+
+function renderDoChatMessages(chatKey) {
+  const msgs = _doChatHistory[chatKey] || [];
+  const el = document.getElementById('do-chat-messages');
+  el.innerHTML = msgs.map(m => `<div class="do-chat-bubble ${m.role === 'ai' ? 'ai' : 'user'}">${m.text}</div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function sendDetailChat() {
+  const input = document.getElementById('do-chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const chatKey = _doType + '-' + _doActiveIdx;
+  if (!_doChatHistory[chatKey]) _doChatHistory[chatKey] = [];
+  _doChatHistory[chatKey].push({ role: 'user', text: msg });
+  renderDoChatMessages(chatKey);
+
+  setTimeout(() => {
+    const item = _doData[_doActiveIdx];
+    const aiReply = '关于「' + (item ? item.title : '') + '」：这是一个很好的问题。根据最新市场数据和产业链调研，我认为核心逻辑仍然成立，建议关注Q2业绩兑现节奏和机构持仓变化。需要我进一步展开分析某个具体方面吗？';
+    _doChatHistory[chatKey].push({ role: 'ai', text: aiReply });
+    renderDoChatMessages(chatKey);
+  }, 800);
+}
 
 function sendFloatBarChat() {
   const input = document.getElementById('float-bar-input');
@@ -4525,7 +5203,7 @@ function sendFloatBarChat() {
 function renderHistory() {
   const el = document.getElementById('ai-global-history');
   if (!el) return;
-  const icons = { report: '📄', general: '💬', joke: '😂', ppt: '📊', 'monitor-center': '📡', schedule: '⏰' };
+  const icons = { report: '📄', general: '💬', joke: '✦', ppt: '📊', 'monitor-center': '📡', schedule: '⏰' };
   el.innerHTML = aiSessions.map(s => `<div class="ai-global-history-item${s.id === currentSession.id ? ' active' : ''}" onclick="loadSession(${s.id})">${icons[s.mode] || '💬'} ${s.title}</div>`).join('');
 }
 
@@ -4549,9 +5227,9 @@ const modeCases = {
     { icon:'🎯', title:'投委会汇报材料', desc:'项目进展与投资建议汇报' }
   ],
   joke: [
-    { icon:'😂', title:'今日大盘段子', desc:'用幽默方式解读今天的行情' },
-    { icon:'🎭', title:'基金经理日常', desc:'基金经理的搞笑日常故事' },
-    { icon:'💬', title:'股民聊天记录', desc:'模拟散户群聊的欢乐对话' }
+    { icon:'✦', title:'今日市场点评', desc:'基于行情数据生成专业投资观点' },
+    { icon:'📊', title:'板块轮动点评', desc:'分析板块涨跌背后的产业逻辑' },
+    { icon:'🎯', title:'个股机会点评', desc:'挖掘值得关注的投资标的' }
   ]
 };
 
@@ -4585,42 +5263,108 @@ function useCaseExample(title) {
 
 function renderScheduleTasks(body) {
   const upcoming = (typeof meetingCardsData !== 'undefined' ? meetingCardsData : []).filter(m => m.status === '未开始' || m.status === '报名中');
+  const customTasks = [
+    { title: '每日自选股早报', time: '每日 08:30', on: true },
+    { title: '周五策略周报生成', time: '每周五 17:00', on: true },
+    { title: '北向资金异动提醒', time: '实时', on: false },
+  ];
   body.innerHTML = `<div style="padding:24px;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
       <span style="font-size:20px;">⏰</span>
       <span style="font-size:16px;font-weight:600;color:var(--text-primary);">定时任务</span>
-      <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">${upcoming.length} 个待执行</span>
     </div>
-    ${upcoming.length === 0 ? '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">暂无定时任务</div>' : upcoming.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${m.title || '会议提醒'}</div>
-        <div style="font-size:11px;color:var(--text-muted);">${m.time || '待定'} · ${m.host || ''}</div>
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;" id="schedule-tabs">
+      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:600;color:var(--accent-blue);border-bottom:2px solid var(--accent-blue);cursor:pointer;" onclick="switchScheduleTab(this,'tab-meetings')">会议预约 (${upcoming.length})</div>
+      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;" onclick="switchScheduleTab(this,'tab-custom')">自建任务 (${customTasks.length})</div>
+      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;" onclick="switchScheduleTab(this,'tab-monitor')">信源监控 (${monitorSettings.length})</div>
+    </div>
+    <div id="tab-meetings">
+      ${upcoming.length === 0 ? '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">暂无会议预约</div>' : upcoming.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${m.title || '会议提醒'}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${m.time || '待定'} · ${m.host || ''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);cursor:pointer;" onclick="this.querySelector('span').textContent=this.querySelector('span').textContent==='已同步'?'同步飞书':'已同步';this.querySelector('span').style.color=this.querySelector('span').textContent==='已同步'?'var(--accent-cyan)':'var(--text-secondary)'">
+          <span style="color:${i < 1 ? 'var(--accent-cyan)' : 'var(--text-secondary)'};">${i < 1 ? '已同步' : '同步飞书'}</span> 📅
+        </div>
+        <label style="position:relative;width:36px;height:20px;display:inline-block;">
+          <input type="checkbox" ${i < 2 ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
+          <span style="position:absolute;inset:0;border-radius:10px;background:${i < 2 ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
+          <span style="position:absolute;top:2px;left:${i < 2 ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
+        </label>
+      </div>`).join('')}
+    </div>
+    <div id="tab-custom" style="display:none;">
+      ${customTasks.map((t, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${t.title}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${t.time}</div>
+        </div>
+        <label style="position:relative;width:36px;height:20px;display:inline-block;">
+          <input type="checkbox" ${t.on ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
+          <span style="position:absolute;inset:0;border-radius:10px;background:${t.on ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
+          <span style="position:absolute;top:2px;left:${t.on ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
+        </label>
+      </div>`).join('')}
+      <div style="text-align:center;padding:16px;">
+        <button class="btn btn-outline btn-sm" onclick="showToast('请在对话中描述任务内容')">+ 新建任务</button>
       </div>
-      <label style="position:relative;width:36px;height:20px;display:inline-block;">
-        <input type="checkbox" ${i < 2 ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.style.background=this.checked?'var(--accent-blue)':'var(--border)'">
-        <span style="position:absolute;inset:0;border-radius:10px;background:${i < 2 ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
-        <span style="position:absolute;top:2px;left:${i < 2 ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
-      </label>
-    </div>`).join('')}
+    </div>
+    <div id="tab-monitor" style="display:none;">
+      ${monitorSettings.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:500;color:var(--text-primary);">${m.name}</span>
+            <span style="font-size:10px;padding:2px 6px;border-radius:6px;background:${m.on ? 'rgba(0,184,148,0.1)' : 'rgba(142,142,147,0.1)'};color:${m.on ? 'var(--accent-cyan)' : 'var(--text-muted)'};">${m.on ? '运行中' : '已暂停'}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);">${m.sources}</div>
+        </div>
+        <label style="position:relative;width:36px;height:20px;display:inline-block;">
+          <input type="checkbox" ${m.on ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
+          <span style="position:absolute;inset:0;border-radius:10px;background:${m.on ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
+          <span style="position:absolute;top:2px;left:${m.on ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
+        </label>
+      </div>`).join('')}
+    </div>
   </div>`;
 }
 
+function switchScheduleTab(el, tabId) {
+  el.parentElement.querySelectorAll('.schedule-tab-btn').forEach(t => {
+    t.style.color = 'var(--text-muted)'; t.style.fontWeight = '500'; t.style.borderBottom = '2px solid transparent';
+  });
+  el.style.color = 'var(--accent-blue)'; el.style.fontWeight = '600'; el.style.borderBottom = '2px solid var(--accent-blue)';
+  ['tab-meetings','tab-custom','tab-monitor'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.style.display = id === tabId ? '' : 'none';
+  });
+}
+
 function renderMonitorCenter(body) {
-  const groups = typeof researchGroups !== 'undefined' ? Object.keys(researchGroups).slice(0, 6) : ['AI产业','科技','金融','消费','医疗健康','先进制造'];
   body.innerHTML = `<div style="padding:24px;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
       <span style="font-size:20px;">📡</span>
       <span style="font-size:16px;font-weight:600;color:var(--text-primary);">信源监控中心</span>
+      <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">${monitorSettings.length} 个监控器</span>
+      <button class="btn btn-primary btn-sm" style="margin-left:8px;" onclick="closeAiGlobal();openGlobalAiPanel('new')">+ 新建</button>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
-      ${groups.map((g, i) => `<span style="padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer;border:1px solid ${i===0?'var(--accent-blue)':'var(--border)'};color:${i===0?'var(--accent-blue)':'var(--text-secondary)'};background:${i===0?'rgba(45,127,249,0.06)':'transparent'};">${g}</span>`).join('')}
-    </div>
-    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:12px;">今日触发 (${3 + groups.length})</div>
-    ${['英伟达发布新一代B300芯片，算力提升40%','OpenAI估值突破3000亿美元','国内大模型备案数量突破200家','中科曙光获30亿服务器订单','华为昇腾AI集群部署加速'].map((t, i) => `<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;">
-      <span style="font-size:10px;color:var(--text-muted);white-space:nowrap;margin-top:2px;">${String(8+i).padStart(2,'0')}:${String(15+i*12).padStart(2,'0')}</span>
-      <div style="flex:1;">
-        <div style="font-size:12px;color:var(--text-primary);line-height:1.5;">${t}</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">来源：${['路透社','Bloomberg','36氪','证券时报','新华社'][i]}</div>
+    ${monitorSettings.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:600;color:var(--text-primary);">${m.name}</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:${m.on ? 'rgba(0,184,148,0.1)' : 'rgba(142,142,147,0.1)'};color:${m.on ? 'var(--accent-cyan)' : 'var(--text-muted)'};">${m.on ? '运行中' : '已暂停'}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">信源：${m.sources}</div>
+          ${m.researcher ? `<div style="font-size:11px;color:var(--text-secondary);">👤 ${m.researcher}</div>` : ''}
+        </div>
+        <label style="position:relative;width:36px;height:20px;display:inline-block;cursor:pointer;">
+          <input type="checkbox" ${m.on ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
+          <span style="position:absolute;inset:0;border-radius:10px;background:${m.on ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
+          <span style="position:absolute;top:2px;left:${m.on ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
+        </label>
+        <button class="btn btn-outline btn-sm" onclick="closeAiGlobal();openGlobalAiPanel('edit','${m.name}')">编辑</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--val-down);" onclick="showToast('已删除 ${m.name}');this.closest('div[style*=margin-bottom]').remove()">删除</button>
       </div>
     </div>`).join('')}
   </div>`;
@@ -4653,7 +5397,7 @@ function sendGlobalChat() {
       general: `好的，让我针对「${msg}」为你做分析...\n\n基于当前市场数据，这个问题涉及多个维度。建议关注近期机构调研动向和北向资金流向。`,
       report: `正在基于「${msg}」生成报告草稿...\n\n正在整合信源数据、个股行情和产业链逻辑。`,
       ppt: `正在生成PPT大纲...\n\n主题：${msg}\n预计包含8-12页，涵盖行业概述、数据分析和投资建议。`,
-      joke: `「${msg}」相关段子来了：\n\n"今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。"\n\n😄 需要换个风格吗？`,
+      joke: `正在基于「${msg}」生成点评...\n\n已分析今日47条信源，为你提炼核心投资观点。`,
       'monitor-center': `已为你启动信源监控中心。当前监控 ${msg} 相关信源变动。`,
       schedule: `已创建定时任务：${msg}。将在指定时间提醒你。`
     };
@@ -4736,10 +5480,10 @@ function sendRightChat() {
 
 // ========== AIX SCENE-AWARE SYSTEM ==========
 const sceneConfig = {
-  home: { title:'AI 投研助手', suggestions:['宁德时代扩产的边际效应分析','H20获批后算力产业链机会梳理','免税板块五一数据超预期怎么看'] },
-  meetings: { title:'AI 会议助手', suggestions:['预约专家访谈','获取纪要摘要','推荐值得参会的会议'] },
-  monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','优化配置'] },
-  stock: { title:'AI 个股助手', suggestions:['深度分析当前个股','查看相关信源','查看调研数据'] },
+  home: { title:'AI 投研助手', suggestions:['分析今日市场主线','生成自选股早报','AI板块最新动态'] },
+  meetings: { title:'AI 会议助手', suggestions:['预约下一场专家访谈','对比本周会议观点','导出纪要摘要PDF'] },
+  monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','生成行业点评'] },
+  stock: { title:'AI 个股助手', suggestions:['加入自选股','产业链详细分析','同业估值对比'] },
 };
 
 let aixTaskRunning = false;
@@ -4798,9 +5542,9 @@ function openGlobalAiPanel(mode, name) {
     bindSuggestions();
   } else if (mode === 'joke') {
     chatMode = 'joke';
-    title.textContent = 'AI 段子生成器';
-    subtitle.textContent = '基于行情的投研段子';
-    resetAiChat('来点乐子！我可以根据今日行情帮你生成投研段子。<br><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="根据今天涨停板生成一个段子">「涨停板段子」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="编一个关于基金经理的搞笑段子">「基金经理段子」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="来一个韭菜自嘲的段子">「韭菜自嘲」</span>');
+    title.textContent = 'AI 点评生成';
+    subtitle.textContent = '基于行情的投研点评';
+    resetAiChat('你好！我可以根据今日行情和信源数据生成专业投研点评。<br><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="根据今天涨停板生成市场点评">「市场点评」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="分析今日板块轮动并给出投资观点">「板块轮动点评」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="挖掘今日值得关注的个股机会">「个股机会点评」</span>');
     bindSuggestions();
   } else {
     const scene = sceneConfig[currentPageId] || sceneConfig.home;
