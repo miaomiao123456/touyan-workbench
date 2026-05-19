@@ -68,11 +68,11 @@ body {
   gap: 10px;
 }
 .logo-icon {
-  width: 28px; height: 28px;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 14px; color: #fff;
+  height: 36px;
+  flex-shrink: 0;
+}
+.logo-icon img {
+  height: 100%; width: auto; object-fit: contain;
 }
 .logo-text {
   font-size: 16px;
@@ -1977,14 +1977,26 @@ body {
 
 /* ========== LOGO SLOGAN ========== */
 .logo-slogan {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: 400;
-  letter-spacing: 0.3px;
+  display: none;
+}
+.header-slogan {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #2d7ff9, #00d4aa, #2d7ff9);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: sloganShimmer 4s linear infinite;
   white-space: nowrap;
-  padding-left: 4px;
-  border-left: 1px solid var(--border);
-  margin-left: 4px;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+@keyframes sloganShimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 </style>
 </head>
@@ -1993,10 +2005,9 @@ body {
 <!-- HEADER -->
 <header class="header">
   <div class="header-logo">
-    <div class="logo-icon">C</div>
-    <span class="logo-text">财跃投研</span>
-    <span class="logo-slogan">市场最懂AI的投研平台</span>
+    <div class="logo-icon"><img src="images/logo.png" alt="财跃星辰" /></div>
   </div>
+  <div class="header-slogan">市场最懂AI的投研平台</div>
   <div class="header-right">
     <div class="header-market">
       <div class="market-item"><span class="market-label">沪指</span><span class="market-val up">3,412.56</span></div>
@@ -2354,6 +2365,7 @@ body {
     </div>
 
   </div>
+  </div>
 
   <!-- ==================== STOCK ONE-PAGER ==================== -->
   <div class="page" id="page-stock">
@@ -2575,17 +2587,6 @@ body {
           </div>
         </div>
 
-        <div class="card">
-          </div>
-          <div class="source-refs">
-            <span class="source-ref">📄 华泰证券 · 深度报告 · 2026.05.12</span>
-            <span class="source-ref">📄 中信证券 · 点评 · 2026.05.10</span>
-            <span class="source-ref">🎙 AI专家会议 · 千里科技端侧AI解读 · 2026.05.14</span>
-            <span class="source-ref">🎙 AI专家会议 · 智能终端趋势 · 2026.05.08</span>
-            <span class="source-ref">📢 上市公司公告 · 2026Q1业绩快报</span>
-            <span class="source-ref">📊 一线调研 · Q2出货数据 · 8条</span>
-          </div>
-        </div>
       </div>
 
       <div class="stock-sidebar">
@@ -2817,7 +2818,7 @@ body {
   </div>
   <div class="ai-global-right">
     <!-- 默认模式: progress + documents -->
-    <div class="ai-global-right-default">
+    <div class="ai-global-right-default" style="display:none;">
       <div class="ai-global-right-section">
         <div class="ai-global-right-title">Progress</div>
         <div id="ai-global-progress"></div>
@@ -3787,9 +3788,9 @@ const researchGroups = {
 // ========== AI EXPERT DIRECTORY ==========
 const expertData = [
   // AI 产业 — 大模型（国内）
-  { name: '印奇', identity: '阶跃星辰董事长/旷视科技创始人', field: 'AI战略/计算机视觉', tags: ['AI+终端','旷视科技'], region: '国内', group: 'ai', subgroup: '大模型', headline: '阶跃星辰董事长，AI视觉四小龙旷视创始人' },
-  { name: '姜大昕', identity: '阶跃星辰创始人兼CEO', field: '数据挖掘/NLP/大模型', tags: ['万亿参数模型','Step系列模型'], region: '国内', group: 'ai', subgroup: '大模型', headline: '前微软全球副总裁，IEEE 2025 Fellow' },
-  { name: '张祥雨', identity: '阶跃星辰首席科学家', field: '深度学习模型架构/计算机视觉', tags: ['ResNet第一作者','模型压缩'], region: '国内', group: 'ai', subgroup: '大模型', headline: 'ResNet第一作者，未来科学大奖获得者' },
+  { name: '印奇', identity: '阶跃星辰董事长/旷视科技创始人', field: 'AI战略/计算机视觉', tags: ['AI+终端','旷视科技'], region: '国内', group: 'ai', subgroup: '大模型', headline: '阶跃星辰董事长，AI视觉四小龙旷视创始人', photo: 'images/yinqi.png' },
+  { name: '姜大昕', identity: '阶跃星辰创始人兼CEO', field: '数据挖掘/NLP/大模型', tags: ['万亿参数模型','Step系列模型'], region: '国内', group: 'ai', subgroup: '大模型', headline: '前微软全球副总裁，IEEE 2025 Fellow', photo: 'images/jiangdaxin.png' },
+  { name: '张祥雨', identity: '阶跃星辰首席科学家', field: '深度学习模型架构/计算机视觉', tags: ['ResNet第一作者','模型压缩'], region: '国内', group: 'ai', subgroup: '大模型', headline: 'ResNet第一作者，未来科学大奖获得者', photo: 'images/zhangxiangyu.png' },
   { name: '朱亦博', identity: '阶跃星辰联合创始人/CTO', field: 'AI系统/软硬协同', tags: ['万卡集群','分布式训练'], region: '国内', group: 'ai', subgroup: '大模型', headline: '曾为字节搭建万卡集群，系统架构专家' },
   { name: '焦斌星', identity: '阶跃星辰数据负责人', field: '数据挖掘/搜索算法/NLP', tags: ['数据质量','搜索优化'], region: '国内', group: 'ai', subgroup: '大模型', headline: '前微软Bing核心搜索团队负责人' },
   { name: '唐杰', identity: '智谱AI创始人、清华教授', field: '大模型基座/知识图谱', tags: ['国产大模型领军','产业落地'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国产大模型领军人物' },
@@ -3867,7 +3868,7 @@ function renderExperts(group, sub) {
   el.innerHTML = filtered.map(e => `
     <div class="ai-expert-card" onclick="openExpertDetail('${e.name.replace(/'/g, "\\'")}')">
       <div class="expert-core">
-        <img class="ai-expert-avatar" src="https://i.pravatar.cc/112?u=${encodeURIComponent(e.name)}" alt="${e.name}" />
+        <img class="ai-expert-avatar" src="${e.photo || 'https://i.pravatar.cc/112?u=' + encodeURIComponent(e.name)}" alt="${e.name}" />
         <div class="expert-bio">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
             <span class="expert-name">${e.name}</span>
@@ -4902,7 +4903,7 @@ function closeAiGlobal() {
   overlay.classList.remove('show', 'has-product', 'no-product');
   document.getElementById('ai-float-group').style.display = '';
   document.getElementById('ai-global-right-chat').style.display = 'none';
-  document.querySelector('.ai-global-right-default').style.display = '';
+  document.querySelector('.ai-global-right-default').style.display = 'none';
   renderFloatSuggestions();
 }
 
@@ -5439,7 +5440,7 @@ function hideProductView() {
   overlay.classList.remove('has-product');
   overlay.classList.add('no-product');
   document.getElementById('ai-global-right-chat').style.display = 'none';
-  document.querySelector('.ai-global-right-default').style.display = '';
+  document.querySelector('.ai-global-right-default').style.display = 'none';
 }
 
 function switchProductTab(el, tab) {
