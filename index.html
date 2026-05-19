@@ -954,11 +954,16 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
-.mc-card-cover-icon {
-  font-size: 40px;
-  opacity: 0.3;
+.mc-card-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
 }
+.mc-card-cover > * { position: relative; z-index: 1; }
 .mc-card-status {
   position: absolute;
   top: 10px;
@@ -1129,6 +1134,14 @@ body {
   top: 0; left: 0; right: 0;
   height: 4px;
   background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  display: none;
+}
+.note-card-cover {
+  height: 80px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px 8px 0 0;
+  margin: -18px -16px 12px -16px;
 }
 .note-card:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
@@ -1136,7 +1149,6 @@ body {
 }
 .note-card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
 .note-card-title { font-weight: 700; font-size: 14px; line-height: 1.5; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.note-card-rating { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 8px; }
 .note-card-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .note-card-footer { font-size: 11px; color: var(--text-muted); }
 
@@ -1200,6 +1212,11 @@ body {
 }
 .minutes-content li { margin-bottom: 4px; list-style: none; position: relative; padding-left: 12px; }
 .minutes-content li::before { content: ''; position: absolute; left: 0; top: 7px; width: 4px; height: 4px; background: var(--accent-blue); border-radius: 50%; }
+.minutes-chat { display:flex; flex-direction:column; gap:16px; }
+.minutes-chat-meta { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.minutes-chat-avatar { width:22px; height:22px; border-radius:50%; background:var(--accent-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; flex-shrink:0; }
+.minutes-chat-time { font-size:10px; color:var(--text-muted); font-family:var(--font-mono); }
+.minutes-chat-bubble { font-size:12px; color:var(--accent-blue); line-height:1.7; padding-left:30px; }
 .collapsible-header {
   display: flex;
   align-items: center;
@@ -1722,6 +1739,14 @@ body {
 .ai-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(45,127,249,0.5); }
 .ai-fab.hidden { display: none; }
 
+/* Toggle Switch */
+.toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); border-radius: 20px; transition: 0.3s; }
+.toggle-slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; }
+.toggle-switch input:checked + .toggle-slider { background: var(--accent-blue); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
 /* Toast */
 .toast {
   position: fixed;
@@ -1995,18 +2020,10 @@ body {
       <div class="monitor-tab active" data-tab="ai-meetings">会议中心</div>
       <div class="monitor-tab" data-tab="notes-library">纪要资料库</div>
       <div class="monitor-tab" data-tab="expert-dir">专家库</div>
-      <button class="btn btn-gradient btn-sm" style="margin-left:auto;" onclick="openInterviewAiPanel()">✦ AI智能预约</button>
     </div>
 
-    <!-- Meeting Center with sub-tabs -->
+    <!-- Meeting Center -->
     <div class="monitor-view active" id="tab-ai-meetings">
-      <div class="sub-tabs">
-        <div class="sub-tab active" data-subview="subview-industry">AI产业链会议</div>
-        <div class="sub-tab" data-subview="subview-booked">我的预约会议</div>
-      </div>
-
-      <!-- Sub-view: AI产业链会议 -->
-      <div class="sub-view active" id="subview-industry">
         <div class="research-filter" id="meeting-research-filter">
           <div class="filter-bar filter-groups" id="meeting-group-filter">
             <div class="filter-chip active" data-group="all">全部</div>
@@ -2025,36 +2042,6 @@ body {
           <div class="filter-bar filter-subs" id="meeting-sub-filter"></div>
         </div>
         <div class="meeting-cards-grid" id="meeting-cards-grid"></div>
-      </div>
-
-      <!-- Sub-view: 我的预约会议 -->
-      <div class="sub-view" id="subview-booked">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
-          <button class="btn btn-sm" onclick="showToast('已同步到飞书日历')">📅 同步到飞书日历</button>
-        </div>
-        <div class="card" style="padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:14px; border-left:3px solid var(--accent-gold);">
-          <div style="text-align:center; min-width:60px;">
-            <div style="font-size:13px; font-weight:700; color:var(--text-primary);">05/21</div>
-            <div style="font-size:10px; color:var(--text-muted);">周三 10:00</div>
-          </div>
-          <div style="flex:1;">
-            <div style="font-size:13px; font-weight:600; margin-bottom:3px;">人形机器人量产元年：产业链机会梳理</div>
-            <div style="font-size:11px; color:var(--text-secondary);">赵伟 · 广发证券机械首席</div>
-          </div>
-          <span class="tag tag-gold">应用</span>
-        </div>
-        <div class="card" style="padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:14px; border-left:3px solid var(--accent-cyan);">
-          <div style="text-align:center; min-width:60px;">
-            <div style="font-size:13px; font-weight:700; color:var(--text-primary);">05/23</div>
-            <div style="font-size:10px; color:var(--text-muted);">周五 14:00</div>
-          </div>
-          <div style="flex:1;">
-            <div style="font-size:13px; font-weight:600; margin-bottom:3px;">AI Agent商业化路径探讨</div>
-            <div style="font-size:11px; color:var(--text-secondary);">李晓峰 · 华锐技术AI研究院院长</div>
-          </div>
-          <span class="tag tag-cyan">大模型</span>
-        </div>
-      </div>
     </div>
 
     <!-- Notes Library -->
@@ -2104,87 +2091,7 @@ body {
 
   <!-- Meeting Detail Overlay -->
   <div class="detail-overlay" id="meeting-detail">
-    <div class="detail-panel">
-      <div class="detail-header">
-        <div>
-          <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;">2026-05-14 14:00</div>
-          <div style="font-size:20px; font-weight:700; margin-bottom:6px;">英伟达中国特供芯片深度解读：产业链投资机会</div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span class="tag tag-blue">半导体</span>
-            <span class="tag tag-green">纪要已出</span>
-            <span style="font-size:11px; color:var(--text-secondary);">主讲：陈明远 · 华泰证券电子首席</span>
-          </div>
-        </div>
-        <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
-      </div>
-      <div class="detail-body">
-        <div style="display:flex; gap:16px; margin-bottom:20px;">
-          <div class="card" style="flex:1; padding:12px;">
-            <div class="text-xs" style="color:var(--text-muted);">参会人数</div>
-            <div class="mono" style="font-size:18px; font-weight:700; margin-top:2px;">186</div>
-          </div>
-          <div class="card" style="flex:1; padding:12px;">
-            <div class="text-xs" style="color:var(--text-muted);">会议时长</div>
-            <div class="mono" style="font-size:18px; font-weight:700; margin-top:2px;">62 min</div>
-          </div>
-          <div class="card" style="flex:1; padding:12px;">
-            <div class="text-xs" style="color:var(--text-muted);">AI 评分</div>
-            <div class="mono" style="font-size:18px; font-weight:700; color:var(--accent-blue); margin-top:2px;">A+</div>
-          </div>
-        </div>
-
-        <div class="minutes-section">
-          <div class="minutes-section-title">◆ 核心观点</div>
-          <div class="minutes-content">
-            <li>英伟达中国特供 H20 芯片获批信号明确，预计 Q3 量产交付，首批客户为 BAT 级别云厂商</li>
-            <li>特供芯片性能约为 H100 的 60%，但价格仅为 40%，性价比优势突出</li>
-            <li>国产替代逻辑不变但节奏放缓，短期利好英伟达产业链，中长期仍看好国产 GPU</li>
-          </div>
-        </div>
-        <div class="minutes-section">
-          <div class="minutes-section-title">◆ 数据要点</div>
-          <div class="minutes-content">
-            <li>H20 预计年出货量 50-80 万片，对应收入约 40-60 亿美元</li>
-            <li>中科曙光、浪潮信息为主要服务器集成商，订单能见度至 2026Q4</li>
-            <li>PCB/载板环节受益确定性最高，深南电路、兴森科技产能利用率已超 90%</li>
-          </div>
-        </div>
-        <div class="minutes-section">
-          <div class="minutes-section-title">◆ 投资建议</div>
-          <div class="minutes-content">
-            <li><strong>强烈推荐：</strong>中科曙光(603019)、深南电路(002916)</li>
-            <li><strong>推荐关注：</strong>浪潮信息(000977)、兴森科技(002436)</li>
-            <li><strong>风险标的：</strong>寒武纪——短期估值过高，等回调再介入</li>
-          </div>
-        </div>
-
-        <div class="collapsible-header" onclick="this.classList.toggle('expanded'); this.nextElementSibling.classList.toggle('open');">
-          <span>📄 查看原始语料（12,847字）</span>
-          <span class="analysis-arrow">▼</span>
-        </div>
-        <div class="collapsible-body">
-          <p>大家好，我是华泰证券电子行业首席分析师陈明远。今天我们重点讨论英伟达中国特供芯片H20的最新进展和产业链投资机会。</p>
-          <p style="margin-top:8px;">首先，关于H20获批的背景。我们从多个产业链渠道确认，英伟达已经获得了美国商务部的出口许可...</p>
-          <p style="margin-top:8px; color:var(--text-muted);">（原始语料已脱敏处理，仅限已认证投研用户查看完整版本）</p>
-        </div>
-
-        <div style="margin-top:20px;">
-          <div class="text-xs mb-8" style="color:var(--text-muted);">相关个股一页纸</div>
-          <div class="source-refs">
-            <span class="source-ref" onclick="navigateTo('stock'); closeMeetingDetail();">◆ 中科曙光 603019</span>
-            <span class="source-ref" onclick="navigateTo('stock'); closeMeetingDetail();">◆ 深南电路 002916</span>
-            <span class="source-ref" onclick="navigateTo('stock'); closeMeetingDetail();">◆ 浪潮信息 000977</span>
-          </div>
-        </div>
-        <div style="margin-top:20px;">
-          <div class="text-xs mb-8" style="color:var(--text-muted);">相关主题会议</div>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">国产GPU三足鼎立：海光/寒武纪/摩尔线程 · 05/20</div>
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">算力产业2026年趋势展望 · 05/28</div>
-          </div>
-          <button class="btn btn-cyan btn-sm" style="margin-top:10px;" onclick="showToast('已订阅此系列会议'); closeMeetingDetail();">订阅此系列会议</button>
-        </div>
-      </div>
+    <div class="detail-panel" id="meeting-detail-panel" style="width:960px;">
     </div>
   </div>
 
@@ -2204,16 +2111,7 @@ body {
 
   <!-- Note Detail Overlay -->
   <div class="detail-overlay" id="note-detail">
-    <div class="detail-panel">
-      <div class="detail-header">
-        <div>
-          <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;" id="note-detail-meta"></div>
-          <div style="font-size:20px; font-weight:700; margin-bottom:6px;" id="note-detail-title"></div>
-          <div style="display:flex; gap:8px; align-items:center;" id="note-detail-tags"></div>
-        </div>
-        <button class="detail-close" onclick="closeNoteDetail()">✕</button>
-      </div>
-      <div class="detail-body" id="note-detail-body"></div>
+    <div class="detail-panel" id="note-detail-panel" style="width:960px;">
     </div>
   </div>
 
@@ -2736,18 +2634,6 @@ document.querySelectorAll('.sidebar .nav-item').forEach(item => {
   item.addEventListener('click', () => navigateTo(item.dataset.page));
 });
 
-// Sub-tab click handlers (within meeting center)
-document.querySelectorAll('.sub-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const container = tab.closest('.monitor-view');
-    container.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-    container.querySelectorAll('.sub-view').forEach(v => v.classList.remove('active'));
-    tab.classList.add('active');
-    const view = document.getElementById(tab.dataset.subview);
-    if (view) view.classList.add('active');
-  });
-});
-
 // ========== QUICK SEARCH TAGS ==========
 function quickSearch(category) {
   const searchInput = document.getElementById('main-search');
@@ -2931,17 +2817,17 @@ watchlistData.forEach(w => {
 
 // ========== AI MEETING CARDS ==========
 const meetingCardsData = [
-  { title: 'AI大模型在投研领域的实践探索', expert: '李晓峰 · AI研究院院长 · 华锐技术', date: '2026-05-19 10:00', tag: 'AI大模型', tagClass: 'tag-cyan', attendees: 628, status: '即将开始', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #1a1030, #2d1b69)', icon: '🤖', registered: false, group: 'ai', subgroup: '大模型' },
-  { title: '英伟达H20产业链深度：算力投资的确定性主线', expert: '陈明远 · 华泰证券电子首席', date: '2026-05-18 14:00', tag: '算力/芯片', tagClass: 'tag-blue', attendees: 412, status: '即将开始', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #0d2137, #1a3a5c)', icon: '💎', registered: true, group: 'ai', subgroup: '算力/芯片' },
-  { title: '国产GPU三足鼎立：海光/寒武纪/摩尔线程跟踪', expert: '周磊 · 中金公司TMT首席', date: '2026-05-20 15:00', tag: 'AI芯片', tagClass: 'tag-blue', attendees: 298, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #0f2b1a, #1a5c3a)', icon: '⚡', registered: false, group: 'ai', subgroup: '算力/芯片' },
-  { title: '人形机器人量产元年：产业链机会梳理', expert: '赵伟 · 广发证券机械首席', date: '2026-05-21 10:00', tag: '机器人', tagClass: 'tag-gold', attendees: 445, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #2b1a0f, #5c3a1a)', icon: '🤖', registered: false, group: 'ai', subgroup: 'AI应用' },
-  { title: '英伟达中国特供芯片深度解读', expert: '陈明远 · 华泰证券电子首席', date: '2026-05-14 14:00', tag: '半导体', tagClass: 'tag-blue', attendees: 186, status: '已结束', statusClass: 'ended', gradient: 'linear-gradient(135deg, #0d1b2a, #1b3a5c)', icon: '💎', hasDetail: true, registered: true, group: 'ai', subgroup: '算力/芯片' },
-  { title: 'AI Agent爆发期：通用智能体的投资地图', expert: '李晓峰 · 华锐技术AI院长', date: '2026-05-10 14:00', tag: 'AI应用', tagClass: 'tag-cyan', attendees: 534, status: '已结束', statusClass: 'ended', gradient: 'linear-gradient(135deg, #1a2b0f, #3a5c1a)', icon: '🧠', registered: true, group: 'ai', subgroup: 'AI应用' },
-  { title: '苹果AI战略与供应链变革深度', expert: '赵晓光 · 天风证券电子首席', date: '2026-05-22 14:00', tag: '消费电子', tagClass: 'tag-blue', attendees: 356, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #1a1a2e, #16213e)', icon: '📱', registered: false, group: 'tech', subgroup: '半导体' },
-  { title: '白酒行业中期策略：复苏节奏与估值重塑', expert: '范劲松 · 华创证券食饮首席', date: '2026-05-23 10:00', tag: '白酒', tagClass: 'tag-gold', attendees: 289, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #2b200f, #5c4a1a)', icon: '🍶', registered: false, group: 'consume', subgroup: '白酒' },
-  { title: 'GLP-1减重药产业链深度：万亿赛道拆解', expert: '杨松 · 中信证券医药首席', date: '2026-05-24 14:00', tag: '创新药', tagClass: 'tag-green', attendees: 412, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #0f2b1a, #1a5c3a)', icon: '💊', registered: false, group: 'health', subgroup: '创新药' },
-  { title: '2026下半年宏观经济展望与资产配置', expert: '任泽平 · 泽平宏观创始人', date: '2026-05-26 10:00', tag: '宏观经济', tagClass: 'tag-cyan', attendees: 876, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #0d2137, #1a3a5c)', icon: '🌐', registered: false, group: 'macro', subgroup: '宏观经济' },
-  { title: '军工中期策略：装备放量与卫星互联网', expert: '孙潇雅 · 国泰君安军工首席', date: '2026-05-25 14:00', tag: '军工', tagClass: 'tag-blue', attendees: 198, status: '报名中', statusClass: 'upcoming', gradient: 'linear-gradient(135deg, #1a2b0f, #3a5c1a)', icon: '🚀', registered: false, group: 'manufacture', subgroup: '军工' },
+  { title: 'AI大模型在投研领域的实践探索', expert: '李晓峰 · AI研究院院长 · 华锐技术', date: '2026-05-19 10:00', tag: 'AI大模型', tagClass: 'tag-cyan', attendees: 628, status: '直播中', statusClass: 'live', coverImg: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=300&fit=crop', registered: false, group: 'ai', subgroup: '大模型' },
+  { title: '英伟达H20产业链深度：算力投资的确定性主线', expert: '陈明远 · 华泰证券电子首席', date: '2026-05-18 14:00', tag: '算力/芯片', tagClass: 'tag-blue', attendees: 412, status: '即将开始', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop', registered: true, group: 'ai', subgroup: '算力/芯片' },
+  { title: '国产GPU三足鼎立：海光/寒武纪/摩尔线程跟踪', expert: '周磊 · 中金公司TMT首席', date: '2026-05-20 15:00', tag: 'AI芯片', tagClass: 'tag-blue', attendees: 298, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=300&fit=crop', registered: false, group: 'ai', subgroup: '算力/芯片' },
+  { title: '人形机器人量产元年：产业链机会梳理', expert: '赵伟 · 广发证券机械首席', date: '2026-05-21 10:00', tag: '机器人', tagClass: 'tag-gold', attendees: 445, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=300&fit=crop', registered: false, group: 'ai', subgroup: 'AI应用' },
+  { title: '英伟达中国特供芯片深度解读', expert: '陈明远 · 华泰证券电子首席', date: '2026-05-14 14:00', tag: '半导体', tagClass: 'tag-blue', attendees: 186, status: '已结束', statusClass: 'ended', coverImg: 'https://images.unsplash.com/photo-1625314897518-bb4fe6e95229?w=600&h=300&fit=crop', hasDetail: true, registered: true, group: 'ai', subgroup: '算力/芯片' },
+  { title: 'AI Agent爆发期：通用智能体的投资地图', expert: '李晓峰 · 华锐技术AI院长', date: '2026-05-10 14:00', tag: 'AI应用', tagClass: 'tag-cyan', attendees: 534, status: '已结束', statusClass: 'ended', coverImg: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=300&fit=crop', registered: true, group: 'ai', subgroup: 'AI应用' },
+  { title: '苹果AI战略与供应链变革深度', expert: '赵晓光 · 天风证券电子首席', date: '2026-05-22 14:00', tag: '消费电子', tagClass: 'tag-blue', attendees: 356, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1491933382434-500287f9b54b?w=600&h=300&fit=crop', registered: false, group: 'tech', subgroup: '半导体' },
+  { title: '白酒行业中期策略：复苏节奏与估值重塑', expert: '范劲松 · 华创证券食饮首席', date: '2026-05-23 10:00', tag: '白酒', tagClass: 'tag-gold', attendees: 289, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1516594798947-e65505dbb29d?w=600&h=300&fit=crop', registered: false, group: 'consume', subgroup: '白酒' },
+  { title: 'GLP-1减重药产业链深度：万亿赛道拆解', expert: '杨松 · 中信证券医药首席', date: '2026-05-24 14:00', tag: '创新药', tagClass: 'tag-green', attendees: 412, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&h=300&fit=crop', registered: false, group: 'health', subgroup: '创新药' },
+  { title: '2026下半年宏观经济展望与资产配置', expert: '任泽平 · 泽平宏观创始人', date: '2026-05-26 10:00', tag: '宏观经济', tagClass: 'tag-cyan', attendees: 876, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=300&fit=crop', registered: false, group: 'macro', subgroup: '宏观经济' },
+  { title: '军工中期策略：装备放量与卫星互联网', expert: '孙潇雅 · 国泰君安军工首席', date: '2026-05-25 14:00', tag: '军工', tagClass: 'tag-blue', attendees: 198, status: '报名中', statusClass: 'upcoming', coverImg: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=300&fit=crop', registered: false, group: 'manufacture', subgroup: '军工' },
 ];
 
 const meetingCardsEl = document.getElementById('meeting-cards-grid');
@@ -2959,11 +2845,10 @@ function renderMeetingCards(group, sub) {
       m.status === '报名中' ? '<span class="mc-card-status upcoming">报名中</span>' :
       '<span class="mc-card-status ended">已结束</span>';
     const registerBtn = m.status === '已结束' ? '' :
-      m.registered ? '<span class="mc-card-register"><span class="btn-registered">✓ 已报名</span></span>' :
-      `<span class="mc-card-register"><button class="btn-register" onclick="event.stopPropagation(); this.outerHTML='<span class=\\'btn-registered\\'>✓ 已报名</span>'; showToast('报名成功，会议信息已发送至您的账户')">立即报名</button></span>`;
-    return `<div class="mc-card" onclick="${m.hasDetail ? 'openMeetingDetail()' : ''}">
-      <div class="mc-card-cover" style="background:${m.gradient};">
-        <span class="mc-card-cover-icon">${m.icon}</span>
+      m.registered ? '<span class="mc-card-register"><span class="btn-registered">✓ 已加入日程</span></span>' :
+      `<span class="mc-card-register"><button class="btn-register" onclick="event.stopPropagation(); this.outerHTML='<span class=\\'btn-registered\\'>✓ 已加入日程</span>'; showToast('已添加到会议日程')">添加日程</button></span>`;
+    return `<div class="mc-card" onclick="openMeetingDetail('${m.title.replace(/'/g, "\\'")}')">
+      <div class="mc-card-cover" style="background-image:url('${m.coverImg}')">
         ${statusLabel}
         <span class="mc-card-attendees">👤 ${m.attendees}人${m.status === '已结束' ? '参会' : '报名'}</span>
         ${registerBtn}
@@ -3072,7 +2957,7 @@ function renderExperts(group, sub) {
     return;
   }
   el.innerHTML = filtered.map(e => `
-    <div class="ai-expert-card">
+    <div class="ai-expert-card" onclick="openExpertDetail('${e.name.replace(/'/g, "\\'")}')">
       <div class="expert-core">
         <img class="ai-expert-avatar" src="https://i.pravatar.cc/112?u=${encodeURIComponent(e.name)}" alt="${e.name}" />
         <div class="expert-bio">
@@ -3094,22 +2979,22 @@ renderExperts('ai');
 
 // ========== NOTES LIBRARY ==========
 const notesLibraryData = [
-  { date: '05-14', title: '英伟达中国特供芯片深度解读：产业链投资机会', expert: '陈明远 · 华泰证券电子首席', tag: '算力/芯片', tagClass: 'tag-blue', rating: 'A+', hasDetail: true, group: 'ai', subgroup: '算力/芯片' },
-  { date: '05-15', title: '消费电子2026下半年展望：苹果链与折叠屏', expert: '赵晓光 · 天风证券电子首席', tag: '消费电子', tagClass: 'tag-blue', rating: 'A', group: 'tech', subgroup: '半导体' },
-  { date: '05-13', title: '宏观经济月度跟踪：PMI与社融数据解读', expert: '任泽平 · 泽平宏观创始人', tag: '宏观经济', tagClass: 'tag-cyan', rating: 'A+', group: 'macro', subgroup: '宏观经济' },
-  { date: '05-12', title: '中美贸易缓和下的出口链机会', expert: '张峰 · 海通证券策略首席', tag: 'AI策略', tagClass: 'tag-blue', rating: 'A', group: 'ai', subgroup: '大模型' },
-  { date: '05-11', title: '茅台渠道调研纪要：批价企稳信号', expert: '范劲松 · 华创证券食饮首席', tag: '白酒', tagClass: 'tag-gold', rating: 'A', group: 'consume', subgroup: '白酒' },
-  { date: '05-10', title: 'AI Agent爆发期：通用智能体投资地图', expert: '李晓峰 · 华锐技术AI院长', tag: 'AI应用', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: 'AI应用' },
-  { date: '05-09', title: '创新药2026年投资框架：GLP-1主线', expert: '杨松 · 中信证券医药首席', tag: '创新药', tagClass: 'tag-green', rating: 'A+', group: 'health', subgroup: '创新药' },
-  { date: '05-08', title: '算力产业2026年趋势展望', expert: '周磊 · 中金公司TMT首席', tag: 'AI芯片', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: '算力/芯片' },
-  { date: '05-07', title: '锂电产业链价格周期复盘与展望', expert: '韩虹 · 招商证券新能源首席', tag: '锂电', tagClass: 'tag-green', rating: 'A', group: 'manufacture', subgroup: '锂电' },
-  { date: '05-06', title: '800G光模块需求爆发：产业链受益梳理', expert: '吕伟 · 华创证券通信首席', tag: '光模块', tagClass: 'tag-blue', rating: 'A', group: 'tech', subgroup: '通信设备' },
-  { date: '05-04', title: '银行股中期配置价值：低估值高股息策略', expert: '戴志锋 · 中泰证券银行首席', tag: '银行', tagClass: 'tag-blue', rating: 'B+', group: 'finance', subgroup: '银行' },
-  { date: '04-30', title: '黄金突破3000美元的逻辑与持续性', expert: '邱祖学 · 国泰君安有色首席', tag: '有色金属', tagClass: 'tag-gold', rating: 'A+', group: 'material', subgroup: '有色金属' },
-  { date: '04-28', title: '光伏产业链价格触底与出清节奏研判', expert: '刘思远 · 浦发银行投研部', tag: '新能源', tagClass: 'tag-green', rating: 'B+', group: 'ai', subgroup: 'AI应用' },
-  { date: '04-22', title: '国产GPU突围：海光/寒武纪/摩尔线程三方对比', expert: '周磊 · 中金公司TMT首席', tag: 'AI芯片', tagClass: 'tag-blue', rating: 'A+', group: 'ai', subgroup: '算力/芯片' },
-  { date: '04-15', title: '人形机器人核心零部件全景扫描', expert: '赵伟 · 广发证券机械首席', tag: '机器人', tagClass: 'tag-gold', rating: 'A', group: 'ai', subgroup: 'AI应用' },
-  { date: '04-10', title: '大模型应用层：从ChatGPT到行业垂直化', expert: '李晓峰 · 华锐技术AI院长', tag: 'AI大模型', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: '大模型' },
+  { date: '05-14', title: '英伟达中国特供芯片深度解读：产业链投资机会', expert: '陈明远 · 华泰证券电子首席', tag: '算力/芯片', tagClass: 'tag-blue', rating: 'A+', hasDetail: true, group: 'ai', subgroup: '算力/芯片', coverImg: 'https://images.unsplash.com/photo-1625314897518-bb4fe6e95229?w=400&h=160&fit=crop' },
+  { date: '05-15', title: '消费电子2026下半年展望：苹果链与折叠屏', expert: '赵晓光 · 天风证券电子首席', tag: '消费电子', tagClass: 'tag-blue', rating: 'A', group: 'tech', subgroup: '半导体', coverImg: 'https://images.unsplash.com/photo-1491933382434-500287f9b54b?w=400&h=160&fit=crop' },
+  { date: '05-13', title: '宏观经济月度跟踪：PMI与社融数据解读', expert: '任泽平 · 泽平宏观创始人', tag: '宏观经济', tagClass: 'tag-cyan', rating: 'A+', group: 'macro', subgroup: '宏观经济', coverImg: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=160&fit=crop' },
+  { date: '05-12', title: '中美贸易缓和下的出口链机会', expert: '张峰 · 海通证券策略首席', tag: 'AI策略', tagClass: 'tag-blue', rating: 'A', group: 'ai', subgroup: '大模型', coverImg: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=160&fit=crop' },
+  { date: '05-11', title: '茅台渠道调研纪要：批价企稳信号', expert: '范劲松 · 华创证券食饮首席', tag: '白酒', tagClass: 'tag-gold', rating: 'A', group: 'consume', subgroup: '白酒', coverImg: 'https://images.unsplash.com/photo-1516594798947-e65505dbb29d?w=400&h=160&fit=crop' },
+  { date: '05-10', title: 'AI Agent爆发期：通用智能体投资地图', expert: '李晓峰 · 华锐技术AI院长', tag: 'AI应用', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: 'AI应用', coverImg: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=160&fit=crop' },
+  { date: '05-09', title: '创新药2026年投资框架：GLP-1主线', expert: '杨松 · 中信证券医药首席', tag: '创新药', tagClass: 'tag-green', rating: 'A+', group: 'health', subgroup: '创新药', coverImg: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=160&fit=crop' },
+  { date: '05-08', title: '算力产业2026年趋势展望', expert: '周磊 · 中金公司TMT首席', tag: 'AI芯片', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: '算力/芯片', coverImg: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=160&fit=crop' },
+  { date: '05-07', title: '锂电产业链价格周期复盘与展望', expert: '韩虹 · 招商证券新能源首席', tag: '锂电', tagClass: 'tag-green', rating: 'A', group: 'manufacture', subgroup: '锂电', coverImg: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=400&h=160&fit=crop' },
+  { date: '05-06', title: '800G光模块需求爆发：产业链受益梳理', expert: '吕伟 · 华创证券通信首席', tag: '光模块', tagClass: 'tag-blue', rating: 'A', group: 'tech', subgroup: '通信设备', coverImg: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400&h=160&fit=crop' },
+  { date: '05-04', title: '银行股中期配置价值：低估值高股息策略', expert: '戴志锋 · 中泰证券银行首席', tag: '银行', tagClass: 'tag-blue', rating: 'B+', group: 'finance', subgroup: '银行', coverImg: 'https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?w=400&h=160&fit=crop' },
+  { date: '04-30', title: '黄金突破3000美元的逻辑与持续性', expert: '邱祖学 · 国泰君安有色首席', tag: '有色金属', tagClass: 'tag-gold', rating: 'A+', group: 'material', subgroup: '有色金属', coverImg: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=400&h=160&fit=crop' },
+  { date: '04-28', title: '光伏产业链价格触底与出清节奏研判', expert: '刘思远 · 浦发银行投研部', tag: '新能源', tagClass: 'tag-green', rating: 'B+', group: 'ai', subgroup: 'AI应用', coverImg: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=160&fit=crop' },
+  { date: '04-22', title: '国产GPU突围：海光/寒武纪/摩尔线程三方对比', expert: '周磊 · 中金公司TMT首席', tag: 'AI芯片', tagClass: 'tag-blue', rating: 'A+', group: 'ai', subgroup: '算力/芯片', coverImg: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=160&fit=crop' },
+  { date: '04-15', title: '人形机器人核心零部件全景扫描', expert: '赵伟 · 广发证券机械首席', tag: '机器人', tagClass: 'tag-gold', rating: 'A', group: 'ai', subgroup: 'AI应用', coverImg: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=160&fit=crop' },
+  { date: '04-10', title: '大模型应用层：从ChatGPT到行业垂直化', expert: '李晓峰 · 华锐技术AI院长', tag: 'AI大模型', tagClass: 'tag-cyan', rating: 'A+', group: 'ai', subgroup: '大模型', coverImg: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=160&fit=crop' },
 ];
 
 const notesLibraryEl = document.getElementById('notes-library-list');
@@ -3123,9 +3008,9 @@ function renderNotes(group, sub) {
   }
   notesLibraryEl.innerHTML = filtered.map(n => `
     <div class="note-card" onclick="openNoteDetail('${n.title.replace(/'/g, "\\'")}')">
+      <div class="note-card-cover" style="background-image:url('${n.coverImg}')"></div>
       <div class="note-card-tags">
         <span class="tag ${n.tagClass}">${n.tag}</span>
-        <span class="tag">${n.rating}</span>
       </div>
       <div class="note-card-title">${n.title}</div>
       <div class="note-card-summary">${n.summary || '深度解析行业趋势与投资机会，涵盖产业链核心环节研判。'}</div>
@@ -3171,11 +3056,412 @@ initGroupFilter('meeting-group-filter', 'meeting-sub-filter', renderMeetingCards
 initGroupFilter('notes-group-filter', 'notes-sub-filter', renderNotes);
 
 // ========== MEETING DETAIL ==========
-function openMeetingDetail() {
+function hashStr(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i); h|=0;} return Math.abs(h); }
+
+function buildEndedMeetingHTML(m) {
+  const expertName = m.expert.split('·')[0].trim();
+  const expertIdentity = m.expert.replace(expertName, '').replace(/^[\s·]+/, '').trim();
+  const h = hashStr(m.title);
+  const followers = ((h % 30) + 5) / 10;
+  const notes = (h % 80) + 10;
+  const accuracy = (h % 20) + 70;
+  const score = ((h % 10) + 40) / 10;
+  const duration = (h % 40) + 30;
+
+  return `
+    <div class="detail-header">
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;">${m.date}</div>
+        <div style="font-size:20px; font-weight:700; margin-bottom:6px;">${m.title}</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="tag ${m.tagClass}">${m.tag}</span>
+          <span class="tag tag-green">纪要已出</span>
+          <span style="font-size:11px; color:var(--text-secondary);">主讲：${m.expert}</span>
+          <span style="font-size:11px; color:var(--text-muted);">${m.attendees}人参会 · ${duration}分钟</span>
+        </div>
+      </div>
+      <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
+    </div>
+    <div class="detail-body" style="display:flex; gap:24px;">
+      <div style="flex:1; min-width:0;">
+        <div style="position:relative; border-radius:8px; overflow:hidden; margin-bottom:16px; cursor:pointer;" onclick="showToast('正在播放会议回放')">
+          <img src="${m.coverImg}" style="width:100%; height:200px; object-fit:cover; display:block;">
+          <div style="position:absolute; inset:0; background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center;">
+            <div style="width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:24px; color:var(--accent-blue); margin-left:3px;">▶</span>
+            </div>
+          </div>
+          <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.6); color:#fff; padding:2px 8px; border-radius:4px; font-size:10px; font-family:var(--font-mono);">${duration}:00</div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+          <button class="btn btn-sm" onclick="showToast('已下载纪要PDF')">📄 下载 PDF</button>
+          <button class="btn btn-sm" onclick="showToast('已复制分享链接')">↗ 分享</button>
+        </div>
+        <div style="display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border);">
+          <div class="minutes-tab-btn active" onclick="switchMinutesTab(this, 'minutes-summary')" style="padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue);">纪要总结</div>
+          <div class="minutes-tab-btn" onclick="switchMinutesTab(this, 'minutes-detail')" style="padding:8px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;">纪要明细</div>
+        </div>
+        <div id="minutes-summary">
+          <div class="minutes-section">
+            <div class="minutes-section-title">◆ 核心观点</div>
+            <div class="minutes-content">
+              <li>深度解析 ${m.tag} 领域核心趋势，研判产业链关键拐点与投资节奏</li>
+              <li>梳理产业链上下游核心标的，明确受益确定性最高的环节</li>
+              <li>结合最新政策与市场数据，给出中短期配置建议</li>
+            </div>
+          </div>
+          <div class="minutes-section">
+            <div class="minutes-section-title">◆ 数据要点</div>
+            <div class="minutes-content">
+              <li>行业景气度指标持续上行，核心公司订单能见度较高</li>
+              <li>产能利用率维持高位，供需格局持续改善</li>
+              <li>估值处于历史中位数偏下水平，性价比突出</li>
+            </div>
+          </div>
+          <div class="minutes-section">
+            <div class="minutes-section-title">◆ 投资建议</div>
+            <div class="minutes-content">
+              <li><strong>重点推荐：</strong>${m.tag}赛道龙头标的</li>
+              <li><strong>关注方向：</strong>产业链上游核心供应商</li>
+              <li><strong>风险提示：</strong>需关注政策变化与市场波动风险</li>
+            </div>
+          </div>
+          <div class="minutes-section">
+            <div class="minutes-section-title">◆ 相关个股</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">龙头股份A</div>
+                    <div style="font-size:10px; color:var(--text-muted);">600XXX · ${m.tag}龙头</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 8) + 1).toFixed(2)}%</div>
+                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 25) + 15}x</div>
+                  </div>
+                </div>
+                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">行业龙头，市占率领先，受益于${m.tag}景气度上行。近期催化：产能扩张+订单放量。</div>
+              </div>
+              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">上游材料B</div>
+                    <div style="font-size:10px; color:var(--text-muted);">300XXX · 核心供应商</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:13px; font-weight:700; color:#f43f5e;">+${((h % 5) + 0.5).toFixed(2)}%</div>
+                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 20) + 20}x</div>
+                  </div>
+                </div>
+                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">上游核心材料供应商，技术壁垒高，客户绑定深。估值处于历史低位，安全边际充足。</div>
+              </div>
+              <div class="card" style="padding:10px; cursor:pointer;" onclick="showToast('打开个股一页纸')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div style="font-size:12px; font-weight:600;">新锐科技C</div>
+                    <div style="font-size:10px; color:var(--text-muted);">688XXX · 弹性标的</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:13px; font-weight:700; color:#22c55e;">-${((h % 3) + 0.2).toFixed(2)}%</div>
+                    <div style="font-size:10px; color:var(--text-muted);">PE ${(h % 30) + 25}x</div>
+                  </div>
+                </div>
+                <div style="font-size:10px; color:var(--text-secondary); margin-top:6px; line-height:1.6;">高弹性成长标的，新产品放量在即。关注点：Q3业绩拐点确认。</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:20px;">
+            <div class="text-xs mb-8" style="color:var(--text-muted);">相关主题会议</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">${m.tag}产业链深度研讨 · 近期</div>
+            </div>
+            <button class="btn btn-cyan btn-sm" style="margin-top:10px;" onclick="showToast('已订阅此系列会议'); closeMeetingDetail();">订阅此系列会议</button>
+          </div>
+        </div>
+        <div id="minutes-detail" style="display:none;">
+          <div class="minutes-chat">
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">主持人</span><span class="minutes-chat-time">00:00</span></div>
+              <div class="minutes-chat-bubble">大家好，欢迎参加本次${m.tag}主题会议。今天非常荣幸邀请到${expertName}老师为我们分享行业最新研判。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">00:15</span></div>
+              <div class="minutes-chat-bubble">谢谢主持人。大家好，今天主要和大家聊三个方面：第一是${m.tag}行业的最新景气度判断，第二是产业链核心环节的变化，第三是重点标的的投资机会。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">00:42</span></div>
+              <div class="minutes-chat-bubble">首先看景气度方面，从我们产业链调研的情况来看，下游需求确实在回暖。核心公司Q2的订单能见度比较高，环比增长在15%-20%左右。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">01:18</span></div>
+              <div class="minutes-chat-bubble">产能利用率目前维持在85%以上的高位，供需格局持续改善。特别是龙头企业，产能利用率已经接近满产状态。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">主持人</span><span class="minutes-chat-time">01:45</span></div>
+              <div class="minutes-chat-bubble">理解，那从估值角度来看呢？当前的性价比如何？</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">01:58</span></div>
+              <div class="minutes-chat-bubble">这是一个很好的问题。目前${m.tag}板块核心标的的估值处于历史中位数偏下水平，PE大概在20-25倍区间。考虑到行业景气度向上的趋势，当前估值的性价比是比较突出的。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-gold);">C</span><span style="font-size:12px; font-weight:600;">提问者</span><span class="minutes-chat-time">02:35</span></div>
+              <div class="minutes-chat-bubble">请问老师，产业链上下游哪个环节确定性最高？</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">02:48</span></div>
+              <div class="minutes-chat-bubble">从确定性角度来讲，我认为中游制造环节确定性最高。原因有三个：第一，龙头企业的技术壁垒和客户绑定比较深；第二，产能扩张周期刚启动，未来两到三年业绩增长可见度高；第三，海外市场拓展打开了新的增量空间。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-gold);">C</span><span style="font-size:12px; font-weight:600;">提问者</span><span class="minutes-chat-time">03:30</span></div>
+              <div class="minutes-chat-bubble">了解，那政策面上有什么需要关注的风险点吗？</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar" style="background:var(--accent-cyan);">B</span><span style="font-size:12px; font-weight:600;">${expertName}</span><span class="minutes-chat-time">03:42</span></div>
+              <div class="minutes-chat-bubble">政策面主要关注两个方面：一个是国内产业政策的持续性，目前来看支持力度是在加大的；另一个是海外贸易政策的变化，这块需要持续跟踪。但总体来看，政策对行业的支持方向是明确的。</div>
+            </div>
+            <div class="minutes-chat-item">
+              <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">主持人</span><span class="minutes-chat-time">04:20</span></div>
+              <div class="minutes-chat-bubble">非常感谢${expertName}老师的精彩分享。总结一下今天的核心观点：行业景气度向上，估值性价比突出，重点关注中游制造龙头。</div>
+            </div>
+            <div style="padding:12px 0; text-align:center; font-size:11px; color:var(--text-muted);">—— 会议纪要全文完 ——</div>
+          </div>
+        </div>
+      </div>
+      <div style="width:260px; flex-shrink:0;">
+        <div class="card" style="padding:16px; margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:600; margin-bottom:12px;">专家介绍</div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:600; flex-shrink:0;">${expertName[0]}</div>
+            <div>
+              <div style="font-size:13px; font-weight:600;">${expertName}</div>
+              <div style="font-size:10px; color:var(--text-muted);">${expertIdentity}</div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:12px;">
+            ${expertName}，${expertIdentity}，深耕${m.tag}领域研究多年。覆盖行业核心标的，多次准确预判行业拐点。
+          </div>
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px;">
+            <span class="tag tag-blue" style="font-size:10px;">${m.tag}</span>
+            <span class="tag tag-blue" style="font-size:10px;">${m.subgroup || m.tag}</span>
+          </div>
+          <button class="btn btn-sm" style="width:100%;" onclick="showToast('已关注${expertName}')">+ 关注专家</button>
+        </div>
+        <div class="card" style="padding:16px;">
+          <div style="font-size:12px; font-weight:600; margin-bottom:12px;">专家影响力</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:center;">
+            <div><div style="font-size:18px; font-weight:700;">${followers}万</div><div style="font-size:10px; color:var(--text-muted);">关注者</div></div>
+            <div><div style="font-size:18px; font-weight:700;">${notes}</div><div style="font-size:10px; color:var(--text-muted);">发布纪要</div></div>
+            <div><div style="font-size:18px; font-weight:700; color:var(--accent-cyan);">${accuracy}%</div><div style="font-size:10px; color:var(--text-muted);">观点准确率</div></div>
+            <div><div style="font-size:18px; font-weight:700; color:var(--accent-blue);">${score}</div><div style="font-size:10px; color:var(--text-muted);">综合评分</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildUpcomingMeetingHTML(m) {
+  const expertName = m.expert.split('·')[0].trim();
+  const expertIdentity = m.expert.replace(expertName, '').replace(/^[\s·]+/, '').trim();
+  const statusTag = m.status === '报名中' ? '<span class="tag tag-green">报名中</span>' : '<span class="tag tag-gold">即将开始</span>';
+  const actionBtn = m.registered
+    ? '<button class="btn btn-sm" style="width:100%; opacity:0.7;" disabled>✓ 已加入日程</button>'
+    : '<button class="btn btn-gradient" style="width:100%;" onclick="showToast(\'已添加到会议日程\')">添加到会议日程</button>';
+
+  return `
+    <div class="detail-header">
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;">${m.date}</div>
+        <div style="font-size:20px; font-weight:700; margin-bottom:6px;">${m.title}</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="tag ${m.tagClass}">${m.tag}</span>
+          ${statusTag}
+          <span style="font-size:11px; color:var(--text-secondary);">主讲：${m.expert}</span>
+          <span style="font-size:11px; color:var(--text-muted);">${m.attendees}人已报名</span>
+        </div>
+      </div>
+      <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
+    </div>
+    <div class="detail-body">
+      <div style="border-radius:8px; overflow:hidden; margin-bottom:16px;">
+        <img src="${m.coverImg}" style="width:100%; height:220px; object-fit:cover; display:block;">
+      </div>
+      <div class="card" style="padding:16px; margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">会议介绍</div>
+        <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">
+          <p>本次会议将深入探讨${m.tag}领域最新发展趋势与投资机会。邀请行业顶尖专家，从产业链视角出发，系统梳理核心逻辑与关键变量。</p>
+          <p style="margin-top:8px;">会议将覆盖以下核心议题：行业景气度研判、产业链关键环节分析、重点公司跟踪更新、以及中短期投资策略建议。适合机构投资者、研究员及行业从业者参与。</p>
+        </div>
+      </div>
+      <div class="card" style="padding:16px; margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">主讲嘉宾</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+          <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; font-weight:600; flex-shrink:0;">${expertName[0]}</div>
+          <div>
+            <div style="font-size:14px; font-weight:600;">${expertName}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${expertIdentity}</div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7;">
+          ${expertName}，${expertIdentity}，深耕${m.tag}领域多年，具有丰富的产业研究与投资咨询经验。多次在行业关键节点准确预判趋势拐点。
+        </div>
+      </div>
+      <div class="card" style="padding:16px; margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">会议议程</div>
+        <div style="font-size:12px; color:var(--text-secondary); line-height:2;">
+          <div style="display:flex; gap:12px; align-items:baseline;"><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10px; flex-shrink:0;">14:00</span><span>开场介绍与行业宏观背景</span></div>
+          <div style="display:flex; gap:12px; align-items:baseline;"><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10px; flex-shrink:0;">14:15</span><span>产业链核心环节深度分析</span></div>
+          <div style="display:flex; gap:12px; align-items:baseline;"><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10px; flex-shrink:0;">14:40</span><span>重点标的跟踪与投资建议</span></div>
+          <div style="display:flex; gap:12px; align-items:baseline;"><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10px; flex-shrink:0;">15:00</span><span>Q&A 互动环节</span></div>
+        </div>
+      </div>
+      ${actionBtn}
+    </div>`;
+}
+
+function buildLiveMeetingHTML(m) {
+  const expertName = m.expert.split('·')[0].trim();
+  const expertIdentity = m.expert.replace(expertName, '').replace(/^[\s·]+/, '').trim();
+
+  return `
+    <div class="detail-header">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span class="mc-card-status live" style="position:static;">● LIVE</span>
+          <span style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${m.date}</span>
+        </div>
+        <div style="font-size:20px; font-weight:700; margin-bottom:6px;">${m.title}</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="tag ${m.tagClass}">${m.tag}</span>
+          <span style="font-size:11px; color:var(--text-secondary);">主讲：${m.expert}</span>
+          <span style="font-size:11px; color:var(--text-muted);">${m.attendees}人正在观看</span>
+        </div>
+      </div>
+      <button class="detail-close" onclick="closeMeetingDetail()">✕</button>
+    </div>
+    <div class="detail-body">
+      <div style="position:relative; border-radius:8px; overflow:hidden; margin-bottom:16px; background:#1a1a2e; cursor:pointer;" onclick="showToast('正在加载直播画面')">
+        <img src="${m.coverImg}" style="width:100%; height:280px; object-fit:cover; display:block; opacity:0.8;">
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%); display:flex; align-items:center; justify-content:center;">
+          <div style="width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.2); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:28px; color:#fff; margin-left:4px;">▶</span>
+          </div>
+        </div>
+        <div style="position:absolute; top:12px; left:12px;"><span class="mc-card-status live" style="position:static;">● LIVE</span></div>
+        <div style="position:absolute; bottom:12px; left:12px; display:flex; gap:8px; align-items:center;">
+          <span style="font-size:11px; color:#fff; font-weight:600;">${expertName}</span>
+          <span style="font-size:10px; color:rgba(255,255,255,0.7);">${expertIdentity}</span>
+        </div>
+        <div style="position:absolute; bottom:12px; right:12px; font-size:10px; color:#fff; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:4px;">
+          ${m.attendees}人正在观看
+        </div>
+      </div>
+      <div style="display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border);">
+        <div class="live-tab-btn active" onclick="switchLiveTab(this, 'live-tab-detail')" style="padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue);">详情</div>
+        <div class="live-tab-btn" onclick="switchLiveTab(this, 'live-tab-speakers')" style="padding:8px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;">发言人</div>
+        <div class="live-tab-btn" onclick="switchLiveTab(this, 'live-tab-related')" style="padding:8px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;">相关路演</div>
+      </div>
+      <div id="live-tab-detail">
+        <div style="font-size:12px; font-weight:600; margin-bottom:12px; color:var(--accent-blue);">实时会议纪要</div>
+        <div class="minutes-chat">
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:00</span></div>
+            <div class="minutes-chat-bubble">大家好，欢迎来到本次直播。今天我们主要聊一下${m.tag}领域最新的发展动态。</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:04</span></div>
+            <div class="minutes-chat-bubble">但我们直播只是一个入口，那我们还有专家会议纪要和深度研究。</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:09</span></div>
+            <div class="minutes-chat-bubble">其实里面产品现在怎么设计运营，那是一个一定要深挖的方向。</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:18</span></div>
+            <div class="minutes-chat-bubble">就是说我的理解APP打开中间这一块，一进来就看到核心信息，对吧？</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:22</span></div>
+            <div class="minutes-chat-bubble">就是一个盯盘的，有热榜的、资讯的、行情的等板块。</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">A</span><span style="font-size:12px; font-weight:600;">说话人A</span><span class="minutes-chat-time">00:27</span></div>
+            <div class="minutes-chat-bubble">然后再往这边就是我们专家会议头部各种，我们在这个领域积累的独家内容。</div>
+          </div>
+          <div class="minutes-chat-item">
+            <div class="minutes-chat-meta"><span class="minutes-chat-avatar">B</span><span style="font-size:12px; font-weight:600;">说话人B</span><span class="minutes-chat-time">00:35</span></div>
+            <div class="minutes-chat-bubble">这三个东西，你看现在头部机构都在做，再加上深度产业链研究，才形成了完整的闭环。</div>
+          </div>
+          <div style="padding:12px 0; text-align:center;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent-blue); animation:pulse 1.5s infinite;"></span><span style="font-size:11px; color:var(--text-muted); margin-left:8px;">实时转写中...</span></div>
+        </div>
+      </div>
+      <div id="live-tab-speakers" style="display:none;">
+        <div class="card" style="padding:16px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; font-weight:600; flex-shrink:0;">${expertName[0]}</div>
+            <div>
+              <div style="font-size:14px; font-weight:600;">${expertName}</div>
+              <div style="font-size:11px; color:var(--text-muted);">${expertIdentity}</div>
+            </div>
+          </div>
+          <div style="font-size:11px; color:var(--text-secondary); line-height:1.7;">
+            ${expertName}，${expertIdentity}，深耕${m.tag}领域多年，具有丰富的产业研究与投资咨询经验。
+          </div>
+        </div>
+      </div>
+      <div id="live-tab-related" style="display:none;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:12px;" class="hotlist-row">${m.tag}产业链投资策略更新 · 近期</div>
+          <div style="padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:12px;" class="hotlist-row">${m.tag}年度展望与核心标的梳理 · 近期</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function openMeetingDetail(title) {
+  let m = meetingCardsData.find(item => item.title === title);
+  if (!m) { m = meetingCardsData[0]; }
+  const panel = document.getElementById('meeting-detail-panel');
+  if (m.status === '已结束') {
+    panel.style.width = '960px';
+    panel.innerHTML = buildEndedMeetingHTML(m);
+  } else if (m.status === '直播中') {
+    panel.style.width = '820px';
+    panel.innerHTML = buildLiveMeetingHTML(m);
+  } else {
+    panel.style.width = '720px';
+    panel.innerHTML = buildUpcomingMeetingHTML(m);
+  }
   document.getElementById('meeting-detail').classList.add('show');
 }
 function closeMeetingDetail() {
   document.getElementById('meeting-detail').classList.remove('show');
+}
+function switchMinutesTab(el, tabId) {
+  el.parentElement.querySelectorAll('.minutes-tab-btn').forEach(t => {
+    t.style.color = 'var(--text-muted)';
+    t.style.fontWeight = '400';
+    t.style.borderBottom = '2px solid transparent';
+  });
+  el.style.color = '';
+  el.style.fontWeight = '600';
+  el.style.borderBottom = '2px solid var(--accent-blue)';
+  document.getElementById('minutes-summary').style.display = tabId === 'minutes-summary' ? '' : 'none';
+  document.getElementById('minutes-detail').style.display = tabId === 'minutes-detail' ? '' : 'none';
+}
+function switchLiveTab(el, tabId) {
+  el.parentElement.querySelectorAll('.live-tab-btn').forEach(t => {
+    t.style.color = 'var(--text-muted)';
+    t.style.fontWeight = '400';
+    t.style.borderBottom = '2px solid transparent';
+  });
+  el.style.color = '';
+  el.style.fontWeight = '600';
+  el.style.borderBottom = '2px solid var(--accent-blue)';
+  ['live-tab-detail','live-tab-speakers','live-tab-related'].forEach(id => {
+    const el2 = document.getElementById(id);
+    if (el2) el2.style.display = id === tabId ? '' : 'none';
+  });
 }
 document.getElementById('meeting-detail').addEventListener('click', function(e) {
   if (e.target === this) closeMeetingDetail();
@@ -3187,29 +3473,86 @@ function openExpertDetail(name) {
   document.getElementById('expert-detail-name').textContent = expert.name;
   document.getElementById('expert-detail-identity').textContent = expert.identity;
   const body = document.getElementById('expert-detail-body');
+  const h = hashStr(expert.name);
+  const followers = ((h % 30) + 5) / 10;
+  const pubNotes = (h % 80) + 10;
+  const accuracy = (h % 20) + 70;
+  const score = ((h % 10) + 40) / 10;
+  const yearsExp = (h % 12) + 5;
+  const coverCount = (h % 30) + 10;
   body.innerHTML = `
     <div class="card" style="padding:14px; margin-bottom:12px;">
-      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">研究方向</div>
-      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">${expert.field}</div>
+      <div style="font-size:12px; font-weight:600; margin-bottom:10px;">专家简介</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:10px;">
+        ${expert.name}，${expert.identity}，深耕${expert.field}领域${yearsExp}年。长期覆盖${expert.subgroup}赛道${coverCount}余家核心公司，擅长产业链上下游深度调研与投资机会挖掘。曾多次准确预判行业拐点和重要催化事件，研究成果获业内广泛认可。
+      </div>
+      <div style="font-size:12px; font-weight:600; margin-bottom:6px;">研究方向</div>
+      <div style="font-size:11px; color:var(--text-secondary); margin-bottom:8px;">${expert.field}</div>
       <div style="display:flex; gap:4px; flex-wrap:wrap;">
         ${expert.tags.map(t => '<span class="tag tag-blue" style="font-size:10px;">'+t+'</span>').join('')}
       </div>
-      <div style="margin-top:8px; font-size:10px; color:var(--text-muted);">赛道：${expert.track} · ${expert.region}</div>
+      <div style="margin-top:8px; font-size:10px; color:var(--text-muted);">赛道：${expert.subgroup} · ${expert.region}</div>
+    </div>
+    <div class="card" style="padding:12px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0;">
+        <div style="font-size:11px; font-weight:600; color:var(--text-muted);">影响力</div>
+      </div>
+      <div style="display:flex; gap:16px; justify-content:space-around; padding:6px 0;">
+        <div style="text-align:center;">
+          <div style="font-size:14px; font-weight:700; color:var(--accent-blue);">${followers.toFixed(1)}万</div>
+          <div style="font-size:9px; color:var(--text-muted);">关注者</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:14px; font-weight:700; color:var(--accent-cyan);">${pubNotes}</div>
+          <div style="font-size:9px; color:var(--text-muted);">发布纪要</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:14px; font-weight:700; color:var(--accent-gold);">${accuracy}%</div>
+          <div style="font-size:9px; color:var(--text-muted);">准确率</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:14px; font-weight:700;">${score.toFixed(1)}</div>
+          <div style="font-size:9px; color:var(--text-muted);">评分</div>
+        </div>
+      </div>
     </div>
     <div class="card" style="padding:14px; margin-bottom:12px;">
-      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">近期相关会议</div>
-      <div style="display:flex; flex-direction:column; gap:6px;">
-        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail();">H20获批窗口期：算力产业链主线逻辑 · 05/16</div>
-        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail();">${expert.track}方向深度研讨会 · 05/25</div>
+      <div style="font-size:12px; font-weight:600; margin-bottom:10px;">最新观点</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8; margin-bottom:12px;">
+        基于最近一次公开分享（${new Date().getFullYear()}-05-${String((h % 14) + 1).padStart(2, '0')}），${expert.name}核心观点如下：
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; padding-left:10px; border-left:2px solid var(--accent-blue);">
+          ${expert.subgroup}赛道当前处于结构性机会期，行业景气度持续上行。核心推荐关注中游制造环节的龙头企业，产能扩张与订单放量构成双重催化。
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; padding-left:10px; border-left:2px solid var(--accent-cyan);">
+          重点标的：${expert.tags.slice(0, 2).join('、')}等方向确定性较高。估值处于历史中位数偏下水平，性价比突出，建议逢低布局。
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; padding-left:10px; border-left:2px solid var(--accent-gold);">
+          风险提示：需持续跟踪海外贸易政策变化及国内产业政策执行节奏，关注行业竞争格局是否出现超预期变化。
+        </div>
       </div>
     </div>
-    <div class="card" style="padding:14px;">
-      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">最新观点摘要</div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8;">
-        基于最近一次公开分享，${expert.name}认为${expert.track}赛道当前处于结构性机会期。重点关注${expert.tags.slice(0,2).join('、')}等核心标的。建议持续跟踪行业催化事件。
+    <div class="card" style="padding:14px; margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">近期会议纪要</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail('H20获批窗口期：算力产业链主线逻辑');">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:11px; font-weight:600;">${expert.subgroup}行业景气度与投资机会</div>
+            <span class="tag tag-green" style="font-size:9px;">纪要已出</span>
+          </div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">2026-05-${String((h % 14) + 1).padStart(2, '0')} · ${(h % 80) + 40}人参会</div>
+        </div>
+        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail('${expert.subgroup}方向深度研讨会');">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:11px; font-weight:600;">${expert.subgroup}方向深度研讨会</div>
+            <span class="tag tag-gold" style="font-size:9px;">即将开始</span>
+          </div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">2026-05-25 14:00 · ${(h % 50) + 30}人报名</div>
+        </div>
       </div>
     </div>
-    <button class="btn btn-gradient btn-sm" style="margin-top:14px; width:100%;" onclick="closeExpertDetail(); openInterviewWithExpert('${expert.name}', '${expert.track}')">✦ 订阅该专家会议</button>
+    <button class="btn btn-gradient btn-sm" style="margin-top:10px; width:100%;" onclick="closeExpertDetail(); showToast('已订阅 ${expert.name.replace(/'/g, "\\'")} 的会议')">✦ 订阅该专家会议</button>
   `;
   document.getElementById('expert-detail').classList.add('show');
 }
@@ -3224,44 +3567,18 @@ document.getElementById('expert-detail').addEventListener('click', function(e) {
 function openNoteDetail(title) {
   const note = notesLibraryData.find(n => n.title === title);
   if (!note) return;
-  document.getElementById('note-detail-meta').textContent = '2026-' + note.date + ' · ' + note.rating + ' 评级';
-  document.getElementById('note-detail-title').textContent = note.title;
-  document.getElementById('note-detail-tags').innerHTML =
-    '<span class="tag ' + note.tagClass + '">' + note.tag + '</span>' +
-    '<span style="font-size:11px; color:var(--text-secondary);">' + note.expert + '</span>';
-  document.getElementById('note-detail-body').innerHTML = `
-    <div style="display:flex; gap:16px; margin-bottom:20px;">
-      <div class="card" style="flex:1; padding:12px;">
-        <div class="text-xs" style="color:var(--text-muted);">评级</div>
-        <div class="mono" style="font-size:18px; font-weight:700; color:var(--accent-blue); margin-top:2px;">${note.rating}</div>
-      </div>
-      <div class="card" style="flex:1; padding:12px;">
-        <div class="text-xs" style="color:var(--text-muted);">分类</div>
-        <div style="font-size:14px; font-weight:600; margin-top:2px;">${note.tag}</div>
-      </div>
-      <div class="card" style="flex:1; padding:12px;">
-        <div class="text-xs" style="color:var(--text-muted);">日期</div>
-        <div class="mono" style="font-size:14px; font-weight:600; margin-top:2px;">2026-${note.date}</div>
-      </div>
-    </div>
-    <div class="minutes-section">
-      <div class="minutes-section-title">◆ 核心要点</div>
-      <div class="minutes-content">
-        <li>深度解析 ${note.tag} 领域最新产业趋势与政策动向</li>
-        <li>梳理产业链核心环节投资机会与风险点</li>
-        <li>结合最新数据给出重点标的推荐与配置建议</li>
-      </div>
-    </div>
-    <div class="minutes-section">
-      <div class="minutes-section-title">◆ 专家简介</div>
-      <div class="minutes-content">
-        <p style="font-size:13px; line-height:1.7;">${note.expert}，在 ${note.tag} 领域深耕多年，具有丰富的产业研究与投资咨询经验。</p>
-      </div>
-    </div>
-    <div style="margin-top:20px;">
-      <button class="btn btn-cyan btn-sm" onclick="showToast('纪要已收藏'); closeNoteDetail();">收藏此纪要</button>
-    </div>
-  `;
+  const m = {
+    title: note.title,
+    expert: note.expert,
+    date: '2026-' + note.date,
+    tag: note.tag,
+    tagClass: note.tagClass,
+    attendees: ((hashStr(note.title) % 80) + 40),
+    status: '已结束',
+    coverImg: note.coverImg || 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=160&fit=crop'
+  };
+  const panel = document.getElementById('note-detail-panel');
+  panel.innerHTML = buildEndedMeetingHTML(m).replace(/closeMeetingDetail/g, 'closeNoteDetail');
   document.getElementById('note-detail').classList.add('show');
 }
 function closeNoteDetail() {
