@@ -1073,7 +1073,7 @@ body {
 }
 .ai-expert-dir {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-top: 12px;
 }
@@ -1090,12 +1090,8 @@ body {
 .ai-expert-avatar {
   width: 56px; height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(45,127,249,0.15), rgba(0,184,148,0.15));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  object-fit: cover;
   flex-shrink: 0;
-  font-weight: 600;
-  color: var(--accent-blue);
 }
 .expert-bio { flex: 1; min-width: 0; }
 .expert-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
@@ -1103,27 +1099,46 @@ body {
 .expert-abstract {
   font-size: 12px; color: var(--text-secondary); line-height: 1.7;
   background: var(--bg-primary); padding: 10px 14px; border-radius: 8px; margin-top: 10px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.expert-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-.expert-nested {
-  margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-}
-.expert-nested-box {
-  background: var(--bg-primary); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 14px;
-}
-.expert-nested-box h4 { font-size: 11px; color: var(--text-muted); margin: 0 0 6px; font-weight: 600; }
-.expert-nested-link {
-  display: block; font-size: 11px; color: var(--accent-blue);
-  margin-bottom: 4px; cursor: pointer; white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis;
-}
-.expert-nested-link:hover { text-decoration: underline; }
 .research-filter { margin-bottom: 14px; }
 .filter-groups { margin-bottom: 6px; }
 .filter-chip-ai { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0,184,148,0.06); }
 .filter-chip-ai.active { background: rgba(0,184,148,0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+/* Notes Card Grid */
+.notes-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 12px;
+}
+.note-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 16px 14px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.note-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+}
+.note-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+.note-card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+.note-card-title { font-weight: 700; font-size: 14px; line-height: 1.5; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.note-card-rating { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 8px; }
+.note-card-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.note-card-footer { font-size: 11px; color: var(--text-muted); }
 
 /* Meeting Detail Overlay */
 .detail-overlay {
@@ -1977,36 +1992,14 @@ body {
   <div class="page" id="page-meetings">
 
     <div class="monitor-tabs" style="display:flex; align-items:center;">
-      <div class="monitor-tab active" data-tab="expert-dir">专家库</div>
-      <div class="monitor-tab" data-tab="ai-meetings">会议中心</div>
+      <div class="monitor-tab active" data-tab="ai-meetings">会议中心</div>
       <div class="monitor-tab" data-tab="notes-library">纪要资料库</div>
+      <div class="monitor-tab" data-tab="expert-dir">专家库</div>
       <button class="btn btn-gradient btn-sm" style="margin-left:auto;" onclick="openInterviewAiPanel()">✦ AI智能预约</button>
     </div>
 
-    <!-- Expert Directory (default active) -->
-    <div class="monitor-view active" id="tab-expert-dir">
-      <div class="research-filter" id="expert-research-filter">
-        <div class="filter-bar filter-groups" id="expert-group-filter">
-          <div class="filter-chip active" data-group="all">全部</div>
-          <div class="filter-chip filter-chip-ai" data-group="ai">✦ AI 产业</div>
-          <div class="filter-chip" data-group="tech">💻 科技</div>
-          <div class="filter-chip" data-group="finance">🏦 金融</div>
-          <div class="filter-chip" data-group="consume">🛒 消费</div>
-          <div class="filter-chip" data-group="health">💊 医疗健康</div>
-          <div class="filter-chip" data-group="manufacture">⚙️ 先进制造</div>
-          <div class="filter-chip" data-group="material">⛏️ 能源材料</div>
-          <div class="filter-chip" data-group="macro">🌐 宏观策略</div>
-          <div class="filter-chip" data-group="quant">📐 量化配置</div>
-          <div class="filter-chip" data-group="fixed">📊 固收</div>
-          <div class="filter-chip" data-group="infra">🏗️ 基建服务</div>
-        </div>
-        <div class="filter-bar filter-subs" id="expert-sub-filter"></div>
-      </div>
-      <div class="ai-expert-dir" id="expert-directory"></div>
-    </div>
-
     <!-- Meeting Center with sub-tabs -->
-    <div class="monitor-view" id="tab-ai-meetings">
+    <div class="monitor-view active" id="tab-ai-meetings">
       <div class="sub-tabs">
         <div class="sub-tab active" data-subview="subview-industry">AI产业链会议</div>
         <div class="sub-tab" data-subview="subview-booked">我的预约会议</div>
@@ -2017,17 +2010,17 @@ body {
         <div class="research-filter" id="meeting-research-filter">
           <div class="filter-bar filter-groups" id="meeting-group-filter">
             <div class="filter-chip active" data-group="all">全部</div>
-            <div class="filter-chip filter-chip-ai" data-group="ai">✦ AI 产业</div>
-            <div class="filter-chip" data-group="tech">💻 科技</div>
-            <div class="filter-chip" data-group="finance">🏦 金融</div>
-            <div class="filter-chip" data-group="consume">🛒 消费</div>
-            <div class="filter-chip" data-group="health">💊 医疗健康</div>
-            <div class="filter-chip" data-group="manufacture">⚙️ 先进制造</div>
-            <div class="filter-chip" data-group="material">⛏️ 能源材料</div>
-            <div class="filter-chip" data-group="macro">🌐 宏观策略</div>
-            <div class="filter-chip" data-group="quant">📐 量化配置</div>
-            <div class="filter-chip" data-group="fixed">📊 固收</div>
-            <div class="filter-chip" data-group="infra">🏗️ 基建服务</div>
+            <div class="filter-chip filter-chip-ai" data-group="ai">AI 产业</div>
+            <div class="filter-chip" data-group="tech">科技</div>
+            <div class="filter-chip" data-group="finance">金融</div>
+            <div class="filter-chip" data-group="consume">消费</div>
+            <div class="filter-chip" data-group="health">医疗健康</div>
+            <div class="filter-chip" data-group="manufacture">先进制造</div>
+            <div class="filter-chip" data-group="material">能源材料</div>
+            <div class="filter-chip" data-group="macro">宏观策略</div>
+            <div class="filter-chip" data-group="quant">量化配置</div>
+            <div class="filter-chip" data-group="fixed">固收</div>
+            <div class="filter-chip" data-group="infra">基建服务</div>
           </div>
           <div class="filter-bar filter-subs" id="meeting-sub-filter"></div>
         </div>
@@ -2066,71 +2059,46 @@ body {
 
     <!-- Notes Library -->
     <div class="monitor-view" id="tab-notes-library">
-      <!-- AI每周谈 -->
-      <div class="ai-weekly-card" style="margin-bottom:16px;">
-        <div class="ai-weekly-header">
-          <div>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-              <span style="font-size:16px;">✦</span>
-              <span style="font-size:16px; font-weight:700;">AI 每周谈 · 最新一期</span>
-            </div>
-            <div style="font-size:10px; color:var(--text-muted);">每周AI产业深度复盘与解读 · 固定栏目</div>
-          </div>
-          <div class="ai-weekly-ep-num">EP.23</div>
-        </div>
-        <div style="font-size:15px; font-weight:700; margin:12px 0 10px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
-        <div style="font-size:12px; color:var(--text-secondary); line-height:2; margin-bottom:16px;">
-          <p><strong style="color:var(--text-primary)">核心观点：</strong>英伟达H20特供芯片获批是2026年AI投资的关键催化事件。三条主线逻辑清晰：</p>
-          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线一：服务器集成</strong> — 中科曙光、浪潮信息订单能见度至Q4</p>
-          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线二：PCB/载板</strong> — 深南电路ABF载板通过英伟达认证</p>
-          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线三：光模块</strong> — 800G光模块需求爆发，中际旭创出货量环比翻倍</p>
-        </div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <span class="tag tag-cyan">算力基建</span>
-          <span class="tag tag-blue">H20产业链</span>
-          <span class="tag tag-gold">国产替代</span>
-        </div>
-        <div style="margin-top:12px; font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">2026-05-16 发布 · 阅读 2,847</div>
-      </div>
-      <div class="card mb-16" style="padding:12px;">
-        <div style="font-size:12px; font-weight:600; margin-bottom:8px;">往期回顾</div>
-        <div style="display:flex; flex-direction:column; gap:6px;">
-          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.22</span>
-            <span style="font-size:11px; flex:1;">Llama 4开源冲击波：大模型应用层投资机会</span>
-            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-09</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.21</span>
-            <span style="font-size:11px; flex:1;">人形机器人量产元年：核心零部件供应链扫描</span>
-            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-02</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.20</span>
-            <span style="font-size:11px; flex:1;">AI Agent爆发期：通用智能体投资地图</span>
-            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">04-25</span>
-          </div>
-        </div>
-      </div>
-
       <div class="research-filter" id="notes-research-filter">
         <div class="filter-bar filter-groups" id="notes-group-filter">
           <div class="filter-chip active" data-group="all">全部</div>
-          <div class="filter-chip filter-chip-ai" data-group="ai">✦ AI 产业</div>
-          <div class="filter-chip" data-group="tech">💻 科技</div>
-          <div class="filter-chip" data-group="finance">🏦 金融</div>
-          <div class="filter-chip" data-group="consume">🛒 消费</div>
-          <div class="filter-chip" data-group="health">💊 医疗健康</div>
-          <div class="filter-chip" data-group="manufacture">⚙️ 先进制造</div>
-          <div class="filter-chip" data-group="material">⛏️ 能源材料</div>
-          <div class="filter-chip" data-group="macro">🌐 宏观策略</div>
-          <div class="filter-chip" data-group="quant">📐 量化配置</div>
-          <div class="filter-chip" data-group="fixed">📊 固收</div>
-          <div class="filter-chip" data-group="infra">🏗️ 基建服务</div>
+          <div class="filter-chip filter-chip-ai" data-group="ai">AI 产业</div>
+          <div class="filter-chip" data-group="tech">科技</div>
+          <div class="filter-chip" data-group="finance">金融</div>
+          <div class="filter-chip" data-group="consume">消费</div>
+          <div class="filter-chip" data-group="health">医疗健康</div>
+          <div class="filter-chip" data-group="manufacture">先进制造</div>
+          <div class="filter-chip" data-group="material">能源材料</div>
+          <div class="filter-chip" data-group="macro">宏观策略</div>
+          <div class="filter-chip" data-group="quant">量化配置</div>
+          <div class="filter-chip" data-group="fixed">固收</div>
+          <div class="filter-chip" data-group="infra">基建服务</div>
         </div>
         <div class="filter-bar filter-subs" id="notes-sub-filter"></div>
       </div>
-      <div class="meeting-list" id="notes-library-list"></div>
+      <div class="notes-card-grid" id="notes-library-list"></div>
+    </div>
+
+    <!-- Expert Directory -->
+    <div class="monitor-view" id="tab-expert-dir">
+      <div class="research-filter" id="expert-research-filter">
+        <div class="filter-bar filter-groups" id="expert-group-filter">
+          <div class="filter-chip" data-group="all">全部</div>
+          <div class="filter-chip filter-chip-ai active" data-group="ai">AI 产业</div>
+          <div class="filter-chip" data-group="tech">科技</div>
+          <div class="filter-chip" data-group="finance">金融</div>
+          <div class="filter-chip" data-group="consume">消费</div>
+          <div class="filter-chip" data-group="health">医疗健康</div>
+          <div class="filter-chip" data-group="manufacture">先进制造</div>
+          <div class="filter-chip" data-group="material">能源材料</div>
+          <div class="filter-chip" data-group="macro">宏观策略</div>
+          <div class="filter-chip" data-group="quant">量化配置</div>
+          <div class="filter-chip" data-group="fixed">固收</div>
+          <div class="filter-chip" data-group="infra">基建服务</div>
+        </div>
+        <div class="filter-bar filter-subs" id="expert-sub-filter"></div>
+      </div>
+      <div class="ai-expert-dir" id="expert-directory"></div>
     </div>
   </div>
 
@@ -2231,6 +2199,21 @@ body {
         <span class="detail-close" onclick="closeExpertDetail()">×</span>
       </div>
       <div class="detail-body" id="expert-detail-body"></div>
+    </div>
+  </div>
+
+  <!-- Note Detail Overlay -->
+  <div class="detail-overlay" id="note-detail">
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div>
+          <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px;" id="note-detail-meta"></div>
+          <div style="font-size:20px; font-weight:700; margin-bottom:6px;" id="note-detail-title"></div>
+          <div style="display:flex; gap:8px; align-items:center;" id="note-detail-tags"></div>
+        </div>
+        <button class="detail-close" onclick="closeNoteDetail()">✕</button>
+      </div>
+      <div class="detail-body" id="note-detail-body"></div>
     </div>
   </div>
 
@@ -3000,64 +2983,83 @@ renderMeetingCards('all');
 
 // ========== RESEARCH GROUPS ==========
 const researchGroups = {
-  ai: { title: 'AI 产业', icon: '✦', subs: ['大模型', '算力/芯片', '数据要素', 'AI应用'] },
-  tech: { title: '科技', icon: '💻', subs: ['半导体','消费电子','通信设备','计算机','软件','云计算/IDC','互联网','游戏传媒'] },
-  finance: { title: '金融', icon: '🏦', subs: ['银行','证券','保险','多元金融','金融科技'] },
-  consume: { title: '消费', icon: '🛒', subs: ['白酒','食品饮料','餐饮旅游','家电','零售','纺服','农牧'] },
-  health: { title: '医疗健康', icon: '💊', subs: ['创新药','中药','CXO','医疗器械','医疗服务'] },
-  manufacture: { title: '先进制造', icon: '⚙️', subs: ['新能源车','锂电','光伏','风电储能','机械','自动化','军工'] },
-  material: { title: '能源材料', icon: '⛏️', subs: ['有色金属','基础化工','煤炭石化'] },
-  macro: { title: '宏观策略', icon: '🌐', subs: ['宏观经济','政策研究','市场策略','主题投资'] },
-  quant: { title: '量化配置', icon: '📐', subs: ['量化策略','金融工程','指数研究','资产配置','ESG'] },
-  fixed: { title: '固收', icon: '📊', subs: ['利率','信用债','可转债','衍生品'] },
-  infra: { title: '基建服务', icon: '🏗️', subs: ['地产链','建筑建材','交运物流'] },
+  ai: { title: 'AI 产业', subs: ['大模型', '算力芯片', '行业应用', '语料&学术'] },
+  tech: { title: '科技', subs: ['半导体','消费电子','通信设备','计算机','软件','云计算/IDC','互联网','游戏传媒'] },
+  finance: { title: '金融', subs: ['银行','证券','保险','多元金融','金融科技'] },
+  consume: { title: '消费', subs: ['白酒','食品饮料','餐饮旅游','家电','零售','纺服','农牧'] },
+  health: { title: '医疗健康', subs: ['创新药','中药','CXO','医疗器械','医疗服务'] },
+  manufacture: { title: '先进制造', subs: ['新能源车','锂电','光伏','风电储能','机械','自动化','军工'] },
+  material: { title: '能源材料', subs: ['有色金属','基础化工','煤炭石化'] },
+  macro: { title: '宏观策略', subs: ['宏观经济','政策研究','市场策略','主题投资'] },
+  quant: { title: '量化配置', subs: ['量化策略','金融工程','指数研究','资产配置','ESG'] },
+  fixed: { title: '固收', subs: ['利率','信用债','可转债','衍生品'] },
+  infra: { title: '基建服务', subs: ['地产链','建筑建材','交运物流'] },
 };
 
 // ========== AI EXPERT DIRECTORY ==========
 const expertData = [
-  // AI 产业 — 算力/芯片
-  { name: '陈明远', identity: '华泰证券 · 电子首席', field: 'GPU/芯片设计', tags: ['英伟达','海光','寒武纪'], track: '算力', region: '国内', group: 'ai', subgroup: '算力/芯片', headline: '深耕半导体10年，H20产业链权威', abstract: '国内最早跟踪英伟达特供芯片的卖方分析师，覆盖GPU/AI芯片全产业链。连续3年新财富电子行业第一，对海光信息、寒武纪有深度产业人脉。', linkedMeetings: [{title:'英伟达H20产业链深度', date:'05-18'}], linkedNotes: [{title:'英伟达中国特供芯片深度解读', date:'05-14'}] },
-  { name: '周磊', identity: '中金公司 · TMT首席', field: '国产GPU/AI芯片', tags: ['摩尔线程','海光','算力租赁'], track: '算力', region: '国内', group: 'ai', subgroup: '算力/芯片', headline: '国产GPU三足鼎立格局提出者', abstract: '首次系统性对比海光/寒武纪/摩尔线程三大国产GPU路线，提出"算力平权"投资框架。对国产替代节奏判断精准。', linkedMeetings: [{title:'国产GPU三方对比跟踪', date:'05-20'}], linkedNotes: [{title:'国产GPU突围：三方对比', date:'04-22'},{title:'算力产业2026趋势展望', date:'05-08'}] },
-  { name: '周子轩', identity: '中信证券 · 电子首席', field: 'AI服务器/算力基建', tags: ['中科曙光','浪潮信息','PCB'], track: '算力', region: '国内', group: 'ai', subgroup: '算力/芯片', headline: 'AI服务器产业链核心覆盖', abstract: '覆盖AI服务器从芯片到整机全链条，与中科曙光、浪潮信息管理层保持密切沟通。对PCB/载板环节的量价趋势判断领先市场。', linkedMeetings: [], linkedNotes: [] },
-  { name: '林志鹏', identity: '国泰君安 · 计算机首席', field: '云计算/智算中心', tags: ['阿里云','华为','IDC'], track: '算力', region: '国内', group: 'ai', subgroup: '算力/芯片', headline: '智算中心建设节奏判断标杆', abstract: '最早提出"智算中心三年建设周期"框架，准确预判阿里云资本开支拐点。对云厂商算力部署节奏有独到见解。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Dylan Patel', identity: 'SemiAnalysis 创始人', field: '半导体产业链分析', tags: ['NVIDIA','AMD','台积电'], track: '算力', region: '海外', group: 'ai', subgroup: '算力/芯片', headline: '全球半导体产业链独立研究标杆', abstract: '创办SemiAnalysis，全球最具影响力的半导体产业链独立研究机构。对NVIDIA产品路线图、台积电先进制程进度有第一手信息源。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Dan Hutcheson', identity: 'TechInsights', field: '芯片制造工艺', tags: ['光刻机','先进制程','EUV'], track: '算力', region: '海外', group: 'ai', subgroup: '算力/芯片', headline: '芯片制造工艺40年老兵', abstract: '半导体设备与制造工艺领域最资深的产业分析师之一，对ASML光刻机、先进封装技术趋势有深刻洞察。', linkedMeetings: [], linkedNotes: [] },
-  // AI 产业 — 大模型
-  { name: '李晓峰', identity: '华锐技术 · AI研究院院长', field: 'AI大模型/Agent', tags: ['GPT','Claude','开源模型'], track: '大模型', region: '国内', group: 'ai', subgroup: '大模型', headline: 'AI Agent投资逻辑构建者', abstract: '国内最早系统性研究AI Agent投资机会的产业专家，提出"Agent爆发三阶段"框架。与OpenAI、Anthropic保持技术交流。', linkedMeetings: [{title:'AI大模型投研实践探索', date:'05-19'}], linkedNotes: [{title:'AI Agent爆发期：投资地图', date:'05-10'},{title:'大模型应用层：垂直化', date:'04-10'}] },
-  { name: '张峰', identity: '海通证券 · 策略首席', field: 'AI策略/配置', tags: ['AI ETF','算力指数','主题投资'], track: '大模型', region: '国内', group: 'ai', subgroup: '大模型', headline: 'AI主题投资策略第一人', abstract: '构建了A股AI板块的系统性投资框架，包括AI ETF配置策略、算力指数编制方法论。2024年AI主题策略收益率排名卖方第一。', linkedMeetings: [], linkedNotes: [{title:'中美贸易缓和下的出口链机会', date:'05-12'}] },
-  { name: '王明华', identity: '百度研究院 · 副院长', field: '大模型训练/推理优化', tags: ['文心','ERNIE','MoE'], track: '大模型', region: '国内', group: 'ai', subgroup: '大模型', headline: '文心大模型核心技术负责人', abstract: '主导百度文心大模型从3.0到4.0的技术迭代，在MoE架构、推理加速领域有核心专利。对国产大模型技术路线有产业一线视角。', linkedMeetings: [], linkedNotes: [] },
-  { name: '陈天奇', identity: 'OctoAI / TVM', field: '模型编译与推理加速', tags: ['TVM','量化部署','边缘推理'], track: '大模型', region: '国内', group: 'ai', subgroup: '大模型', headline: 'AI编译器领域开创者', abstract: 'TVM开源项目创始人，推动了AI模型编译优化的技术范式。对模型量化部署、边缘推理有前沿研究成果。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Jim Fan', identity: 'NVIDIA 高级研究科学家', field: '具身智能/基础模型', tags: ['Voyager','MineDojo','多模态'], track: '大模型', region: '海外', group: 'ai', subgroup: '大模型', headline: 'NVIDIA具身智能研究核心', abstract: 'Voyager和MineDojo项目负责人，NVIDIA具身智能方向的核心研究者。对多模态基础模型和游戏AI有深入研究。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Andrej Karpathy', identity: '前Tesla AI总监', field: 'AI训练方法论', tags: ['nanoGPT','自动驾驶感知'], track: '大模型', region: '海外', group: 'ai', subgroup: '大模型', headline: '全球AI教育与实践标杆人物', abstract: '前特斯拉AI总监，nanoGPT作者。在AI训练方法论、自动驾驶感知系统领域有开创性贡献，YouTube AI教育频道影响力巨大。', linkedMeetings: [], linkedNotes: [] },
-  // AI 产业 — 数据要素
-  { name: '钱磊', identity: '海量数据 · CTO', field: '数据标注/训练数据', tags: ['RLHF','合成数据','数据飞轮'], track: '数据', region: '国内', group: 'ai', subgroup: '数据要素', headline: '训练数据工程实践先驱', abstract: '主导了国内最大规模的RLHF数据标注项目，提出"数据飞轮"概念。对合成数据生成、数据质量评估有丰富实践经验。', linkedMeetings: [], linkedNotes: [] },
-  { name: '李强', identity: '万得信息 · 技术总监', field: '金融数据工程', tags: ['Wind','另类数据','因子库'], track: '数据', region: '国内', group: 'ai', subgroup: '数据要素', headline: 'Wind数据平台架构核心', abstract: '主导Wind金融终端数据架构升级，对另类数据采集、因子库构建有深厚积累。了解国内金融数据合规边界。', linkedMeetings: [], linkedNotes: [] },
-  { name: '赵明', identity: '同花顺 · AI Lab主任', field: 'NLP/金融文本挖掘', tags: ['情感分析','公告解析','知识图谱'], track: '数据', region: '国内', group: 'ai', subgroup: '数据要素', headline: '金融NLP落地实践标杆', abstract: '带领同花顺AI Lab实现公告智能解析、市场情感分析等多个NLP产品落地。对金融知识图谱构建有系统方法论。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Jared Kaplan', identity: 'Anthropic 联合创始人', field: 'Scaling Laws/数据效率', tags: ['数据配比','训练动态','涌现能力'], track: '数据', region: '海外', group: 'ai', subgroup: '数据要素', headline: 'Scaling Laws奠基人', abstract: 'Scaling Laws论文核心作者，Anthropic联合创始人。对训练数据配比、模型规模与性能关系有开创性研究。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Tri Dao', identity: 'FlashAttention 作者', field: '高效注意力/数据吞吐', tags: ['FlashAttention','长上下文','稀疏注意力'], track: '数据', region: '海外', group: 'ai', subgroup: '数据要素', headline: 'FlashAttention发明者', abstract: 'FlashAttention系列论文作者，从根本上改变了大模型训练和推理的效率上限。对长上下文处理和稀疏注意力有前沿贡献。', linkedMeetings: [], linkedNotes: [] },
-  // AI 产业 — AI应用
-  { name: '刘思远', identity: '浦发银行 · 投研部首席', field: 'AI+金融应用', tags: ['智能投顾','风控模型','量化'], track: '应用', region: '国内', group: 'ai', subgroup: 'AI应用', headline: '银行体系AI落地推动者', abstract: '主导浦发银行AI投研系统建设，对智能投顾、AI风控模型在银行体系的落地有一线实操经验。了解金融AI合规要求。', linkedMeetings: [], linkedNotes: [{title:'光伏产业链价格触底研判', date:'04-28'}] },
-  { name: '王雅婷', identity: '国金证券 · 研究总监', field: 'AI医疗/药研', tags: ['AI制药','医学影像','临床数据'], track: '应用', region: '国内', group: 'ai', subgroup: 'AI应用', headline: 'AI+医疗交叉领域专家', abstract: '国内少数同时覆盖AI和医疗的证券分析师，对AI制药、医学影像AI有深入跟踪。准确预判了多个AI医疗标的的投资节奏。', linkedMeetings: [], linkedNotes: [] },
-  { name: '赵伟', identity: '广发证券 · 机械首席', field: '机器人/自动化', tags: ['人形机器人','工业机器人','减速器'], track: '应用', region: '国内', group: 'ai', subgroup: 'AI应用', headline: '人形机器人产业链覆盖第一', abstract: '最早系统性梳理人形机器人产业链的卖方分析师，"量产元年"判断被广泛引用。对核心零部件（减速器/丝杠/电机）供应格局理解深刻。', linkedMeetings: [{title:'人形机器人量产元年', date:'05-21'}], linkedNotes: [{title:'人形机器人核心零部件全景扫描', date:'04-15'}] },
-  { name: '黄涛', identity: '商汤科技 · 产品VP', field: 'AI视觉应用', tags: ['自动驾驶','安防','数字人'], track: '应用', region: '国内', group: 'ai', subgroup: 'AI应用', headline: 'AI视觉商业化实战派', abstract: '主导商汤科技多个AI视觉产品线落地，覆盖自动驾驶、智慧安防、数字人等场景。对AI视觉技术的商业化路径有丰富实践。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Andrew Ng', identity: 'DeepLearning.AI', field: 'AI落地方法论', tags: ['AI转型','MLOps','小数据'], track: '应用', region: '海外', group: 'ai', subgroup: 'AI应用', headline: '全球AI教育与产业化布道者', abstract: 'Coursera联合创始人，Google Brain项目发起人。在AI产业化落地方法论、小数据学习领域有系统性框架和全球影响力。', linkedMeetings: [], linkedNotes: [] },
-  { name: 'Emad Mostaque', identity: 'Stability AI 前CEO', field: '生成式AI应用', tags: ['Stable Diffusion','开源生态','创作者经济'], track: '应用', region: '海外', group: 'ai', subgroup: 'AI应用', headline: '开源AI生态构建者', abstract: 'Stability AI创始人，推动Stable Diffusion成为全球最大开源AI图像生成项目。对生成式AI创作者经济有独特洞察。', linkedMeetings: [], linkedNotes: [] },
+  // AI 产业 — 大模型（国内）
+  { name: '唐杰', identity: '智谱AI创始人、清华教授', field: '大模型基座/知识图谱', tags: ['国产大模型领军','产业落地'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国产大模型领军人物' },
+  { name: '杨植麟', identity: '月之暗面Kimi创始人', field: '长文本大模型/推理能力', tags: ['长文本标杆','轻量化大模型'], region: '国内', group: 'ai', subgroup: '大模型', headline: '长文本大模型标杆' },
+  { name: '梁文锋', identity: 'DeepSeek创始人', field: '通用大模型/MoE架构', tags: ['国产开源顶流','算力效率优化'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国产开源大模型顶流' },
+  { name: '周志华', identity: '南京大学教授、中科院院士', field: '机器学习/集成学习', tags: ['国内AI学术泰斗','大模型基础理论'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国内AI学术泰斗' },
+  { name: '张钹', identity: '清华院士', field: '人工智能基础/可信AI', tags: ['国内AI奠基人','符号主义'], region: '国内', group: 'ai', subgroup: '大模型', headline: '国内AI理论奠基人' },
+  { name: '周伯文', identity: '衔远科技创始人', field: 'NLP/多模态/AIGC', tags: ['Transformer机理','产业AIGC'], region: '国内', group: 'ai', subgroup: '大模型', headline: 'NLP与AIGC产业化先驱' },
+  { name: '黄民烈', identity: '清华大学教授', field: 'NLP/对话系统/情感计算', tags: ['人机交互','智能对话'], region: '国内', group: 'ai', subgroup: '大模型', headline: '对话系统学术权威' },
+  { name: '林俊旸', identity: '阿里通义千问核心负责人', field: '大模型预训练/多模态对齐', tags: ['大厂基座模型落地','通义千问'], region: '国内', group: 'ai', subgroup: '大模型', headline: '通义千问技术核心' },
+  // AI 产业 — 大模型（海外）
+  { name: 'Geoffrey Hinton', identity: '图灵奖、深度学习之父', field: '神经网络/反向传播', tags: ['AI理论奠基人','深度信念网络'], region: '海外', group: 'ai', subgroup: '大模型', headline: '深度学习之父' },
+  { name: 'Yoshua Bengio', identity: '图灵奖得主', field: '深度学习/表征学习/AI安全', tags: ['全球AI学术权威','AI治理'], region: '海外', group: 'ai', subgroup: '大模型', headline: '全球AI学术权威' },
+  { name: 'Yann LeCun', identity: '图灵奖得主、Meta首席AI科学家', field: '卷积网络/自监督学习', tags: ['计算机视觉宗师','深度学习'], region: '海外', group: 'ai', subgroup: '大模型', headline: '卷积网络与自监督学习宗师' },
+  { name: 'Sam Altman', identity: 'OpenAI CEO', field: '通用大模型/AGI产品化', tags: ['GPT生态','AI商业化'], region: '海外', group: 'ai', subgroup: '大模型', headline: 'OpenAI掌舵人' },
+  { name: 'Ilya Sutskever', identity: 'OpenAI联合创始人', field: '大模型预训练/序列建模', tags: ['GPT核心架构设计者','AI安全'], region: '海外', group: 'ai', subgroup: '大模型', headline: 'GPT架构核心设计者' },
+  // AI 产业 — 算力芯片（国内）
+  { name: '陈天石', identity: '寒武纪创始人', field: 'AI训练/推理芯片', tags: ['国产AI算力芯片龙头','端边云算力'], region: '国内', group: 'ai', subgroup: '算力芯片', headline: '国产AI芯片龙头创始人' },
+  { name: '周靖人', identity: '阿里云首席科学家', field: '云智协同/算力集群', tags: ['云计算+AI一体化','通义千问底座'], region: '国内', group: 'ai', subgroup: '算力芯片', headline: '阿里云AI一体化架构师' },
+  { name: '陈云霁', identity: '中科院计算所', field: 'AI芯片/深度学习处理器', tags: ['国产算力架构理论','处理器设计'], region: '国内', group: 'ai', subgroup: '算力芯片', headline: '国产算力架构理论专家' },
+  { name: '黄铁军', identity: '北大教授', field: '视觉算力/多媒体AI', tags: ['AI视觉算力标准','芯片适配'], region: '国内', group: 'ai', subgroup: '算力芯片', headline: 'AI视觉算力标准制定者' },
+  { name: '代达劢', identity: 'DeepSeek基础设施负责人', field: '分布式训练/推理架构', tags: ['算力工程','国产化适配'], region: '国内', group: 'ai', subgroup: '算力芯片', headline: 'DeepSeek算力工程核心' },
+  // AI 产业 — 算力芯片（海外）
+  { name: '黄仁勋', identity: '英伟达CEO', field: 'GPU算力/AI数据中心', tags: ['全球AI算力霸主','生态架构'], region: '海外', group: 'ai', subgroup: '算力芯片', headline: '全球AI算力生态霸主' },
+  { name: '苏姿丰', identity: 'AMD CEO', field: 'AI芯片/高性能计算', tags: ['全球AI芯片核心决策者','端边算力'], region: '海外', group: 'ai', subgroup: '算力芯片', headline: 'AMD AI芯片核心决策者' },
+  { name: 'Dario Amodei', identity: 'Anthropic CEO', field: '安全对齐/大模型可控性', tags: ['AI安全','Claude模型负责人'], region: '海外', group: 'ai', subgroup: '算力芯片', headline: 'Anthropic掌舵人/AI安全先驱' },
+  // AI 产业 — 行业应用（国内）
+  { name: '李开复', identity: '零一万物CEO', field: '大模型产业应用/企业AI落地', tags: ['AI产业趋势','商业化落地'], region: '国内', group: 'ai', subgroup: '行业应用', headline: 'AI产业化布道者' },
+  { name: '王兴兴', identity: '宇树科技创始人', field: '四足机器人/具身智能', tags: ['人形机器人','AI应用落地'], region: '国内', group: 'ai', subgroup: '行业应用', headline: '具身智能产业先锋' },
+  { name: '贾佳亚', identity: '香港中文大学教授', field: '计算机视觉/医学影像', tags: ['视觉AI工业落地','三维重建'], region: '国内', group: 'ai', subgroup: '行业应用', headline: '视觉AI工业落地标杆' },
+  { name: '韩军伟', identity: '西北工业大学教授', field: '遥感AI/目标识别', tags: ['政企安防','遥感AI'], region: '国内', group: 'ai', subgroup: '行业应用', headline: '遥感与安防AI专家' },
+  { name: '彭志辉', identity: '人形机器人核心专家', field: '具身智能/机器人运动控制', tags: ['人形机器人产业','端侧AI'], region: '国内', group: 'ai', subgroup: '行业应用', headline: '人形机器人技术专家' },
+  // AI 产业 — 行业应用（海外）
+  { name: '何恺明', identity: 'MIT教授、ResNet之父', field: '深度视觉/残差网络', tags: ['全球CV顶流','模型架构标杆'], region: '海外', group: 'ai', subgroup: '行业应用', headline: 'ResNet之父/视觉AI标杆' },
+  { name: '李飞飞', identity: '斯坦福大学教授', field: '计算机视觉/机器人/AI伦理', tags: ['AI数据集','视觉认知权威'], region: '海外', group: 'ai', subgroup: '行业应用', headline: 'ImageNet缔造者/视觉认知权威' },
+  { name: 'Demis Hassabis', identity: 'Google DeepMind CEO', field: '通用AI/强化学习/科学计算', tags: ['DeepMind掌舵人','AlphaFold'], region: '海外', group: 'ai', subgroup: '行业应用', headline: 'DeepMind技术掌舵人' },
+  { name: 'Elon Musk', identity: 'xAI创始人', field: 'AGI/大模型开源/产业颠覆', tags: ['AI行业叙事','生态推动者'], region: '海外', group: 'ai', subgroup: '行业应用', headline: 'xAI创始人/AI行业颠覆者' },
+  // AI 产业 — 语料&学术（国内）
+  { name: '朱松纯', identity: '北大教授', field: '通用人工智能/因果推理', tags: ['AGI基础理论','AI哲学'], region: '国内', group: 'ai', subgroup: '语料&学术', headline: 'AGI基础理论学术权威' },
+  { name: '董彬', identity: '北大国际数学研究中心', field: '机器学习数学基础/科学计算', tags: ['AI底层数理基石','数学基础'], region: '国内', group: 'ai', subgroup: '语料&学术', headline: 'AI数学基础研究先锋' },
+  { name: '薛澜', identity: '清华大学苏世民书院', field: 'AI政策/全球AI治理', tags: ['AI产业政策顶层专家','科技战略'], region: '国内', group: 'ai', subgroup: '语料&学术', headline: 'AI治理与产业政策顶层专家' },
+  { name: '林宙辰', identity: '北大教授', field: '机器学习数值计算/优化理论', tags: ['AI数学基础','算法理论'], region: '国内', group: 'ai', subgroup: '语料&学术', headline: '优化理论与算法专家' },
+  // AI 产业 — 语料&学术（海外）
+  { name: 'Andrew Zisserman', identity: '牛津大学教授', field: '视觉识别/几何视觉', tags: ['国际CV学术泰斗','影像理解'], region: '海外', group: 'ai', subgroup: '语料&学术', headline: '计算机视觉学术泰斗' },
+  { name: 'James Manyika', identity: 'Google 高级副总裁', field: 'AI全球治理/科技社会影响', tags: ['联合国AI顾问','产业政策专家'], region: '海外', group: 'ai', subgroup: '语料&学术', headline: '全球AI治理与产业政策专家' },
   // 科技 — 半导体
-  { name: '赵晓光', identity: '天风证券 · 电子首席', field: '消费电子/半导体', tags: ['苹果链','折叠屏','SoC'], track: '', region: '国内', group: 'tech', subgroup: '半导体', headline: '消费电子产业链研究标杆', abstract: '连续多年新财富电子行业上榜，对苹果产业链、折叠屏技术路线有深度覆盖。半导体国产化进程的权威跟踪者。', linkedMeetings: [{title:'苹果AI战略与供应链变革', date:'05-22'}], linkedNotes: [{title:'消费电子2026下半年展望', date:'05-15'}] },
-  { name: '吕伟', identity: '华创证券 · 通信首席', field: '5G/通信设备', tags: ['华为','中兴','光模块'], track: '', region: '国内', group: 'tech', subgroup: '通信设备', headline: '通信设备产业链深度覆盖', abstract: '对华为、中兴通信设备产业链有长期深度跟踪，光模块领域判断屡次领先市场。准确把握5G到AI通信的切换节奏。', linkedMeetings: [], linkedNotes: [{title:'800G光模块需求爆发跟踪', date:'05-06'}] },
-  // 消费
-  { name: '范劲松', identity: '华创证券 · 食饮首席', field: '白酒/食品饮料', tags: ['茅台','五粮液','啤酒'], track: '', region: '国内', group: 'consume', subgroup: '白酒', headline: '白酒行业研究第一人', abstract: '白酒行业覆盖超过15年，对茅台批价、渠道库存有独家跟踪体系。新财富食品饮料第一名，对消费升级与降级的切换判断精准。', linkedMeetings: [{title:'白酒行业中期策略：复苏节奏', date:'05-23'}], linkedNotes: [{title:'茅台渠道调研纪要', date:'05-11'}] },
-  // 医疗健康
-  { name: '杨松', identity: '中信证券 · 医药首席', field: '创新药/CXO', tags: ['恒瑞医药','药明康德','GLP-1'], track: '', region: '国内', group: 'health', subgroup: '创新药', headline: '创新药投资框架构建者', abstract: '国内创新药研究体系最完整的卖方分析师，对恒瑞医药、药明康德等核心标的有深度覆盖。GLP-1赛道判断领先市场半年以上。', linkedMeetings: [{title:'GLP-1减重药产业链机会', date:'05-24'}], linkedNotes: [{title:'创新药2026年投资框架', date:'05-09'}] },
-  // 先进制造
-  { name: '韩虹', identity: '招商证券 · 新能源首席', field: '锂电/光伏', tags: ['宁德时代','隆基绿能','储能'], track: '', region: '国内', group: 'manufacture', subgroup: '锂电', headline: '新能源产业链定价权威', abstract: '对锂电池产业链（碳酸锂-正极-电池-整车）有完整覆盖体系，宁德时代研究最深入的卖方之一。光伏价格底部判断多次精准。', linkedMeetings: [], linkedNotes: [{title:'锂电产业链价格周期复盘', date:'05-07'}] },
-  { name: '孙潇雅', identity: '国泰君安 · 军工首席', field: '军工/航空航天', tags: ['中航沈飞','航发动力','卫星互联网'], track: '', region: '国内', group: 'manufacture', subgroup: '军工', headline: '军工产业链订单跟踪标杆', abstract: '对军工订单节奏和装备列装进度有独家信息源，航空发动机产业链覆盖最深的卖方分析师。卫星互联网赛道的早期发现者。', linkedMeetings: [{title:'军工中期策略：装备放量', date:'05-25'}], linkedNotes: [] },
+  { name: '赵晓光', identity: '天风证券 · 电子首席', field: '消费电子/半导体', tags: ['苹果链','折叠屏','SoC'], region: '国内', group: 'tech', subgroup: '半导体', headline: '消费电子产业链研究标杆' },
+  // 科技 — 通信设备
+  { name: '吕伟', identity: '华创证券 · 通信首席', field: '5G/通信设备', tags: ['华为','中兴','光模块'], region: '国内', group: 'tech', subgroup: '通信设备', headline: '通信设备产业链深度覆盖' },
+  // 消费 — 白酒
+  { name: '范劲松', identity: '华创证券 · 食饮首席', field: '白酒/食品饮料', tags: ['茅台','五粮液','啤酒'], region: '国内', group: 'consume', subgroup: '白酒', headline: '白酒行业研究第一人' },
+  // 医疗健康 — 创新药
+  { name: '杨松', identity: '中信证券 · 医药首席', field: '创新药/CXO', tags: ['恒瑞医药','药明康德','GLP-1'], region: '国内', group: 'health', subgroup: '创新药', headline: '创新药投资框架构建者' },
+  // 先进制造 — 锂电
+  { name: '韩虹', identity: '招商证券 · 新能源首席', field: '锂电/光伏', tags: ['宁德时代','隆基绿能','储能'], region: '国内', group: 'manufacture', subgroup: '锂电', headline: '新能源产业链定价权威' },
+  // 先进制造 — 军工
+  { name: '孙潇雅', identity: '国泰君安 · 军工首席', field: '军工/航空航天', tags: ['中航沈飞','航发动力','卫星互联网'], region: '国内', group: 'manufacture', subgroup: '军工', headline: '军工产业链订单跟踪标杆' },
   // 宏观策略
-  { name: '任泽平', identity: '泽平宏观 · 创始人', field: '宏观经济/政策研究', tags: ['房地产','人口','新基建'], track: '', region: '国内', group: 'macro', subgroup: '宏观经济', headline: '宏观经济趋势研判影响力第一', abstract: '前恒大首席经济学家，"新周期"理论提出者。对中国宏观经济拐点、房地产政策走向有系统性研判框架，公众影响力巨大。', linkedMeetings: [{title:'2026下半年宏观经济展望', date:'05-26'}], linkedNotes: [{title:'宏观经济月度跟踪', date:'05-13'}] },
+  { name: '任泽平', identity: '泽平宏观 · 创始人', field: '宏观经济/政策研究', tags: ['房地产','人口','新基建'], region: '国内', group: 'macro', subgroup: '宏观经济', headline: '宏观经济趋势研判影响力第一' },
   // 金融
-  { name: '戴志锋', identity: '中泰证券 · 银行首席', field: '银行/金融科技', tags: ['招商银行','宁波银行','数字化转型'], track: '', region: '国内', group: 'finance', subgroup: '银行', headline: '银行股深度价值挖掘者', abstract: '银行业研究超过12年，对招商银行零售转型、城商行差异化发展有独到研究。在银行数字化转型与金融科技融合领域走在前列。', linkedMeetings: [], linkedNotes: [{title:'银行股中期配置价值分析', date:'05-04'}] },
+  { name: '戴志锋', identity: '中泰证券 · 银行首席', field: '银行/金融科技', tags: ['招商银行','宁波银行','数字化转型'], region: '国内', group: 'finance', subgroup: '银行', headline: '银行股深度价值挖掘者' },
   // 能源材料
-  { name: '邱祖学', identity: '国泰君安 · 有色首席', field: '有色金属/贵金属', tags: ['黄金','铜','稀土'], track: '', region: '国内', group: 'material', subgroup: '有色金属', headline: '有色金属价格周期判断标杆', abstract: '对黄金、铜等大宗商品价格周期有系统性研究框架，稀土供需格局分析最深入的卖方之一。贵金属趋势判断准确率行业领先。', linkedMeetings: [], linkedNotes: [{title:'黄金突破3000美元的逻辑', date:'04-30'}] },
+  { name: '邱祖学', identity: '国泰君安 · 有色首席', field: '有色金属/贵金属', tags: ['黄金','铜','稀土'], region: '国内', group: 'material', subgroup: '有色金属', headline: '有色金属价格周期判断标杆' },
 ];
 
 function renderExperts(group, sub) {
@@ -3072,7 +3074,7 @@ function renderExperts(group, sub) {
   el.innerHTML = filtered.map(e => `
     <div class="ai-expert-card">
       <div class="expert-core">
-        <div class="ai-expert-avatar">${e.name[0]}</div>
+        <img class="ai-expert-avatar" src="https://i.pravatar.cc/112?u=${encodeURIComponent(e.name)}" alt="${e.name}" />
         <div class="expert-bio">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
             <span class="expert-name">${e.name}</span>
@@ -3085,25 +3087,10 @@ function renderExperts(group, sub) {
           </div>
           ${e.abstract ? '<div class="expert-abstract">' + e.abstract + '</div>' : ''}
         </div>
-        <div class="expert-actions">
-          <button class="btn btn-sm btn-gradient" onclick="openInterviewWithExpert('${e.name}','${e.track || e.subgroup}')">✦ 发起约谈</button>
-          <button class="btn btn-sm" onclick="openExpertDetail('${e.name}')">查看详情</button>
-        </div>
       </div>
-      ${(e.linkedMeetings && e.linkedMeetings.length) || (e.linkedNotes && e.linkedNotes.length) ? `
-      <div class="expert-nested">
-        <div class="expert-nested-box">
-          <h4>📅 关联会议</h4>
-          ${(e.linkedMeetings || []).map(m => '<div class="expert-nested-link" onclick="openMeetingDetail()">· ' + m.title + ' · ' + m.date + '</div>').join('') || '<div style="font-size:10px; color:var(--text-muted);">暂无排期</div>'}
-        </div>
-        <div class="expert-nested-box">
-          <h4>📄 关联纪要</h4>
-          ${(e.linkedNotes || []).map(n => '<div class="expert-nested-link" onclick="openMeetingDetail()">· ' + n.title + '</div>').join('') || '<div style="font-size:10px; color:var(--text-muted);">暂无纪要</div>'}
-        </div>
-      </div>` : ''}
     </div>`).join('');
 }
-renderExperts('all');
+renderExperts('ai');
 
 // ========== NOTES LIBRARY ==========
 const notesLibraryData = [
@@ -3135,15 +3122,14 @@ function renderNotes(group, sub) {
     return;
   }
   notesLibraryEl.innerHTML = filtered.map(n => `
-    <div class="card meeting-list-item" style="grid-template-columns:60px 1fr 80px 60px 100px;" onclick="${n.hasDetail ? 'openMeetingDetail()' : ''}">
-      <div class="ml-date mono">${n.date}</div>
-      <div class="ml-info">
-        <div class="ml-title">${n.title}</div>
-        <div class="ml-expert">${n.expert}</div>
+    <div class="note-card" onclick="openNoteDetail('${n.title.replace(/'/g, "\\'")}')">
+      <div class="note-card-tags">
+        <span class="tag ${n.tagClass}">${n.tag}</span>
+        <span class="tag">${n.rating}</span>
       </div>
-      <div class="ml-industry"><span class="tag ${n.tagClass}">${n.tag}</span></div>
-      <div style="text-align:center;"><span class="mono" style="font-size:12px; font-weight:700; color:var(--accent-blue);">${n.rating}</span></div>
-      <div class="ml-action"><button class="btn btn-cyan btn-sm" onclick="event.stopPropagation(); openMeetingDetail();">查看纪要</button></div>
+      <div class="note-card-title">${n.title}</div>
+      <div class="note-card-summary">${n.summary || '深度解析行业趋势与投资机会，涵盖产业链核心环节研判。'}</div>
+      <div class="note-card-footer">${n.expert} · ${n.date}</div>
     </div>`).join('');
 }
 renderNotes('all');
@@ -3180,6 +3166,7 @@ function initGroupFilter(groupFilterId, subFilterId, renderFn) {
 }
 
 initGroupFilter('expert-group-filter', 'expert-sub-filter', renderExperts);
+renderSubFilter('expert-sub-filter', 'ai', renderExperts);
 initGroupFilter('meeting-group-filter', 'meeting-sub-filter', renderMeetingCards);
 initGroupFilter('notes-group-filter', 'notes-sub-filter', renderNotes);
 
@@ -3231,6 +3218,57 @@ function closeExpertDetail() {
 }
 document.getElementById('expert-detail').addEventListener('click', function(e) {
   if (e.target === this) closeExpertDetail();
+});
+
+// ========== NOTE DETAIL ==========
+function openNoteDetail(title) {
+  const note = notesLibraryData.find(n => n.title === title);
+  if (!note) return;
+  document.getElementById('note-detail-meta').textContent = '2026-' + note.date + ' · ' + note.rating + ' 评级';
+  document.getElementById('note-detail-title').textContent = note.title;
+  document.getElementById('note-detail-tags').innerHTML =
+    '<span class="tag ' + note.tagClass + '">' + note.tag + '</span>' +
+    '<span style="font-size:11px; color:var(--text-secondary);">' + note.expert + '</span>';
+  document.getElementById('note-detail-body').innerHTML = `
+    <div style="display:flex; gap:16px; margin-bottom:20px;">
+      <div class="card" style="flex:1; padding:12px;">
+        <div class="text-xs" style="color:var(--text-muted);">评级</div>
+        <div class="mono" style="font-size:18px; font-weight:700; color:var(--accent-blue); margin-top:2px;">${note.rating}</div>
+      </div>
+      <div class="card" style="flex:1; padding:12px;">
+        <div class="text-xs" style="color:var(--text-muted);">分类</div>
+        <div style="font-size:14px; font-weight:600; margin-top:2px;">${note.tag}</div>
+      </div>
+      <div class="card" style="flex:1; padding:12px;">
+        <div class="text-xs" style="color:var(--text-muted);">日期</div>
+        <div class="mono" style="font-size:14px; font-weight:600; margin-top:2px;">2026-${note.date}</div>
+      </div>
+    </div>
+    <div class="minutes-section">
+      <div class="minutes-section-title">◆ 核心要点</div>
+      <div class="minutes-content">
+        <li>深度解析 ${note.tag} 领域最新产业趋势与政策动向</li>
+        <li>梳理产业链核心环节投资机会与风险点</li>
+        <li>结合最新数据给出重点标的推荐与配置建议</li>
+      </div>
+    </div>
+    <div class="minutes-section">
+      <div class="minutes-section-title">◆ 专家简介</div>
+      <div class="minutes-content">
+        <p style="font-size:13px; line-height:1.7;">${note.expert}，在 ${note.tag} 领域深耕多年，具有丰富的产业研究与投资咨询经验。</p>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn btn-cyan btn-sm" onclick="showToast('纪要已收藏'); closeNoteDetail();">收藏此纪要</button>
+    </div>
+  `;
+  document.getElementById('note-detail').classList.add('show');
+}
+function closeNoteDetail() {
+  document.getElementById('note-detail').classList.remove('show');
+}
+document.getElementById('note-detail').addEventListener('click', function(e) {
+  if (e.target === this) closeNoteDetail();
 });
 
 // ========== MONITOR TABS ==========
