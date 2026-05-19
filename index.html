@@ -340,6 +340,9 @@ body {
 }
 .ai-global-overlay.show {
   display: grid;
+  grid-template-columns: 220px 1fr 360px;
+}
+.ai-global-overlay.show.no-product {
   grid-template-columns: 220px 1fr 280px;
 }
 .ai-global-left {
@@ -464,6 +467,54 @@ body {
   background: var(--bg-secondary);
   margin: 2px 4px 2px 0;
 }
+
+/* Product View (产物展示区) */
+.ai-product-view { display:none; flex-direction:column; height:100%; }
+.ai-global-overlay.show.has-product .ai-product-view { display:flex; }
+.ai-global-overlay.show.has-product .ai-global-chat-initial { display:none; }
+.ai-product-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 20px; background:var(--bg-card); }
+.ai-product-tab { padding:12px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
+.ai-product-tab:hover { color:var(--text-primary); }
+.ai-product-tab.active { color:var(--accent-blue); border-bottom-color:var(--accent-blue); }
+.ai-product-body { flex:1; display:grid; grid-template-columns:200px 1fr; overflow:hidden; }
+.ai-product-file-list { border-right:1px solid var(--border); padding:12px 0; overflow-y:auto; background:var(--bg-card); }
+.ai-product-file-item { padding:8px 16px; font-size:12px; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:8px; transition:background 0.15s; }
+.ai-product-file-item:hover { background:rgba(45,127,249,0.04); }
+.ai-product-file-item.active { background:rgba(45,127,249,0.08); color:var(--accent-blue); }
+.ai-product-file-icon { font-size:14px; }
+.ai-product-preview { flex:1; overflow-y:auto; padding:32px 40px; background:var(--bg-secondary); }
+.ai-product-doc { background:var(--bg-card); border-radius:12px; padding:48px 56px; max-width:800px; margin:0 auto; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+.ai-product-doc h1 { font-size:28px; font-weight:700; margin-bottom:8px; color:var(--text-primary); }
+.ai-product-doc h2 { font-size:18px; font-weight:600; margin:28px 0 12px; color:var(--text-primary); }
+.ai-product-doc h3 { font-size:14px; font-weight:600; margin:20px 0 8px; color:var(--text-primary); }
+.ai-product-doc p { font-size:13px; line-height:1.8; color:var(--text-secondary); margin-bottom:12px; }
+.ai-product-doc .doc-meta { font-size:11px; color:var(--text-muted); margin-bottom:24px; }
+.ai-product-doc .doc-section-tag { display:inline-block; font-size:10px; color:var(--accent-cyan); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.ai-product-doc .doc-highlight { background:linear-gradient(135deg, rgba(45,127,249,0.06), rgba(24,191,255,0.06)); border-radius:8px; padding:20px 24px; margin:16px 0; }
+.ai-product-doc .doc-stat-row { display:flex; gap:32px; margin:16px 0; }
+.ai-product-doc .doc-stat { text-align:center; }
+.ai-product-doc .doc-stat-val { font-size:24px; font-weight:700; color:var(--accent-blue); }
+.ai-product-doc .doc-stat-label { font-size:11px; color:var(--text-muted); margin-top:4px; }
+
+/* Right panel as chat (产物模式下右侧变对话) */
+.ai-global-overlay.show.has-product .ai-global-right { display:flex; flex-direction:column; }
+.ai-global-overlay.show.has-product .ai-global-right-default { display:none; }
+.ai-global-overlay.show.has-product .ai-global-right-chat { display:flex !important; }
+.ai-global-right-chat { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.ai-global-right-chat-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.ai-global-right-chat-msg { font-size:12px; line-height:1.6; padding:10px 14px; border-radius:10px; max-width:90%; }
+.ai-global-right-chat-msg.user { align-self:flex-end; background:var(--accent-blue); color:#fff; }
+.ai-global-right-chat-msg.ai { align-self:flex-start; background:var(--bg-secondary); color:var(--text-primary); }
+.ai-global-right-products { padding:12px 16px; border-top:1px solid var(--border); }
+.ai-global-right-products-title { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.ai-global-right-product-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border:1px solid var(--border); border-radius:6px; font-size:11px; margin:2px 4px 2px 0; cursor:pointer; transition:all 0.15s; }
+.ai-global-right-product-badge:hover { border-color:var(--accent-blue); color:var(--accent-blue); }
+.ai-global-right-footer { border-top:1px solid var(--border); padding:12px 16px; background:var(--bg-card); }
+.ai-global-right-footer input { width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12px; outline:none; background:var(--bg-secondary); }
+.ai-global-right-footer input:focus { border-color:var(--accent-blue); }
+.ai-global-right-footer-actions { display:flex; gap:8px; margin-top:8px; }
+.ai-global-right-footer-btn { font-size:11px; padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--bg-card); cursor:pointer; color:var(--text-secondary); }
+.ai-global-right-footer-btn:hover { border-color:var(--accent-blue); color:var(--accent-blue); }
 
 /* Float group (浮球态) */
 .ai-float-group {
@@ -613,6 +664,12 @@ body {
 .ai-global-empty-sub {
   font-size: 12px; color: var(--text-muted);
 }
+.ai-global-cases { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; justify-content:center; max-width:600px; }
+.ai-case-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px 20px; width:170px; cursor:pointer; transition:all 0.2s; text-align:left; }
+.ai-case-card:hover { border-color:var(--accent-blue); transform:translateY(-2px); box-shadow:0 4px 12px rgba(45,127,249,0.1); }
+.ai-case-card-icon { font-size:20px; margin-bottom:8px; }
+.ai-case-card-title { font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
+.ai-case-card-desc { font-size:11px; color:var(--text-muted); line-height:1.4; }
 
 /* ========== SECTION HEADER ========== */
 .section-header {
@@ -2462,7 +2519,7 @@ body {
       </div>
       <div class="ai-global-action" onclick="newAiSession('report')">
         <span class="ai-action-icon">📄</span>
-        <span>写研报</span>
+        <span>写文档</span>
       </div>
       <div class="ai-global-action" onclick="newAiSession('ppt')">
         <span class="ai-action-icon">📊</span>
@@ -2472,35 +2529,73 @@ body {
         <span class="ai-action-icon">😂</span>
         <span>写段子</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('stock')">
-        <span class="ai-action-icon">📈</span>
-        <span>AI选股</span>
+      <div class="ai-global-action" onclick="newAiSession('monitor-center')">
+        <span class="ai-action-icon">📡</span>
+        <span>信源监控中心</span>
+      </div>
+      <div class="ai-global-action" onclick="newAiSession('schedule')">
+        <span class="ai-action-icon">⏰</span>
+        <span>定时任务</span>
       </div>
     </div>
     <div class="ai-global-history-label">最近</div>
     <div class="ai-global-history" id="ai-global-history"></div>
   </div>
   <div class="ai-global-center">
-    <div class="ai-global-chat-header" id="ai-global-chat-header">
-      <span style="color:var(--accent-cyan);">✦</span> AI 投研助手
+    <!-- 初始聊天模式 -->
+    <div class="ai-global-chat-initial">
+      <div class="ai-global-chat-header" id="ai-global-chat-header">
+        <span style="color:var(--accent-cyan);">✦</span> AI 投研助手
+      </div>
+      <div class="ai-global-chat-body" id="ai-global-chat-body"></div>
+      <div class="ai-global-chat-footer">
+        <div class="ai-global-input-row">
+          <input id="ai-global-input" placeholder="输入你的需求..." onkeydown="if(event.key==='Enter')sendGlobalChat()" />
+          <button onclick="sendGlobalChat()">发送</button>
+        </div>
+      </div>
     </div>
-    <div class="ai-global-chat-body" id="ai-global-chat-body"></div>
-    <div class="ai-global-chat-footer">
-      <div class="ai-global-input-row">
-        <input id="ai-global-input" placeholder="输入你的需求..." onkeydown="if(event.key==='Enter')sendGlobalChat()" />
-        <button onclick="sendGlobalChat()">发送</button>
+    <!-- 产物展示模式 -->
+    <div class="ai-product-view">
+      <div class="ai-product-tabs">
+        <div class="ai-product-tab active" onclick="switchProductTab(this,'products')">📦 产物</div>
+        <div class="ai-product-tab" onclick="switchProductTab(this,'files')">📁 全部文件</div>
+        <div class="ai-product-tab" onclick="switchProductTab(this,'changes')">↔ 变更</div>
+        <div class="ai-product-tab" onclick="switchProductTab(this,'browser')">🌐 浏览器</div>
+      </div>
+      <div class="ai-product-body">
+        <div class="ai-product-file-list" id="ai-product-file-list"></div>
+        <div class="ai-product-preview" id="ai-product-preview"></div>
       </div>
     </div>
   </div>
   <div class="ai-global-right">
-    <div class="ai-global-right-section">
-      <div class="ai-global-right-title">Progress</div>
-      <div id="ai-global-progress"></div>
+    <!-- 默认模式: progress + documents -->
+    <div class="ai-global-right-default">
+      <div class="ai-global-right-section">
+        <div class="ai-global-right-title">Progress</div>
+        <div id="ai-global-progress"></div>
+      </div>
+      <div class="ai-global-right-section">
+        <div class="ai-global-right-title">Documents</div>
+        <div id="ai-global-documents"></div>
+      </div>
     </div>
-    <div class="ai-global-right-section">
-      <div class="ai-global-right-title">Documents</div>
-      <div id="ai-global-documents"></div>
+    <!-- 产物模式: 右侧变为聊天 -->
+    <div class="ai-global-right-chat" id="ai-global-right-chat" style="display:none;">
+      <div style="padding:12px 16px; border-bottom:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text-muted);">对话</div>
+      <div class="ai-global-right-chat-body" id="ai-global-right-chat-body"></div>
+      <div class="ai-global-right-products" id="ai-global-right-products"></div>
+      <div class="ai-global-right-footer">
+        <input id="ai-global-right-input" placeholder="输入消息..." onkeydown="if(event.key==='Enter')sendRightChat()" />
+        <div class="ai-global-right-footer-actions">
+          <span class="ai-global-right-footer-btn">📦 Craft</span>
+          <span class="ai-global-right-footer-btn">⚙ Auto</span>
+          <span class="ai-global-right-footer-btn">🔗 技能</span>
+        </div>
+      </div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -3864,7 +3959,9 @@ let aiSessions = [...mockHistory];
 let currentSession = { id: 99, mode: 'general', title: '新对话', messages: [], documents: [...mockDocuments], progress: [...mockProgress] };
 
 function openAiGlobal() {
-  document.getElementById('ai-global').classList.add('show');
+  const overlay = document.getElementById('ai-global');
+  overlay.classList.add('show');
+  if (!overlay.classList.contains('has-product')) overlay.classList.add('no-product');
   document.getElementById('ai-float-group').style.display = 'none';
   document.getElementById('global-ai-panel').style.display = 'none';
   renderHistory();
@@ -3873,23 +3970,31 @@ function openAiGlobal() {
 }
 
 function closeAiGlobal() {
-  document.getElementById('ai-global').classList.remove('show');
+  const overlay = document.getElementById('ai-global');
+  overlay.classList.remove('show', 'has-product', 'no-product');
   document.getElementById('ai-float-group').style.display = '';
+  document.getElementById('ai-global-right-chat').style.display = 'none';
+  document.querySelector('.ai-global-right-default').style.display = '';
   renderFloatSuggestions();
 }
 
 function expandToGlobal() {
   document.getElementById('global-ai-panel').style.display = 'none';
   openAiGlobal();
+  if (currentSession.messages.length > 0) {
+    setTimeout(() => showProductView('doc-1'), 300);
+  }
 }
 
 function newAiSession(mode) {
-  const titles = { general: '新对话', report: '研报生成', ppt: 'PPT生成', joke: '段子生成', stock: 'AI选股' };
+  const titles = { general: '新对话', report: '文档生成', ppt: 'PPT生成', joke: '段子生成', 'monitor-center': '信源监控中心', schedule: '定时任务' };
   currentSession = { id: Date.now(), mode, title: titles[mode] || '新对话', messages: [], documents: [...mockDocuments], progress: [] };
+  const modes = ['general','report','ppt','joke','monitor-center','schedule'];
   document.querySelectorAll('.ai-global-action').forEach((el, i) => {
-    const modes = ['general','report','ppt','joke','stock'];
     el.classList.toggle('active', modes[i] === mode);
   });
+  hideProductView();
+  document.getElementById('ai-global-right-chat-body').innerHTML = '';
   renderGlobalChat();
 }
 
@@ -3911,7 +4016,7 @@ function renderFloatSuggestions() {
 function renderHistory() {
   const el = document.getElementById('ai-global-history');
   if (!el) return;
-  const icons = { report: '📄', general: '💬', joke: '😂', stock: '📈', ppt: '📊' };
+  const icons = { report: '📄', general: '💬', joke: '😂', ppt: '📊', 'monitor-center': '📡', schedule: '⏰' };
   el.innerHTML = aiSessions.map(s => `<div class="ai-global-history-item${s.id === currentSession.id ? ' active' : ''}" onclick="loadSession(${s.id})">${icons[s.mode] || '💬'} ${s.title}</div>`).join('');
 }
 
@@ -3968,11 +4073,82 @@ function sendGlobalChat() {
       report: `正在基于「${msg}」生成报告草稿...\n\n正在整合信源数据、个股行情和产业链逻辑。`,
       ppt: `正在生成PPT大纲...\n\n主题：${msg}\n预计包含8-12页，涵盖行业概述、数据分析和投资建议。`,
       joke: `「${msg}」相关段子来了：\n\n"今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。"\n\n😄 需要换个风格吗？`,
-      stock: `正在筛选符合「${msg}」条件的个股...\n\n初步筛选出5只标的，需要我进一步分析吗？`
+      'monitor-center': `已为你启动信源监控中心。当前监控 ${msg} 相关信源变动。`,
+      schedule: `已创建定时任务：${msg}。将在指定时间提醒你。`
     };
     currentSession.messages.push({ role: 'ai', text: replies[currentSession.mode] || replies.general });
     renderGlobalChat();
+    if (['report','ppt','general'].includes(currentSession.mode) && currentSession.messages.length >= 2) {
+      setTimeout(() => showProductView(currentSession.mode === 'ppt' ? 'ppt-1' : 'doc-1'), 600);
+    }
   }, 500);
+}
+
+// ========== PRODUCT VIEW ==========
+const mockProducts = [
+  { id: 'doc-1', type: 'doc', icon: '📄', title: 'AI产业链深度报告.docx', content: `<div class="ai-product-doc"><h1>AI产业链深度研究报告</h1><div class="doc-meta">AI投研平台 · 2026年5月19日 · 自动生成</div><div class="doc-section-tag">核心观点</div><h2>算力基础设施持续扩张，应用层加速落地</h2><p>2026年以来，全球AI产业链呈现"基础设施先行、应用层加速跟进"的发展格局。上游算力芯片供不应求，中游云服务厂商加速扩容，下游应用场景从通用大模型向垂直行业快速渗透。</p><div class="doc-highlight"><div class="doc-stat-row"><div class="doc-stat"><div class="doc-stat-val">2.1万亿</div><div class="doc-stat-label">全球AI市场规模(2026E)</div></div><div class="doc-stat"><div class="doc-stat-val">+38%</div><div class="doc-stat-label">YoY增速</div></div><div class="doc-stat"><div class="doc-stat-val">67%</div><div class="doc-stat-label">中国AI企业渗透率</div></div></div></div><h2>产业链各环节投资机会</h2><h3>上游：算力芯片与服务器</h3><p>英伟达、AMD持续主导GPU市场，国产替代加速推进。中科曙光、寒武纪等国内厂商在推理芯片领域取得突破性进展。服务器ODM厂商（浪潮信息、新华三）订单饱满，2026年出货量预计增长45%。</p><h3>中游：云计算与模型服务</h3><p>阿里云、腾讯云、华为云持续加大AI算力投入，MaaS（模型即服务）模式加速普及。百度文心、阿里通义、字节豆包形成三足鼎立格局。</p><h3>下游：行业应用</h3><p>金融、医疗、制造业成为AI应用落地最快的三大领域。投研场景中，AI辅助研报生成、智能信源监控、自动会议纪要已成标配。</p></div>` },
+  { id: 'ppt-1', type: 'ppt', icon: '📊', title: 'Q2投资策略.pptx', content: `<div class="ai-product-doc"><h1>2026 Q2 AI投资策略</h1><div class="doc-meta">策略研究部 · 演示文稿 · 12页</div><div class="doc-section-tag">第1页 · 封面</div><h2>AI产业链Q2投资展望</h2><p>关键词：算力扩张 · 应用爆发 · 国产替代</p><div class="doc-section-tag">第2页 · 市场回顾</div><h2>Q1回顾：AI板块跑赢大盘18%</h2><div class="doc-highlight"><div class="doc-stat-row"><div class="doc-stat"><div class="doc-stat-val">+24.6%</div><div class="doc-stat-label">AI指数Q1涨幅</div></div><div class="doc-stat"><div class="doc-stat-val">+6.3%</div><div class="doc-stat-label">沪深300 Q1涨幅</div></div></div></div><p>算力硬件、模型应用双轮驱动，细分赛道分化明显。</p><div class="doc-section-tag">第3页 · Q2策略</div><h2>建议超配三大方向</h2><p>1. 国产算力替代（寒武纪、海光信息）</p><p>2. AI应用落地龙头（科大讯飞、金山办公）</p><p>3. 数据要素（易华录、海天瑞声）</p></div>` },
+  { id: 'data-1', type: 'data', icon: '📈', title: '个股筛选结果.xlsx', content: `<div class="ai-product-doc"><h1>AI个股筛选结果</h1><div class="doc-meta">筛选条件：AI相关 · 市值>100亿 · 近20日涨幅>10%</div><div class="doc-highlight"><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">代码</th><th style="text-align:left;padding:8px;">名称</th><th style="text-align:right;padding:8px;">涨幅</th><th style="text-align:right;padding:8px;">市值(亿)</th></tr><tr><td style="padding:8px;">002230</td><td>科大讯飞</td><td style="text-align:right;color:#e74c3c;">+18.6%</td><td style="text-align:right;">1,260</td></tr><tr><td style="padding:8px;">688111</td><td>金山办公</td><td style="text-align:right;color:#e74c3c;">+15.2%</td><td style="text-align:right;">1,580</td></tr><tr><td style="padding:8px;">000977</td><td>浪潮信息</td><td style="text-align:right;color:#e74c3c;">+12.8%</td><td style="text-align:right;">890</td></tr></table></div></div>` }
+];
+
+function showProductView(productId) {
+  const overlay = document.getElementById('ai-global');
+  overlay.classList.add('has-product');
+  overlay.classList.remove('no-product');
+  const product = mockProducts.find(p => p.id === productId) || mockProducts[0];
+  const fileList = document.getElementById('ai-product-file-list');
+  fileList.innerHTML = mockProducts.map(p => `<div class="ai-product-file-item${p.id === product.id ? ' active' : ''}" onclick="showProductView('${p.id}')""><span class="ai-product-file-icon">${p.icon}</span>${p.title}</div>`).join('');
+  document.getElementById('ai-product-preview').innerHTML = product.content;
+  const rightChat = document.getElementById('ai-global-right-chat');
+  rightChat.style.display = 'flex';
+  document.querySelector('.ai-global-right-default').style.display = 'none';
+  const productsEl = document.getElementById('ai-global-right-products');
+  productsEl.innerHTML = `<div class="ai-global-right-products-title">任务产物</div>` + mockProducts.map(p => `<span class="ai-global-right-product-badge" onclick="showProductView('${p.id}')">${p.icon} ${p.title.split('.')[0]}</span>`).join('');
+  if (!document.getElementById('ai-global-right-chat-body').innerHTML) {
+    document.getElementById('ai-global-right-chat-body').innerHTML = currentSession.messages.map(m => `<div class="ai-global-right-chat-msg ${m.role}">${m.text}</div>`).join('');
+  }
+}
+
+function hideProductView() {
+  const overlay = document.getElementById('ai-global');
+  overlay.classList.remove('has-product');
+  overlay.classList.add('no-product');
+  document.getElementById('ai-global-right-chat').style.display = 'none';
+  document.querySelector('.ai-global-right-default').style.display = '';
+}
+
+function switchProductTab(el, tab) {
+  el.parentElement.querySelectorAll('.ai-product-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const preview = document.getElementById('ai-product-preview');
+  const fileList = document.getElementById('ai-product-file-list');
+  if (tab === 'products') {
+    fileList.style.display = '';
+    preview.innerHTML = (mockProducts.find(p => document.querySelector('.ai-product-file-item.active')?.textContent.includes(p.title)) || mockProducts[0]).content;
+  } else if (tab === 'files') {
+    fileList.style.display = '';
+    preview.innerHTML = `<div class="ai-product-doc"><h2>全部文件</h2><p style="color:var(--text-muted);">共 ${mockProducts.length} 个文件</p>${mockProducts.map(p => `<div style="padding:12px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showProductView('${p.id}')""><span style="font-size:20px;">${p.icon}</span><div><div style="font-size:13px;font-weight:500;">${p.title}</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">刚刚生成</div></div></div>`).join('')}</div>`;
+  } else if (tab === 'changes') {
+    fileList.style.display = 'none';
+    preview.innerHTML = `<div class="ai-product-doc"><h2>变更记录</h2><div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">最近变更</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;margin-bottom:8px;font-size:12px;"><span style="color:#27ae60;">+ 新增</span> AI产业链深度报告.docx</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;margin-bottom:8px;font-size:12px;"><span style="color:#27ae60;">+ 新增</span> Q2投资策略.pptx</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;font-size:12px;"><span style="color:#f39c12;">● 修改</span> 个股筛选结果.xlsx</div></div>`;
+  } else if (tab === 'browser') {
+    fileList.style.display = 'none';
+    preview.innerHTML = `<div class="ai-product-doc"><h2>浏览器</h2><div style="background:var(--bg-secondary);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);margin-top:16px;"><div style="font-size:24px;margin-bottom:8px;">🌐</div><div style="font-size:12px;">内置浏览器 - 可预览在线文档和数据源</div><div style="margin-top:12px;padding:8px 16px;border:1px solid var(--border);border-radius:6px;display:inline-block;font-size:11px;cursor:pointer;">打开 URL</div></div></div>`;
+  }
+}
+
+function sendRightChat() {
+  const input = document.getElementById('ai-global-right-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const body = document.getElementById('ai-global-right-chat-body');
+  body.innerHTML += `<div class="ai-global-right-chat-msg user">${msg}</div>`;
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    body.innerHTML += `<div class="ai-global-right-chat-msg ai">收到，正在处理「${msg}」的请求。已更新产物内容。</div>`;
+    body.scrollTop = body.scrollHeight;
+  }, 400);
 }
 
 // ========== GLOBAL AI PANEL ==========
