@@ -570,6 +570,31 @@ body {
 }
 .ai-global-doc-item:hover { background: rgba(45,127,249,0.06); }
 
+.ai-chat-artifact {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; margin-top: 8px;
+  background: linear-gradient(135deg, rgba(45,127,249,0.06), rgba(24,191,255,0.06));
+  border: 1px solid rgba(45,127,249,0.15);
+  border-radius: 10px; cursor: pointer;
+  transition: all 0.2s;
+}
+.ai-chat-artifact:hover {
+  border-color: rgba(45,127,249,0.4);
+  box-shadow: 0 2px 12px rgba(45,127,249,0.1);
+}
+.ai-chat-artifact-icon { font-size: 20px; flex-shrink: 0; }
+.ai-chat-artifact-info { flex: 1; min-width: 0; }
+.ai-chat-artifact-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary); line-height: 1.3;
+}
+.ai-chat-artifact-meta {
+  font-size: 11px; color: var(--text-muted); margin-top: 2px;
+}
+.ai-chat-artifact-arrow {
+  color: var(--accent-blue); font-size: 12px; flex-shrink: 0;
+}
+
 .ai-global-empty {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 16px;
@@ -3259,14 +3284,17 @@ function sendAiChat() {
       }
     } else if (chatMode === 'report') {
       setAixTaskRunning(true);
-      addChatBubble(`正在基于「${msg}」生成报告草稿...<br><br>正在整合信源数据、个股行情和产业链逻辑。预计30秒内完成初稿，你可以在此期间继续提出修改要求。`, false);
-      setTimeout(() => setAixTaskRunning(false), 3000);
+      addChatBubble(`正在基于「${msg}」生成报告草稿...<br><br>正在整合信源数据、个股行情和产业链逻辑。预计30秒内完成初稿。`, false);
+      setTimeout(() => {
+        setAixTaskRunning(false);
+        addChatBubble(`报告已生成完毕，共 2,400 字。你可以点击下方查看完整报告：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📄</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 研究报告</div><div class="ai-chat-artifact-meta">AI 生成 · 2,400 字 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
+      }, 3000);
     } else if (chatMode === 'joke') {
       setAixTaskRunning(true);
-      addChatBubble(`正在基于「${msg}」生成段子...<br><br>「今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。不过比起我的账户，至少头发还能长回来。」<br><br>😄 需要换个风格或者再来一个吗？`, false);
+      addChatBubble(`正在基于「${msg}」生成段子...<br><br>「今天的大盘就像我的发量——早盘还有希望，午后就彻底躺平了。」<br><br>😄 段子已出炉：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">😂</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 投研段子</div><div class="ai-chat-artifact-meta">AI 生成 · 3 条段子 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
       setTimeout(() => setAixTaskRunning(false), 1000);
     } else {
-      addChatBubble(`好的，我来帮你分析「${msg}」...<br><br>基于当前市场数据和AI模型分析，这个问题涉及多个维度。需要我深入展开哪个方向？`, false);
+      addChatBubble(`好的，我来帮你分析「${msg}」...<br><br>基于当前市场数据和 AI 模型分析，已为你生成分析摘要：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📊</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">${msg} — 分析报告</div><div class="ai-chat-artifact-meta">AI 生成 · 综合分析 · 刚刚</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>`, false);
     }
   }, 500);
 }
@@ -3279,19 +3307,19 @@ document.addEventListener('keydown', (e) => {
 const mockHistory = [
   { id: 1, title: 'AI板块晨报生成', mode: 'report', messages: [
     { role: 'user', text: '帮我生成今天的AI板块晨报' },
-    { role: 'ai', text: '好的，正在为你生成AI板块晨报...\n\n📊 **AI板块晨报 2026.05.19**\n\n【核心观点】AI算力链延续强势，中科曙光、浪潮信息涨超3%。英伟达中国区负责人抵京，市场对国内GPU供应链预期改善。光模块板块集体走强，中际旭创、新易盛获北向资金净流入。\n\n【今日关注】\n1. 中科曙光(603019)：智算中心订单加速落地，Q1净利润同比+42%\n2. 浪潮信息(000977)：服务器出货量创新高，AI服务器占比提升至35%\n3. 中际旭创(300308)：800G光模块量产爬坡，海外订单持续放量\n\n已为你保存完整报告。' }
+    { role: 'ai', text: '好的，正在为你生成AI板块晨报...\n\n📊 **AI板块晨报 2026.05.19**\n\n【核心观点】AI算力链延续强势，中科曙光、浪潮信息涨超3%。英伟达中国区负责人抵京，市场对国内GPU供应链预期改善。光模块板块集体走强，中际旭创、新易盛获北向资金净流入。\n\n【今日关注】\n1. 中科曙光(603019)：智算中心订单加速落地，Q1净利润同比+42%\n2. 浪潮信息(000977)：服务器出货量创新高，AI服务器占比提升至35%\n3. 中际旭创(300308)：800G光模块量产爬坡，海外订单持续放量\n\n报告已生成：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📄</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">AI板块晨报 2026.05.19</div><div class="ai-chat-artifact-meta">AI 生成 · 1,800 字 · 今天 09:15</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
   { id: 2, title: '中科曙光深度分析', mode: 'general', messages: [
     { role: 'user', text: '帮我分析一下中科曙光最近的基本面和技术面' },
-    { role: 'ai', text: '📈 **中科曙光(603019) 深度分析**\n\n**基本面：**\n- 最新市值：1,285亿 | PE(TTM)：48.6x | PB：6.2x\n- Q1营收128.3亿(+31.2%)，净利润12.7亿(+42.1%)\n- 智算中心业务高速增长，海光信息贡献投资收益\n- 在手订单充裕，政务+运营商智算采购加速\n\n**技术面：**\n- 当前价格54.8元，5日均线上方运行\n- MACD金叉，量能温和放大\n- 压力位58.5元（前高），支撑位51.2元（20日均线）\n\n**机构评级：** 近30天6家机构给出"买入"评级，一致目标价62.5元\n\n需要我进一步分析产业链关联个股吗？' }
+    { role: 'ai', text: '📈 **中科曙光(603019) 深度分析**\n\n**基本面：**\n- 最新市值：1,285亿 | PE(TTM)：48.6x | PB：6.2x\n- Q1营收128.3亿(+31.2%)，净利润12.7亿(+42.1%)\n- 智算中心业务高速增长，海光信息贡献投资收益\n- 在手订单充裕，政务+运营商智算采购加速\n\n**技术面：**\n- 当前价格54.8元，5日均线上方运行\n- MACD金叉，量能温和放大\n- 压力位58.5元（前高），支撑位51.2元（20日均线）\n\n**机构评级：** 近30天6家机构给出"买入"评级，一致目标价62.5元\n\n分析报告已生成：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📊</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">中科曙光深度分析报告</div><div class="ai-chat-artifact-meta">AI 生成 · 综合分析 · 今天 10:32</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
   { id: 3, title: '今日投研段子', mode: 'joke', messages: [
     { role: 'user', text: '根据今天的涨停板生成几个段子' },
-    { role: 'ai', text: '😂 **今日涨停板段子精选**\n\n1. "今天追了AI板块，账户绿得像刚做完光合作用。朋友问我炒股赚了多少，我说：赚了不少经验值。"\n\n2. "散户三大幻觉：这次不一样、明天会反弹、我不会是最后一个。今天A股完美验证了第二条——它确实反弹了，但只反弹给了主力。"\n\n3. "今天涨停板里一半是AI，一半是机器人。作为一个普通散户，我终于理解了什么叫「人工」智能——我负责人工，主力负责智能。"\n\n4. "基金经理早上说看好消费复苏，中午说关注科技主线，收盘说现金为王。这就是传说中的「一日三迁，全面覆盖」。"\n\n需要换个风格吗？讽刺系、鸡汤系还是自嘲系？' }
+    { role: 'ai', text: '😂 **今日涨停板段子精选**\n\n1. "今天追了AI板块，账户绿得像刚做完光合作用。朋友问我炒股赚了多少，我说：赚了不少经验值。"\n\n2. "散户三大幻觉：这次不一样、明天会反弹、我不会是最后一个。今天A股完美验证了第二条——它确实反弹了，但只反弹给了主力。"\n\n3. "今天涨停板里一半是AI，一半是机器人。作为一个普通散户，我终于理解了什么叫「人工」智能——我负责人工，主力负责智能。"\n\n4. "基金经理早上说看好消费复苏，中午说关注科技主线，收盘说现金为王。这就是传说中的「一日三迁，全面覆盖」。"\n\n段子已打包：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">😂</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">涨停板段子合集</div><div class="ai-chat-artifact-meta">AI 生成 · 4 条段子 · 今天 11:05</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
   { id: 4, title: 'H20产业链选股', mode: 'stock', messages: [
     { role: 'user', text: '帮我筛选H20产业链相关的受益标的' },
-    { role: 'ai', text: '📈 **H20产业链受益标的筛选**\n\n根据英伟达H20芯片国内供应链映射，筛选出以下标的：\n\n| 股票 | 代码 | 关联度 | 逻辑 |\n|------|------|--------|------|\n| 中科曙光 | 603019 | ⭐⭐⭐ | H20服务器主要集成商 |\n| 浪潮信息 | 000977 | ⭐⭐⭐ | AI服务器出货量领先 |\n| 中际旭创 | 300308 | ⭐⭐ | 配套光模块供应商 |\n| 沪电股份 | 002463 | ⭐⭐ | 高端PCB配套 |\n| 工业富联 | 601138 | ⭐⭐ | 代工组装环节 |\n\n**筛选条件：** 近20日北向资金净流入 > 1亿，机构评级"买入"数 ≥ 3\n\n需要我对某只个股做进一步分析吗？' }
+    { role: 'ai', text: '📈 **H20产业链受益标的筛选**\n\n根据英伟达H20芯片国内供应链映射，筛选出以下标的：\n\n| 股票 | 代码 | 关联度 | 逻辑 |\n|------|------|--------|------|\n| 中科曙光 | 603019 | ⭐⭐⭐ | H20服务器主要集成商 |\n| 浪潮信息 | 000977 | ⭐⭐⭐ | AI服务器出货量领先 |\n| 中际旭创 | 300308 | ⭐⭐ | 配套光模块供应商 |\n| 沪电股份 | 002463 | ⭐⭐ | 高端PCB配套 |\n| 工业富联 | 601138 | ⭐⭐ | 代工组装环节 |\n\n**筛选条件：** 近20日北向资金净流入 > 1亿，机构评级"买入"数 ≥ 3\n\n选股报告已生成：<div class="ai-chat-artifact" onclick="expandToGlobal()"><div class="ai-chat-artifact-icon">📈</div><div class="ai-chat-artifact-info"><div class="ai-chat-artifact-title">H20产业链选股报告</div><div class="ai-chat-artifact-meta">AI 生成 · 5 只标的 · 今天 14:20</div></div><div class="ai-chat-artifact-arrow">查看 →</div></div>' }
   ]},
 ];
 const mockDocuments = [
