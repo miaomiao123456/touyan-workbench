@@ -1484,32 +1484,6 @@ body {
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ========== COLLAPSIBLE NAV ========== */
-.nav-group { display: flex; flex-direction: column; }
-.nav-parent { position: relative; }
-.nav-expand {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--text-muted);
-  transition: transform 0.2s;
-  display: inline-block;
-}
-.nav-parent.expanded .nav-expand { transform: rotate(90deg); }
-.nav-children {
-  display: none;
-  flex-direction: column;
-}
-.nav-children.open { display: flex; }
-.nav-child {
-  padding: 7px 20px 7px 44px;
-  font-size: 12px;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  border-left: 2px solid transparent;
-}
-.nav-child:hover { color: var(--text-primary); background: rgba(45,127,249,0.04); }
-.nav-child.active { color: var(--accent-blue); border-left-color: var(--accent-blue); background: rgba(45,127,249,0.06); }
 
 /* ========== SUB-TABS ========== */
 .sub-tabs {
@@ -1596,17 +1570,9 @@ body {
     <span class="nav-icon">◉</span>
     <span>首页</span>
   </div>
-  <div class="nav-group">
-    <div class="nav-item nav-parent" data-page="meetings">
-      <span class="nav-icon">◎</span>
-      <span>专家会议</span>
-      <span class="nav-expand">›</span>
-    </div>
-    <div class="nav-children">
-      <div class="nav-child" data-page="meetings" data-subtab="expert-dir">专家库</div>
-      <div class="nav-child" data-page="meetings" data-subtab="ai-meetings">会议中心</div>
-      <div class="nav-child" data-page="meetings" data-subtab="notes-library">纪要资料库</div>
-    </div>
+  <div class="nav-item" data-page="meetings">
+    <span class="nav-icon">◎</span>
+    <span>专家会议</span>
   </div>
   <div class="nav-item" data-page="monitor">
     <span class="nav-icon">◈</span>
@@ -1768,26 +1734,22 @@ body {
 
   <!-- ==================== AI MEETINGS SYSTEM ==================== -->
   <div class="page" id="page-meetings">
-    <div class="section-header mb-16">
-      <div class="section-title" style="font-size:18px;">
-        专家会议
-        <span class="tag tag-cyan" style="font-size:10px; margin-left:6px;">专家优先</span>
-      </div>
-      <div class="flex gap-8">
-        <button class="btn btn-gradient btn-sm" onclick="openInterviewAiPanel()">✦ AI智能预约</button>
-      </div>
-    </div>
 
-    <div class="monitor-tabs">
+    <div class="monitor-tabs" style="display:flex; align-items:center;">
       <div class="monitor-tab active" data-tab="expert-dir">专家库</div>
       <div class="monitor-tab" data-tab="ai-meetings">会议中心</div>
       <div class="monitor-tab" data-tab="notes-library">纪要资料库</div>
+      <button class="btn btn-gradient btn-sm" style="margin-left:auto;" onclick="openInterviewAiPanel()">✦ AI智能预约</button>
     </div>
 
     <!-- Expert Directory (default active) -->
     <div class="monitor-view active" id="tab-expert-dir">
-      <div style="margin-bottom:16px; font-size:12px; color:var(--text-secondary); line-height:1.6;">
-        独家AI领域专家清单 · 覆盖算力、大模型、机器人、自动驾驶等细分赛道 · 持续更新
+      <div class="filter-bar" style="margin-bottom:16px;" id="expert-filter-bar">
+        <div class="filter-chip active" data-track="all">全部</div>
+        <div class="filter-chip" data-track="算力">算力</div>
+        <div class="filter-chip" data-track="大模型">大模型</div>
+        <div class="filter-chip" data-track="数据">数据</div>
+        <div class="filter-chip" data-track="应用">应用</div>
       </div>
       <div class="ai-expert-dir" id="expert-directory"></div>
     </div>
@@ -1795,103 +1757,107 @@ body {
     <!-- Meeting Center with sub-tabs -->
     <div class="monitor-view" id="tab-ai-meetings">
       <div class="sub-tabs">
-        <div class="sub-tab active" data-subview="subview-weekly">AI每周谈</div>
-        <div class="sub-tab" data-subview="subview-industry">AI产业链会议</div>
+        <div class="sub-tab active" data-subview="subview-industry">AI产业链会议</div>
         <div class="sub-tab" data-subview="subview-booked">我的预约会议</div>
       </div>
 
-      <!-- Sub-view: AI每周谈 -->
-      <div class="sub-view active" id="subview-weekly">
-        <div style="max-width:800px;">
-          <div class="ai-weekly-card" style="margin-bottom:16px;">
-            <div class="ai-weekly-header">
-              <div>
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                  <span style="font-size:16px;">✦</span>
-                  <span style="font-size:16px; font-weight:700;">AI 每周谈 · 最新一期</span>
-                </div>
-                <div style="font-size:10px; color:var(--text-muted);">每周AI产业深度复盘与解读 · 固定栏目</div>
-              </div>
-              <div class="ai-weekly-ep-num">EP.23</div>
-            </div>
-            <div style="font-size:15px; font-weight:700; margin:12px 0 10px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
-            <div style="font-size:12px; color:var(--text-secondary); line-height:2; margin-bottom:16px;">
-              <p><strong style="color:var(--text-primary)">核心观点：</strong>英伟达H20特供芯片获批是2026年AI投资的关键催化事件。我们认为市场对H20的定价尚不充分，三条主线逻辑清晰：</p>
-              <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线一：服务器集成</strong> — 中科曙光、浪潮信息作为H20主要集成商，订单能见度至Q4。中科曙光Q2 AI服务器订单环比+60%，互联网大厂+政府智算中心双轮驱动。</p>
-              <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线二：PCB/载板</strong> — 深南电路ABF载板通过英伟达认证，Q3批量供货。高端PCB价值量提升30%，产能利用率超90%。兴森科技IC载板扩产顺利。</p>
-              <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线三：光模块</strong> — 800G光模块需求爆发，中际旭创出货量环比翻倍。新易盛硅光方案获头部客户验证。</p>
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <span class="tag tag-cyan">算力基建</span>
-              <span class="tag tag-blue">H20产业链</span>
-              <span class="tag tag-gold">国产替代</span>
-            </div>
-            <div style="margin-top:12px; font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">2026-05-16 发布 · 阅读 2,847</div>
-          </div>
-          <div class="card mb-16" style="padding:16px;">
-            <div style="font-size:13px; font-weight:600; margin-bottom:12px;">往期回顾</div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-                <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.22</span>
-                <span style="font-size:12px; flex:1;">Llama 4开源冲击波：大模型应用层的投资机会梳理</span>
-                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-09</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-                <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.21</span>
-                <span style="font-size:12px; flex:1;">人形机器人量产元年：核心零部件供应链全景扫描</span>
-                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-02</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-                <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.20</span>
-                <span style="font-size:12px; flex:1;">AI Agent爆发期：从Manus到通用智能体的投资地图</span>
-                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">04-25</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
-                <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.19</span>
-                <span style="font-size:12px; flex:1;">国产GPU突围：海光、寒武纪、摩尔线程三足鼎立</span>
-                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">04-18</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Sub-view: AI产业链会议 -->
-      <div class="sub-view" id="subview-industry">
+      <div class="sub-view active" id="subview-industry">
         <div class="filter-bar">
           <div class="filter-chip active">全部</div>
-          <div class="filter-chip">AI大模型</div>
-          <div class="filter-chip">算力/芯片</div>
-          <div class="filter-chip">AI应用</div>
-          <div class="filter-chip">机器人</div>
-          <div class="filter-chip">自动驾驶</div>
-          <div style="margin-left:auto;">
-            <div class="filter-chip">即将开始</div>
-            <div class="filter-chip">直播中</div>
-          </div>
+          <div class="filter-chip">算力</div>
+          <div class="filter-chip">大模型</div>
+          <div class="filter-chip">数据</div>
+          <div class="filter-chip">应用</div>
         </div>
         <div class="meeting-cards-grid" id="meeting-cards-grid"></div>
       </div>
 
       <!-- Sub-view: 我的预约会议 -->
       <div class="sub-view" id="subview-booked">
-        <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
-          <div style="font-size:32px; margin-bottom:12px;">📅</div>
-          <div style="font-size:13px; margin-bottom:6px;">暂无预约会议</div>
-          <div style="font-size:11px;">通过 AI智能预约 或在会议详情中点击「预约」来添加</div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+          <button class="btn btn-sm" onclick="showToast('已同步到飞书日历')">📅 同步到飞书日历</button>
+        </div>
+        <div class="card" style="padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:14px; border-left:3px solid var(--accent-gold);">
+          <div style="text-align:center; min-width:60px;">
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary);">05/21</div>
+            <div style="font-size:10px; color:var(--text-muted);">周三 10:00</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:600; margin-bottom:3px;">人形机器人量产元年：产业链机会梳理</div>
+            <div style="font-size:11px; color:var(--text-secondary);">赵伟 · 广发证券机械首席</div>
+          </div>
+          <span class="tag tag-gold">应用</span>
+        </div>
+        <div class="card" style="padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:14px; border-left:3px solid var(--accent-cyan);">
+          <div style="text-align:center; min-width:60px;">
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary);">05/23</div>
+            <div style="font-size:10px; color:var(--text-muted);">周五 14:00</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:600; margin-bottom:3px;">AI Agent商业化路径探讨</div>
+            <div style="font-size:11px; color:var(--text-secondary);">李晓峰 · 华锐技术AI研究院院长</div>
+          </div>
+          <span class="tag tag-cyan">大模型</span>
         </div>
       </div>
     </div>
 
     <!-- Notes Library -->
     <div class="monitor-view" id="tab-notes-library">
-      <div class="filter-bar">
-        <div class="filter-chip active">全部纪要</div>
-        <div class="filter-chip">AI/算力</div>
+      <!-- AI每周谈 -->
+      <div class="ai-weekly-card" style="margin-bottom:16px;">
+        <div class="ai-weekly-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span style="font-size:16px;">✦</span>
+              <span style="font-size:16px; font-weight:700;">AI 每周谈 · 最新一期</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-muted);">每周AI产业深度复盘与解读 · 固定栏目</div>
+          </div>
+          <div class="ai-weekly-ep-num">EP.23</div>
+        </div>
+        <div style="font-size:15px; font-weight:700; margin:12px 0 10px; line-height:1.5;">H20获批窗口期：算力产业链的三条主线逻辑</div>
+        <div style="font-size:12px; color:var(--text-secondary); line-height:2; margin-bottom:16px;">
+          <p><strong style="color:var(--text-primary)">核心观点：</strong>英伟达H20特供芯片获批是2026年AI投资的关键催化事件。三条主线逻辑清晰：</p>
+          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线一：服务器集成</strong> — 中科曙光、浪潮信息订单能见度至Q4</p>
+          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线二：PCB/载板</strong> — 深南电路ABF载板通过英伟达认证</p>
+          <p style="margin-top:8px;"><strong style="color:var(--text-primary)">主线三：光模块</strong> — 800G光模块需求爆发，中际旭创出货量环比翻倍</p>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="tag tag-cyan">算力基建</span>
+          <span class="tag tag-blue">H20产业链</span>
+          <span class="tag tag-gold">国产替代</span>
+        </div>
+        <div style="margin-top:12px; font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">2026-05-16 发布 · 阅读 2,847</div>
+      </div>
+      <div class="card mb-16" style="padding:12px;">
+        <div style="font-size:12px; font-weight:600; margin-bottom:8px;">往期回顾</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
+            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.22</span>
+            <span style="font-size:11px; flex:1;">Llama 4开源冲击波：大模型应用层投资机会</span>
+            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-09</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
+            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.21</span>
+            <span style="font-size:11px; flex:1;">人形机器人量产元年：核心零部件供应链扫描</span>
+            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">05-02</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer;" class="hotlist-row">
+            <span class="ai-weekly-ep-num" style="font-size:10px; padding:2px 6px;">EP.20</span>
+            <span style="font-size:11px; flex:1;">AI Agent爆发期：通用智能体投资地图</span>
+            <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">04-25</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-bar" style="margin-bottom:12px;">
+        <div class="filter-chip active">全部</div>
+        <div class="filter-chip">算力</div>
         <div class="filter-chip">大模型</div>
-        <div class="filter-chip">机器人</div>
-        <div class="filter-chip">新能源</div>
-        <div class="filter-chip">策略</div>
+        <div class="filter-chip">数据</div>
+        <div class="filter-chip">应用</div>
       </div>
       <div class="meeting-list" id="notes-library-list"></div>
     </div>
@@ -1971,15 +1937,34 @@ body {
             <span class="source-ref" onclick="navigateTo('stock'); closeMeetingDetail();">◆ 浪潮信息 000977</span>
           </div>
         </div>
+        <div style="margin-top:20px;">
+          <div class="text-xs mb-8" style="color:var(--text-muted);">相关主题会议</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">国产GPU三足鼎立：海光/寒武纪/摩尔线程 · 05/20</div>
+            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">算力产业2026年趋势展望 · 05/28</div>
+          </div>
+          <button class="btn btn-cyan btn-sm" style="margin-top:10px;" onclick="showToast('已订阅此系列会议'); closeMeetingDetail();">订阅此系列会议</button>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Expert Detail Overlay -->
+  <div class="detail-overlay" id="expert-detail">
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div>
+          <div style="font-size:16px; font-weight:700;" id="expert-detail-name"></div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;" id="expert-detail-identity"></div>
+        </div>
+        <span class="detail-close" onclick="closeExpertDetail()">×</span>
+      </div>
+      <div class="detail-body" id="expert-detail-body"></div>
     </div>
   </div>
 
   <!-- ==================== SOURCE MONITOR ==================== -->
   <div class="page" id="page-monitor">
-    <div class="section-header mb-16">
-      <div class="section-title" style="font-size:18px;">AI 信源智能监控</div>
-    </div>
 
     <div class="monitor-tabs">
       <div class="monitor-tab active" data-tab="records">监控记录</div>
@@ -2261,12 +2246,6 @@ body {
 
   <!-- ==================== AI TOOL CENTER ==================== -->
   <div class="page" id="page-ai-tools">
-    <div class="section-header mb-16">
-      <div class="section-title" style="font-size:18px;">
-        AI工具中心
-        <span class="nav-ai-label" style="font-size:10px; margin-left:8px;">Cowork</span>
-      </div>
-    </div>
 
     <div class="card" style="padding:16px; margin-bottom:20px; background:linear-gradient(135deg, rgba(45,127,249,0.04), rgba(0,212,170,0.03)); border-color:rgba(45,127,249,0.15);">
       <div style="font-size:13px; font-weight:600; margin-bottom:6px;">✦ Cowork 模式</div>
@@ -2478,30 +2457,19 @@ body {
 let currentPageId = 'home';
 
 function navigateTo(pageId, subtab) {
-  const navItems = document.querySelectorAll('.sidebar .nav-item:not(.nav-parent)');
-  const navParents = document.querySelectorAll('.sidebar .nav-parent');
-  const navChildren = document.querySelectorAll('.sidebar .nav-child');
+  const navItems = document.querySelectorAll('.sidebar .nav-item');
   const pages = document.querySelectorAll('.page');
 
   navItems.forEach(n => n.classList.remove('active'));
-  navParents.forEach(n => n.classList.remove('active'));
-  navChildren.forEach(n => n.classList.remove('active'));
   pages.forEach(p => p.classList.remove('active'));
 
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
 
-  const navParent = document.querySelector(`.nav-parent[data-page="${pageId}"]`);
-  if (navParent) {
-    navParent.classList.add('active');
-  } else {
-    const nav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-    if (nav) nav.classList.add('active');
-  }
+  const nav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+  if (nav) nav.classList.add('active');
 
   if (subtab) {
-    const child = document.querySelector(`.nav-child[data-subtab="${subtab}"]`);
-    if (child) child.classList.add('active');
     const tabs = target ? target.querySelectorAll('.monitor-tab') : [];
     const views = target ? target.querySelectorAll('.monitor-view') : [];
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === subtab));
@@ -2513,30 +2481,8 @@ function navigateTo(pageId, subtab) {
 }
 
 // Sidebar click handlers
-document.querySelectorAll('.sidebar .nav-item:not(.nav-parent)').forEach(item => {
+document.querySelectorAll('.sidebar .nav-item').forEach(item => {
   item.addEventListener('click', () => navigateTo(item.dataset.page));
-});
-
-document.querySelectorAll('.sidebar .nav-parent').forEach(item => {
-  item.addEventListener('click', () => {
-    const group = item.closest('.nav-group');
-    const children = group.querySelector('.nav-children');
-    const isExpanded = item.classList.contains('expanded');
-    document.querySelectorAll('.nav-parent').forEach(p => p.classList.remove('expanded'));
-    document.querySelectorAll('.nav-children').forEach(c => c.classList.remove('open'));
-    if (!isExpanded) {
-      item.classList.add('expanded');
-      children.classList.add('open');
-    }
-    navigateTo(item.dataset.page);
-  });
-});
-
-document.querySelectorAll('.sidebar .nav-child').forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.stopPropagation();
-    navigateTo(item.dataset.page, item.dataset.subtab);
-  });
 });
 
 // Sub-tab click handlers (within meeting center)
@@ -2772,29 +2718,62 @@ meetingCardsData.forEach(m => {
 
 // ========== AI EXPERT DIRECTORY ==========
 const expertData = [
-  { name: '陈明远', role: '华泰证券 · 电子首席', avatar: '陈', focus: '算力/半导体', meetings: 8, rating: 'A+' },
-  { name: '李晓峰', role: '华锐技术 · AI院长', avatar: '李', focus: 'AI大模型/Agent', meetings: 12, rating: 'A+' },
-  { name: '周磊', role: '中金公司 · TMT首席', avatar: '周', focus: '国产GPU/芯片', meetings: 6, rating: 'A' },
-  { name: '赵伟', role: '广发证券 · 机械首席', avatar: '赵', focus: '机器人/自动化', meetings: 5, rating: 'A' },
-  { name: '张峰', role: '海通证券 · 策略首席', avatar: '张', focus: 'AI策略/配置', meetings: 9, rating: 'A+' },
-  { name: '王雅婷', role: '国金证券 · 研究总监', avatar: '王', focus: 'AI医疗/药研', meetings: 4, rating: 'B+' },
-  { name: '刘思远', role: '浦发银行 · 投研首席', avatar: '刘', focus: 'AI+新能源', meetings: 7, rating: 'A' },
-  { name: '周子轩', role: '中信证券 · 电子首席', avatar: '轩', focus: '消费电子/IoT', meetings: 5, rating: 'A' },
+  // 算力赛道 - 国内
+  { name: '陈明远', identity: '华泰证券 · 电子首席', field: 'GPU/芯片设计', tags: ['英伟达','海光','寒武纪'], track: '算力', region: '国内' },
+  { name: '周磊', identity: '中金公司 · TMT首席', field: '国产GPU/AI芯片', tags: ['摩尔线程','海光','算力租赁'], track: '算力', region: '国内' },
+  { name: '周子轩', identity: '中信证券 · 电子首席', field: 'AI服务器/算力基建', tags: ['中科曙光','浪潮信息','PCB'], track: '算力', region: '国内' },
+  { name: '林志鹏', identity: '国泰君安 · 计算机首席', field: '云计算/智算中心', tags: ['阿里云','华为','IDC'], track: '算力', region: '国内' },
+  // 算力赛道 - 海外
+  { name: 'Dylan Patel', identity: 'SemiAnalysis 创始人', field: '半导体产业链分析', tags: ['NVIDIA','AMD','台积电'], track: '算力', region: '海外' },
+  { name: 'Dan Hutcheson', identity: 'TechInsights', field: '芯片制造工艺', tags: ['光刻机','先进制程','EUV'], track: '算力', region: '海外' },
+  // 大模型赛道 - 国内
+  { name: '李晓峰', identity: '华锐技术 · AI研究院院长', field: 'AI大模型/Agent', tags: ['GPT','Claude','开源模型'], track: '大模型', region: '国内' },
+  { name: '张峰', identity: '海通证券 · 策略首席', field: 'AI策略/配置', tags: ['AI ETF','算力指数','主题投资'], track: '大模型', region: '国内' },
+  { name: '王明华', identity: '百度研究院 · 副院长', field: '大模型训练/推理优化', tags: ['文心','ERNIE','MoE'], track: '大模型', region: '国内' },
+  { name: '陈天奇', identity: 'OctoAI / TVM', field: '模型编译与推理加速', tags: ['TVM','量化部署','边缘推理'], track: '大模型', region: '国内' },
+  // 大模型赛道 - 海外
+  { name: 'Jim Fan', identity: 'NVIDIA 高级研究科学家', field: '具身智能/基础模型', tags: ['Voyager','MineDojo','多模态'], track: '大模型', region: '海外' },
+  { name: 'Andrej Karpathy', identity: '前Tesla AI总监', field: 'AI训练方法论', tags: ['nanoGPT','自动驾驶感知'], track: '大模型', region: '海外' },
+  // 数据赛道 - 国内
+  { name: '钱磊', identity: '海量数据 · CTO', field: '数据标注/训练数据', tags: ['RLHF','合成数据','数据飞轮'], track: '数据', region: '国内' },
+  { name: '李强', identity: '万得信息 · 技术总监', field: '金融数据工程', tags: ['Wind','另类数据','因子库'], track: '数据', region: '国内' },
+  { name: '赵明', identity: '同花顺 · AI Lab主任', field: 'NLP/金融文本挖掘', tags: ['情感分析','公告解析','知识图谱'], track: '数据', region: '国内' },
+  // 数据赛道 - 海外
+  { name: 'Jared Kaplan', identity: 'Anthropic 联合创始人', field: 'Scaling Laws/数据效率', tags: ['数据配比','训练动态','涌现能力'], track: '数据', region: '海外' },
+  { name: 'Tri Dao', identity: 'FlashAttention 作者', field: '高效注意力/数据吞吐', tags: ['FlashAttention','长上下文','稀疏注意力'], track: '数据', region: '海外' },
+  // 应用赛道 - 国内
+  { name: '刘思远', identity: '浦发银行 · 投研部首席', field: 'AI+金融应用', tags: ['智能投顾','风控模型','量化'], track: '应用', region: '国内' },
+  { name: '王雅婷', identity: '国金证券 · 研究总监', field: 'AI医疗/药研', tags: ['AI制药','医学影像','临床数据'], track: '应用', region: '国内' },
+  { name: '赵伟', identity: '广发证券 · 机械首席', field: '机器人/自动化', tags: ['人形机器人','工业机器人','减速器'], track: '应用', region: '国内' },
+  { name: '黄涛', identity: '商汤科技 · 产品VP', field: 'AI视觉应用', tags: ['自动驾驶','安防','数字人'], track: '应用', region: '国内' },
+  // 应用赛道 - 海外
+  { name: 'Andrew Ng', identity: 'DeepLearning.AI', field: 'AI落地方法论', tags: ['AI转型','MLOps','小数据'], track: '应用', region: '海外' },
+  { name: 'Emad Mostaque', identity: 'Stability AI 前CEO', field: '生成式AI应用', tags: ['Stable Diffusion','开源生态','创作者经济'], track: '应用', region: '海外' },
 ];
 
-const expertDirEl = document.getElementById('expert-directory');
-expertData.forEach(e => {
-  expertDirEl.innerHTML += `
-    <div class="ai-expert-card" onclick="openInterviewWithExpert('${e.name}', '${e.focus}')">
-      <div class="ai-expert-avatar">${e.avatar}</div>
+function renderExperts(filter) {
+  const el = document.getElementById('expert-directory');
+  const filtered = filter === 'all' ? expertData : expertData.filter(e => e.track === filter);
+  el.innerHTML = filtered.map(e => `
+    <div class="ai-expert-card" onclick="openExpertDetail('${e.name}')">
+      <div class="ai-expert-avatar">${e.name[0]}</div>
       <div style="font-size:13px; font-weight:600; margin-bottom:2px;">${e.name}</div>
-      <div style="font-size:10px; color:var(--text-secondary); margin-bottom:6px;">${e.role}</div>
-      <div style="font-size:10px; color:var(--accent-cyan); margin-bottom:4px;">${e.focus}</div>
-      <div style="display:flex; justify-content:center; gap:8px; font-size:10px; color:var(--text-muted);">
-        <span>${e.meetings}场会议</span>
-        <span class="mono" style="color:var(--accent-blue); font-weight:600;">${e.rating}</span>
+      <div style="font-size:10px; color:var(--text-secondary); margin-bottom:4px;">${e.identity}</div>
+      <div style="font-size:10px; color:var(--accent-cyan); margin-bottom:6px;">${e.field}</div>
+      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:4px;">
+        ${e.tags.map(t => '<span class="tag" style="font-size:9px; padding:1px 5px;">'+t+'</span>').join('')}
       </div>
-    </div>`;
+      <div style="margin-top:6px; font-size:9px; color:var(--text-muted);">${e.region}</div>
+    </div>`).join('');
+}
+renderExperts('all');
+
+document.querySelectorAll('#expert-filter-bar .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#expert-filter-bar .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderExperts(chip.dataset.track);
+  });
 });
 
 // ========== NOTES LIBRARY ==========
@@ -2833,6 +2812,45 @@ function closeMeetingDetail() {
 }
 document.getElementById('meeting-detail').addEventListener('click', function(e) {
   if (e.target === this) closeMeetingDetail();
+});
+
+function openExpertDetail(name) {
+  const expert = expertData.find(e => e.name === name);
+  if (!expert) return;
+  document.getElementById('expert-detail-name').textContent = expert.name;
+  document.getElementById('expert-detail-identity').textContent = expert.identity;
+  const body = document.getElementById('expert-detail-body');
+  body.innerHTML = `
+    <div class="card" style="padding:14px; margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">研究方向</div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">${expert.field}</div>
+      <div style="display:flex; gap:4px; flex-wrap:wrap;">
+        ${expert.tags.map(t => '<span class="tag tag-blue" style="font-size:10px;">'+t+'</span>').join('')}
+      </div>
+      <div style="margin-top:8px; font-size:10px; color:var(--text-muted);">赛道：${expert.track} · ${expert.region}</div>
+    </div>
+    <div class="card" style="padding:14px; margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">近期相关会议</div>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail();">H20获批窗口期：算力产业链主线逻辑 · 05/16</div>
+        <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row" onclick="closeExpertDetail(); openMeetingDetail();">${expert.track}方向深度研讨会 · 05/25</div>
+      </div>
+    </div>
+    <div class="card" style="padding:14px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">最新观点摘要</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.8;">
+        基于最近一次公开分享，${expert.name}认为${expert.track}赛道当前处于结构性机会期。重点关注${expert.tags.slice(0,2).join('、')}等核心标的。建议持续跟踪行业催化事件。
+      </div>
+    </div>
+    <button class="btn btn-gradient btn-sm" style="margin-top:14px; width:100%;" onclick="closeExpertDetail(); openInterviewWithExpert('${expert.name}', '${expert.track}')">✦ 订阅该专家会议</button>
+  `;
+  document.getElementById('expert-detail').classList.add('show');
+}
+function closeExpertDetail() {
+  document.getElementById('expert-detail').classList.remove('show');
+}
+document.getElementById('expert-detail').addEventListener('click', function(e) {
+  if (e.target === this) closeExpertDetail();
 });
 
 // ========== MONITOR TABS ==========
@@ -2948,7 +2966,7 @@ function getChatEl() { return document.getElementById('ai-chat-messages'); }
 function getChatInput() { return document.getElementById('ai-chat-input'); }
 let chatState = { step: 0, name: '', sources: '', keywords: '', freq: '', time: '' };
 let chatMode = 'general';
-let interviewState = { step: 0, industry: '', topic: '', format: '', time: '', expert: '' };
+let interviewState = { step: 0, industry: '', topic: '', expert: '' };
 
 function addChatBubble(html, isUser) {
   const chatEl = getChatEl();
@@ -3184,17 +3202,17 @@ function openInterviewAiPanel() {
   panel.style.display = 'block';
   fab.classList.add('hidden');
   chatMode = 'interview';
-  interviewState = { step: 0, industry: '', topic: '', format: '', time: '', expert: '' };
+  interviewState = { step: 0, industry: '', topic: '', expert: '' };
   title.textContent = '✦ AI 智能预约';
-  subtitle.textContent = '自然语言一键约访谈约会议';
+  subtitle.textContent = '匹配专家与会议 · 一键订阅';
   const messagesEl = document.getElementById('ai-chat-messages');
   messagesEl.innerHTML = `
     <div class="ai-chat-bubble ai-msg">
       <div class="ai-chat-avatar">✦</div>
-      <div class="ai-chat-content"><div class="ai-chat-text">你好，张明远！<br><br>已自动读取你的账户信息：<strong>富国基金 · TMT研究员</strong><br><br>我会帮你匹配AI领域最合适的专家，请先告诉我你想了解哪个<strong>方向</strong>？</div></div>
+      <div class="ai-chat-content"><div class="ai-chat-text">你好，张明远！<br><br>已读取账户：<strong>富国基金 · TMT研究员</strong><br><br>我会为你匹配最合适的专家和会议，请先选择<strong>方向</strong>：</div></div>
     </div>`;
   setTimeout(() => {
-    addAiWithOptions('', ['算力/芯片', 'AI大模型', 'AI应用/Agent', '机器人', '自动驾驶', '其他方向'], (choice) => {
+    addAiWithOptions('', ['算力', '大模型', '数据', '应用'], (choice) => {
       interviewState.industry = choice;
       interviewState.step = 1;
       askInterviewTopic();
@@ -3210,31 +3228,25 @@ function openInterviewWithExpert(name, focus) {
   panel.style.display = 'block';
   fab.classList.add('hidden');
   chatMode = 'interview';
-  interviewState = { step: 2, industry: focus, topic: '', format: '', time: '', expert: name };
+  interviewState = { step: 2, industry: focus, topic: '', expert: name };
   title.textContent = '✦ AI 智能预约';
-  subtitle.textContent = '预约 ' + name + ' 专家访谈';
+  subtitle.textContent = '订阅 ' + name + ' 相关会议';
   const messagesEl = document.getElementById('ai-chat-messages');
   messagesEl.innerHTML = `
     <div class="ai-chat-bubble ai-msg">
       <div class="ai-chat-avatar">✦</div>
-      <div class="ai-chat-content"><div class="ai-chat-text">已选择专家：<strong>${name}</strong>（${focus}方向）<br><br>已自动填入你的账户信息：<strong>张明远 · 富国基金 · TMT研究员</strong><br><br>你希望什么形式的访谈？</div></div>
+      <div class="ai-chat-content"><div class="ai-chat-text">已选择专家：<strong>${name}</strong>（${focus}方向）<br><br>以下是该专家近期会议，可直接订阅：</div></div>
     </div>`;
-  setTimeout(() => {
-    addAiWithOptions('', ['电话访谈（30分钟）', '视频会议（60分钟）', '线下面谈', '文字问答'], (format) => {
-      interviewState.format = format;
-      interviewState.step = 3;
-      askInterviewTime();
-    });
-  }, 300);
+  setTimeout(() => showRecommendedMeetings(name, focus), 400);
 }
 
 function askInterviewTopic() {
-  addChatBubble(`好的，「${interviewState.industry}」方向。请描述你的<strong>具体访谈需求</strong>，比如想了解的核心问题或公司：`, false);
+  addChatBubble(`好的，「${interviewState.industry}」方向。请描述你的<strong>具体需求</strong>，比如想了解的核心问题或公司：`, false);
 }
 
 function showExpertList() {
   const experts = getExpertsByIndustry(interviewState.industry);
-  let expertListHtml = `我为你匹配了以下AI领域专家，请选择你想预约的专家：
+  let expertListHtml = `为你推荐以下专家和近期相关会议：
     <div class="expert-select-list">`;
   experts.forEach(e => {
     expertListHtml += `
@@ -3242,9 +3254,8 @@ function showExpertList() {
         <div class="expert-select-avatar">${e.name[0]}</div>
         <div style="flex:1;">
           <div style="font-size:12px; font-weight:600;">${e.name}</div>
-          <div style="font-size:10px; color:var(--text-secondary);">${e.role}</div>
+          <div style="font-size:10px; color:var(--text-secondary);">${e.identity}</div>
         </div>
-        <span class="mono" style="font-size:10px; color:var(--accent-blue);">${e.rating}</span>
       </div>`;
   });
   expertListHtml += '</div>';
@@ -3252,23 +3263,9 @@ function showExpertList() {
 }
 
 function getExpertsByIndustry(industry) {
-  if (/算力|芯片/.test(industry)) return [
-    { name: '陈明远', role: '华泰证券 · 电子首席', rating: 'A+' },
-    { name: '周磊', role: '中金公司 · TMT首席', rating: 'A+' },
-    { name: '周子轩', role: '中信证券 · 电子首席', rating: 'A' },
-  ];
-  if (/大模型|Agent|应用/.test(industry)) return [
-    { name: '李晓峰', role: '华锐技术 · AI研究院院长', rating: 'A+' },
-    { name: '张峰', role: '海通证券 · 策略首席', rating: 'A+' },
-  ];
-  if (/机器人/.test(industry)) return [
-    { name: '赵伟', role: '广发证券 · 机械首席', rating: 'A' },
-  ];
-  return [
-    { name: '李晓峰', role: '华锐技术 · AI院长', rating: 'A+' },
-    { name: '陈明远', role: '华泰证券 · 电子首席', rating: 'A+' },
-    { name: '张峰', role: '海通证券 · 策略首席', rating: 'A+' },
-  ];
+  const filtered = expertData.filter(e => e.track === industry);
+  if (filtered.length > 0) return filtered.slice(0, 4).map(e => ({name: e.name, identity: e.identity}));
+  return expertData.slice(0, 4).map(e => ({name: e.name, identity: e.identity}));
 }
 
 function selectExpert(el, name) {
@@ -3277,48 +3274,32 @@ function selectExpert(el, name) {
   interviewState.expert = name;
   setTimeout(() => {
     addChatBubble(name, true);
-    setTimeout(() => askInterviewFormat(), 300);
+    setTimeout(() => showRecommendedMeetings(name, interviewState.industry), 300);
   }, 200);
 }
 
-function askInterviewFormat() {
-  addAiWithOptions('你希望什么形式的访谈？', ['电话访谈（30分钟）', '视频会议（60分钟）', '线下面谈', '文字问答'], (format) => {
-    interviewState.format = format;
-    interviewState.step = 3;
-    askInterviewTime();
-  });
-}
-
-function askInterviewTime() {
-  addAiWithOptions('你期望的访谈时间？', ['尽快（1-2工作日内）', '本周内', '下周', '指定日期'], (time) => {
-    interviewState.time = time;
-    interviewState.step = 4;
-    setTimeout(showInterviewConfirm, 400);
-  });
-}
-
-function showInterviewConfirm() {
-  const confirmHtml = `请确认访谈预约信息：
-    <div class="ai-chat-confirm">
-      <div class="ai-chat-confirm-title">访谈预约预览</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">预约人</span>张明远 · 富国基金 · TMT研究员</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">方向</span>${interviewState.industry}</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">主题</span>${interviewState.topic || '待确认'}</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">专家</span>${interviewState.expert}</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">形式</span>${interviewState.format}</div>
-      <div class="ai-chat-confirm-row"><span class="ai-chat-confirm-label">时间</span>${interviewState.time}</div>
+function showRecommendedMeetings(expertName, track) {
+  const meetingHtml = `为你推荐「${expertName}」相关的近期会议：
+    <div class="ai-chat-confirm" style="margin-top:8px;">
+      <div class="ai-chat-confirm-row" style="padding:8px 0; border-bottom:1px solid var(--border);">
+        <div><strong>算力产业链的三条主线逻辑</strong><br><span style="font-size:10px; color:var(--text-muted);">05/21 10:00 · ${expertName}</span></div>
+      </div>
+      <div class="ai-chat-confirm-row" style="padding:8px 0;">
+        <div><strong>${track}方向深度研讨会</strong><br><span style="font-size:10px; color:var(--text-muted);">05/25 14:00 · 多位专家</span></div>
+      </div>
     </div>`;
-  addAiWithOptions(confirmHtml, ['确认预约', '更换专家', '我要修改'], (choice) => {
-    if (choice === '确认预约') {
-      addChatBubble('访谈已预约成功！我们将在 <strong>1 个工作日内</strong>与 <strong>' + interviewState.expert + '</strong> 确认时间，届时会通过消息通知你。<br><br>预约信息已同步至你的日程。', false);
-      showToast('访谈预约成功');
-      interviewState = { step: 0, industry: '', topic: '', format: '', time: '', expert: '' };
-    } else if (choice === '更换专家') {
-      interviewState.step = 2;
-      showExpertList();
-    } else {
-      addChatBubble('没问题，请告诉我你想修改哪部分？', false);
+  addAiWithOptions(meetingHtml, ['订阅全部会议', '仅订阅第一场', '换个方向看看'], (choice) => {
+    if (choice === '换个方向看看') {
       interviewState.step = 0;
+      addAiWithOptions('请选择新的方向：', ['算力', '大模型', '数据', '应用'], (c) => {
+        interviewState.industry = c;
+        interviewState.step = 1;
+        askInterviewTopic();
+      });
+    } else {
+      addChatBubble(`已成功订阅！会议开始前会通过消息提醒你。<br><br>已同步至「我的预约会议」列表。`, false);
+      showToast('会议订阅成功');
+      interviewState = { step: 0, industry: '', topic: '', expert: '' };
     }
   });
 }
