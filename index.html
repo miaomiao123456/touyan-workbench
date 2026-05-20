@@ -2024,10 +2024,10 @@ body {
     <span class="nav-icon">◉</span>
     <span>首页</span>
   </div>
-  <div class="nav-item" data-page="ai-research">
+  <div class="nav-item" onclick="openAiGlobal()">
     <span class="nav-icon">✦</span>
     <span>AI投研</span>
-    <span class="nav-ai-label" onclick="event.stopPropagation();openAiGlobal()">Cowork</span>
+    <span class="nav-ai-label">Cowork</span>
   </div>
   <div class="nav-item" data-page="meetings">
     <span class="nav-icon">◎</span>
@@ -2038,7 +2038,6 @@ body {
     <span>信源监控器</span>
     <span class="nav-badge">12</span>
   </div>
-  <div class="nav-section-label">研究资料</div>
   <div class="nav-item" data-page="minutes">
     <span class="nav-icon">◇</span>
     <span>纪要</span>
@@ -2093,10 +2092,30 @@ body {
   <!-- ==================== HOME ==================== -->
   <div class="page active" id="page-home">
     <!-- Search Box -->
-    <div style="position:relative; margin-bottom:16px;">
-      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px;">⌕</span>
-      <input type="text" id="home-search-input" placeholder="搜索个股、会议、纪要、研报..." style="width:100%; padding:10px 14px 10px 38px; border:1px solid var(--border); border-radius:8px; background:var(--bg-secondary); font-size:13px; color:var(--text-primary); outline:none;" onkeyup="handleHomeSearch(event)" onfocus="document.getElementById('home-search-results').style.display='block'" />
-      <div id="home-search-results" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; margin-top:4px; max-height:400px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.3);"></div>
+    <div style="position:relative; margin-bottom:16px; display:flex; gap:8px; align-items:center;">
+      <div style="position:relative; flex:1;">
+        <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px;">⌕</span>
+        <input type="text" id="home-search-input" placeholder="千里科技怎么样" style="width:100%; padding:10px 14px 10px 38px; border:1px solid var(--border); border-radius:8px; background:var(--bg-secondary); font-size:13px; color:var(--text-primary); outline:none;" onkeyup="handleHomeSearch(event)" onfocus="if(this.value.trim())document.getElementById('home-search-results').style.display='block'" />
+        <div id="home-search-results" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; margin-top:4px; max-height:320px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.3);"></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openSearchResultPage()" style="padding:8px 16px; font-size:12px; white-space:nowrap;">搜索</button>
+    </div>
+
+    <!-- Search Result Full Page Overlay -->
+    <div id="home-search-page" style="display:none; position:fixed; top:0; left:var(--sidebar-width, 200px); right:0; bottom:0; background:var(--bg-primary); z-index:200; overflow-y:auto; padding:32px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <button class="btn btn-sm" onclick="closeSearchResultPage()" style="font-size:12px;">← 返回</button>
+          <span id="search-result-keyword" style="font-size:15px; font-weight:700;"></span>
+        </div>
+        <span id="search-result-count" style="font-size:11px; color:var(--text-muted);"></span>
+      </div>
+      <!-- AI Summary -->
+      <div id="search-ai-summary" style="margin-bottom:20px;"></div>
+      <!-- Tabs -->
+      <div id="search-result-tabs" style="display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border);"></div>
+      <!-- Results -->
+      <div id="search-result-list"></div>
     </div>
 
     <!-- Version Tabs -->
@@ -2135,7 +2154,10 @@ body {
           <!-- Section a: AI专家会议 -->
           <div>
             <div class="section-header">
-              <div class="section-title"><span class="dot"></span>AI 专家会议</div>
+              <div style="display:flex; align-items:baseline; gap:10px;">
+                <div class="section-title"><span class="dot"></span>AI 专家会议</div>
+                <span style="font-size:11px; color:var(--text-secondary); font-style:italic; letter-spacing:0.5px;">深耕 AI 全产业赛道，精准捕捉价值风口</span>
+              </div>
               <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
             </div>
             <div class="card-grid card-grid-3" id="home-expert-meetings" style="grid-template-columns:repeat(3,1fr);"></div>
@@ -2150,16 +2172,16 @@ body {
           </div>
 
           <!-- Section c: 纪要库 -->
-          <div>
+          <div class="card">
             <div class="section-header">
-              <div class="section-title"><span class="dot"></span>纪要库</div>
+              <div class="section-title"><span class="dot"></span>AI 纪要库</div>
               <span class="section-more" onclick="navigateTo('minutes')">查看全部 ›</span>
             </div>
             <div id="home-minutes-list"></div>
           </div>
 
           <!-- Section d: AI研究报告 -->
-          <div>
+          <div class="card">
             <div class="section-header">
               <div class="section-title"><span class="dot"></span>AI 研究报告</div>
               <span class="section-more" onclick="navigateTo('reports')">查看全部 ›</span>
@@ -2168,7 +2190,7 @@ body {
           </div>
 
           <!-- Section e: AI投资日历 -->
-          <div>
+          <div class="card">
             <div class="section-header">
               <div class="section-title"><span class="dot"></span>AI 投资日历</div>
               <span class="section-more" onclick="navigateTo('calendar')">查看全部 ›</span>
@@ -2177,7 +2199,7 @@ body {
           </div>
 
           <!-- Section f: AI活动 -->
-          <div>
+          <div class="card">
             <div class="section-header">
               <div class="section-title"><span class="dot"></span>AI 活动</div>
               <span class="section-more" onclick="navigateTo('research')">查看全部 ›</span>
@@ -2248,35 +2270,91 @@ body {
       </div>
 
       <div class="home-grid">
-        <div class="home-left">
-          <div class="card">
-            <div style="display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); margin:-16px -16px 12px; padding:0 16px; flex-wrap:wrap;">
-              <div class="market-hot-tab active" onclick="switchMarketHotTab('hot')" style="padding:10px 12px; font-size:13px; font-weight:600; cursor:pointer; border-bottom:2px solid var(--accent-blue); color:var(--accent-blue);">热点个股</div>
-              <div class="market-hot-tab" onclick="switchMarketHotTab('rise')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">大涨个股</div>
-              <div class="market-hot-tab" onclick="switchMarketHotTab('watchlist')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">自选股</div>
-              <div class="market-hot-tab" onclick="switchMarketHotTab('news')" style="padding:10px 12px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--text-muted);">资讯热点</div>
-              <span class="section-more" style="margin-left:auto;" onclick="openAiGlobal();showProductView('doc-1')">查看全部 ›</span>
-            </div>
-            <div id="market-tab-hot"></div>
-            <div id="market-tab-rise" style="display:none;"></div>
-            <div id="market-tab-watchlist" style="display:none;"></div>
-            <div id="market-tab-news" style="display:none;"></div>
-          </div>
-        </div>
-        <div class="home-right">
+        <div class="home-left" style="display:flex; flex-direction:column; gap:16px;">
+
+          <!-- Section a: 专家会议 -->
           <div>
             <div class="section-header">
-              <div class="section-title"><span class="dot"></span>专家会议</div>
+              <div style="display:flex; align-items:baseline; gap:10px;">
+                <div class="section-title"><span class="dot"></span>专家会议</div>
+                <span style="font-size:11px; color:var(--text-secondary); font-style:italic; letter-spacing:0.5px;">覆盖全行业核心赛道，洞察投资先机</span>
+              </div>
               <span class="section-more" onclick="navigateTo('meetings')">查看全部 ›</span>
             </div>
-            <div class="card-grid card-grid-3" id="meeting-preview-market" style="grid-template-columns:1fr;"></div>
+            <div class="card-grid card-grid-3" id="meeting-preview-market" style="grid-template-columns:repeat(3,1fr);"></div>
           </div>
+
+          <!-- Section b: 专家智囊团 -->
+          <div>
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>专家智囊团</div>
+            </div>
+            <div id="mkt-expert-panel" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;"></div>
+          </div>
+
+          <!-- Section c: 纪要库 -->
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>纪要库</div>
+              <span class="section-more" onclick="navigateTo('minutes')">查看全部 ›</span>
+            </div>
+            <div id="mkt-minutes-list"></div>
+          </div>
+
+          <!-- Section d: 研究报告 -->
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>研究报告</div>
+              <span class="section-more" onclick="navigateTo('reports')">查看全部 ›</span>
+            </div>
+            <div id="mkt-reports-list"></div>
+          </div>
+
+          <!-- Section e: 投资日历 -->
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>投资日历</div>
+              <span class="section-more" onclick="navigateTo('calendar')">查看全部 ›</span>
+            </div>
+            <div id="mkt-calendar-events"></div>
+          </div>
+
+          <!-- Section f: 活动 -->
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>活动</div>
+              <span class="section-more" onclick="navigateTo('research')">查看全部 ›</span>
+            </div>
+            <div id="mkt-activities-list"></div>
+          </div>
+        </div>
+
+        <!-- 右侧栏：4个模块 -->
+        <div class="home-right">
           <div class="card">
             <div class="section-header">
               <div class="section-title"><span class="dot"></span>信源监控快报</div>
               <span class="section-more" onclick="navigateTo('monitor')">全部记录 ›</span>
             </div>
             <div id="source-feed-market"></div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>热点个股</div>
+            </div>
+            <div id="mkt-sec-hot"></div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>大涨个股</div>
+            </div>
+            <div id="mkt-sec-rise"></div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div class="section-title"><span class="dot"></span>资讯热点</div>
+            </div>
+            <div id="mkt-news-feed"></div>
           </div>
         </div>
       </div>
@@ -2413,13 +2491,6 @@ body {
   <!-- ==================== SOURCE MONITOR ==================== -->
   <div class="page" id="page-monitor">
 
-    <div class="monitor-tabs" style="display:flex; align-items:center; justify-content:space-between;">
-      <div style="display:flex;">
-        <div class="monitor-tab active" data-tab="records">监控记录</div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="openAiGlobal();newAiSession('monitor-center')" style="font-size:11px; padding:4px 12px;">+ 新建监控器</button>
-    </div>
-
     <!-- Records View -->
     <div class="monitor-view active" id="tab-records">
       <div class="records-layout">
@@ -2433,6 +2504,7 @@ body {
             <span class="filter-chip" style="font-size:10px; padding:3px 8px;" onclick="filterMonitorByIndustry('health')">医疗健康</span>
             <span class="filter-chip" style="font-size:10px; padding:3px 8px;" onclick="filterMonitorByIndustry('manufacture')">先进制造</span>
             <span class="filter-chip" style="font-size:10px; padding:3px 8px;" onclick="filterMonitorByIndustry('material')">能源材料</span>
+            <button class="btn btn-primary btn-sm" onclick="openAiGlobal();newAiSession('monitor-center')" style="font-size:10px; padding:3px 10px; margin-left:4px;">+ 新建监控器</button>
           </div>
           <div class="timeline" id="timeline-feed"></div>
         </div>
@@ -2510,115 +2582,36 @@ body {
 
 
   <!-- ==================== AI RESEARCH PAGE ==================== -->
-  <div class="page" id="page-ai-research">
-    <div style="padding:20px; max-width:1100px; margin:0 auto;">
-      <div style="margin-bottom:24px;">
-        <h2 style="font-size:20px; font-weight:700; margin-bottom:6px;">AI 投研工作站</h2>
-        <p style="font-size:13px; color:var(--text-secondary);">智能投研工具集，助你高效完成分析与内容产出</p>
-      </div>
-      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px;">
-        <div class="card" style="padding:20px; cursor:pointer; text-align:center;" onclick="openAiGlobal();newAiSession('meeting-assistant')">
-          <div style="font-size:28px; margin-bottom:10px;">🎙</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">会议助手</div>
-          <div style="font-size:11px; color:var(--text-muted);">AI代参会 · 录音转文字 · 自动生成纪要</div>
-        </div>
-        <div class="card" style="padding:20px; cursor:pointer; text-align:center;" onclick="openAiGlobal();newAiSession('gallery')">
-          <div style="font-size:28px; margin-bottom:10px;">🖼</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">图库</div>
-          <div style="font-size:11px; color:var(--text-muted);">AI画图 · 提示词引导 · 元素编辑 · 水印</div>
-        </div>
-        <div class="card" style="padding:20px; cursor:pointer; text-align:center;" onclick="openAiGlobal();newAiSession('stock-analysis')">
-          <div style="font-size:28px; margin-bottom:10px;">📊</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">个股一页纸</div>
-          <div style="font-size:11px; color:var(--text-muted);">一键生成个股深度分析报告</div>
-        </div>
-        <div class="card" style="padding:20px; cursor:pointer; text-align:center;" onclick="openAiGlobal();newAiSession('research-outline')">
-          <div style="font-size:28px; margin-bottom:10px;">📋</div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">调研大纲</div>
-          <div style="font-size:11px; color:var(--text-muted);">AI生成调研计划与访谈提纲</div>
-        </div>
-      </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:28px;">
-        <div class="card" style="padding:20px; cursor:pointer;" onclick="openAiGlobal();newAiSession('joke')">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:22px;">✦</span>
-            <div>
-              <div style="font-size:13px; font-weight:600;">写点评</div>
-              <div style="font-size:11px; color:var(--text-muted);">生成专业投资点评与观点</div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style="padding:20px; cursor:pointer;" onclick="openAiGlobal();newAiSession('general')">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:22px;">💬</span>
-            <div>
-              <div style="font-size:13px; font-weight:600;">自由对话</div>
-              <div style="font-size:11px; color:var(--text-muted);">与AI投研助手自由交流</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" style="padding:20px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <span style="font-size:14px; font-weight:600;">最近会话</span>
-          <span style="font-size:11px; color:var(--accent-blue); cursor:pointer;" onclick="openAiGlobal()">查看全部 ›</span>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:8px;" id="ai-research-history">
-          <div style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--bg-primary); border-radius:8px; cursor:pointer;" onclick="openAiGlobal()">
-            <span style="font-size:14px;">✦</span>
-            <div style="flex:1;">
-              <div style="font-size:12px; font-weight:500;">千里科技深度分析</div>
-              <div style="font-size:10px; color:var(--text-muted);">2026-05-19 14:32</div>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--bg-primary); border-radius:8px; cursor:pointer;" onclick="openAiGlobal()">
-            <span style="font-size:14px;">🎙</span>
-            <div style="flex:1;">
-              <div style="font-size:12px; font-weight:500;">中信AI产业链电话会纪要</div>
-              <div style="font-size:10px; color:var(--text-muted);">2026-05-18 09:15</div>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px; padding:10px; background:var(--bg-primary); border-radius:8px; cursor:pointer;" onclick="openAiGlobal()">
-            <span style="font-size:14px;">📊</span>
-            <div style="flex:1;">
-              <div style="font-size:12px; font-weight:500;">阶跃星辰估值模型搭建</div>
-              <div style="font-size:10px; color:var(--text-muted);">2026-05-17 16:48</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ==================== MINUTES PAGE ==================== -->
   <div class="page" id="page-minutes">
     <div style="padding:20px;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
         <h2 style="font-size:18px; font-weight:700;">纪要</h2>
-        <div style="display:flex; gap:8px;">
-          <input type="text" placeholder="搜索纪要..." style="font-size:12px; padding:6px 12px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); width:200px; outline:none;" id="minutes-search-input" oninput="filterMinutes()">
-        </div>
       </div>
-      <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:6px;" id="minutes-type-filter">
-        <span class="filter-chip active" onclick="filterMinutesByType('all',this)">全部</span>
-        <span class="filter-chip" onclick="filterMinutesByType('expert',this)">专家纪要</span>
-        <span class="filter-chip" onclick="filterMinutesByType('regular',this)">常规纪要</span>
-      </div>
-      <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:6px;" id="minutes-industry-filter">
-        <span class="filter-chip active" onclick="filterMinutesByIndustry('all',this)">全部行业</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('ai',this)">AI产业</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('semiconductor',this)">半导体</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('newenergy',this)">新能源</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('consume',this)">消费</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('medical',this)">医疗健康</span>
-        <span class="filter-chip" onclick="filterMinutesByIndustry('finance',this)">金融</span>
-      </div>
-      <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:6px;" id="minutes-org-filter">
-        <span class="filter-chip active" onclick="filterMinutesByOrg('all',this)">全部机构</span>
-        <span class="filter-chip" onclick="filterMinutesByOrg('zhongxin',this)">中信证券</span>
-        <span class="filter-chip" onclick="filterMinutesByOrg('huatai',this)">华泰证券</span>
-        <span class="filter-chip" onclick="filterMinutesByOrg('guotai',this)">国泰君安</span>
-        <span class="filter-chip" onclick="filterMinutesByOrg('internal',this)">内部调研</span>
+      <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
+        <input id="minutes-search" type="text" placeholder="搜索纪要..." oninput="applyMinutesFilter()" style="font-size:13px; padding:8px 14px; border:1px solid var(--border); border-radius:6px; background:var(--bg-card); color:var(--text-primary); outline:none; width:200px;">
+        <select id="minutes-type-select" onchange="applyMinutesFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部类型</option>
+          <option value="expert">专家纪要</option>
+          <option value="regular">常规纪要</option>
+        </select>
+        <select id="minutes-industry-select" onchange="applyMinutesFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部行业</option>
+          <option value="ai">AI产业</option>
+          <option value="semiconductor">半导体</option>
+          <option value="newenergy">新能源</option>
+          <option value="consume">消费</option>
+          <option value="medical">医疗健康</option>
+          <option value="finance">金融</option>
+        </select>
+        <select id="minutes-org-select" onchange="applyMinutesFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部机构</option>
+          <option value="zhongxin">中信证券</option>
+          <option value="huatai">华泰证券</option>
+          <option value="guotai">国泰君安</option>
+          <option value="internal">内部调研</option>
+        </select>
       </div>
       <div class="notes-card-grid" id="minutes-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px;">
       </div>
@@ -2668,19 +2661,22 @@ body {
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
         <h2 style="font-size:18px; font-weight:700;">调研</h2>
       </div>
-      <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:6px;" id="research-type-filter">
-        <span class="filter-chip active" onclick="filterResearchByType('all',this)">全部</span>
-        <span class="filter-chip" onclick="filterResearchByType('field',this)">实地调研</span>
-        <span class="filter-chip" onclick="filterResearchByType('expert-call',this)">专家电话会</span>
-        <span class="filter-chip" onclick="filterResearchByType('chain',this)">产业链验证</span>
-        <span class="filter-chip" onclick="filterResearchByType('grassroot',this)">草根调研</span>
-      </div>
-      <div style="margin-bottom:14px; display:flex; flex-wrap:wrap; gap:6px;" id="research-industry-filter">
-        <span class="filter-chip active" onclick="filterResearchByIndustry('all',this)">全部行业</span>
-        <span class="filter-chip" onclick="filterResearchByIndustry('ai',this)">AI产业</span>
-        <span class="filter-chip" onclick="filterResearchByIndustry('semiconductor',this)">半导体</span>
-        <span class="filter-chip" onclick="filterResearchByIndustry('newenergy',this)">新能源</span>
-        <span class="filter-chip" onclick="filterResearchByIndustry('consume',this)">消费</span>
+      <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
+        <input id="research-search" type="text" placeholder="搜索调研..." oninput="applyResearchFilter()" style="font-size:13px; padding:8px 14px; border:1px solid var(--border); border-radius:6px; background:var(--bg-card); color:var(--text-primary); outline:none; width:200px;">
+        <select id="research-type-select" onchange="applyResearchFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部类型</option>
+          <option value="field">实地调研</option>
+          <option value="expert-call">专家电话会</option>
+          <option value="chain">产业链验证</option>
+          <option value="grassroot">草根调研</option>
+        </select>
+        <select id="research-industry-select" onchange="applyResearchFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部行业</option>
+          <option value="ai">AI产业</option>
+          <option value="semiconductor">半导体</option>
+          <option value="newenergy">新能源</option>
+          <option value="consume">消费</option>
+        </select>
       </div>
       <div id="research-list" style="display:flex; flex-direction:column; gap:12px;">
       </div>
@@ -2692,23 +2688,23 @@ body {
     <div style="padding:20px;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
         <h2 style="font-size:18px; font-weight:700;">研报</h2>
-        <div style="display:flex; gap:8px;">
-          <input type="text" placeholder="搜索研报..." style="font-size:12px; padding:6px 12px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); width:200px; outline:none;" id="reports-search-input" oninput="filterReports()">
-        </div>
       </div>
-      <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:6px;" id="reports-source-filter">
-        <span class="filter-chip active" onclick="filterReportsBySource('all',this)">全部来源</span>
-        <span class="filter-chip" onclick="filterReportsBySource('broker',this)">券商</span>
-        <span class="filter-chip" onclick="filterReportsBySource('third',this)">第三方</span>
-        <span class="filter-chip" onclick="filterReportsBySource('internal',this)">内部</span>
-      </div>
-      <div style="margin-bottom:14px; display:flex; flex-wrap:wrap; gap:6px;" id="reports-industry-filter">
-        <span class="filter-chip active" onclick="filterReportsByIndustry('all',this)">全部行业</span>
-        <span class="filter-chip" onclick="filterReportsByIndustry('ai',this)">AI产业</span>
-        <span class="filter-chip" onclick="filterReportsByIndustry('semiconductor',this)">半导体</span>
-        <span class="filter-chip" onclick="filterReportsByIndustry('newenergy',this)">新能源</span>
-        <span class="filter-chip" onclick="filterReportsByIndustry('consume',this)">消费</span>
-        <span class="filter-chip" onclick="filterReportsByIndustry('medical',this)">医疗健康</span>
+      <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
+        <input id="reports-search" type="text" placeholder="搜索研报..." oninput="applyReportsFilter()" style="font-size:13px; padding:8px 14px; border:1px solid var(--border); border-radius:6px; background:var(--bg-card); color:var(--text-primary); outline:none; width:200px;">
+        <select id="reports-source-select" onchange="applyReportsFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部来源</option>
+          <option value="broker">券商</option>
+          <option value="third">第三方</option>
+          <option value="internal">内部</option>
+        </select>
+        <select id="reports-industry-select" onchange="applyReportsFilter()" style="font-size:12px; padding:5px 24px 5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%23999%22/></svg>');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="all">全部行业</option>
+          <option value="ai">AI产业</option>
+          <option value="semiconductor">半导体</option>
+          <option value="newenergy">新能源</option>
+          <option value="consume">消费</option>
+          <option value="medical">医疗健康</option>
+        </select>
       </div>
       <div id="reports-list" style="display:flex; flex-direction:column; gap:10px;">
       </div>
@@ -2767,6 +2763,18 @@ body {
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Share Overlay -->
+<div id="share-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px);" onclick="if(event.target===this)closeShareOverlay()">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:24px; background:var(--bg-primary); border-radius:16px; padding:32px; box-shadow:0 16px 48px rgba(0,0,0,0.15); border:1px solid var(--border); max-width:420px; width:90%;">
+    <div id="share-card-content"></div>
+    <div style="display:flex; gap:16px; width:100%; justify-content:center;">
+      <button onclick="shareAction('link')" style="flex:1; padding:12px 20px; border-radius:10px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text-primary); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .15s;" onmouseover="this.style.borderColor='var(--accent-blue)'" onmouseout="this.style.borderColor='var(--border)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>复制链接</button>
+      <button onclick="shareAction('poster')" style="flex:1; padding:12px 20px; border-radius:10px; border:none; background:var(--accent-blue); color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:opacity .15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>分享图片</button>
+    </div>
+    <button onclick="closeShareOverlay()" style="padding:6px 20px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--text-muted); font-size:11px; cursor:pointer;">关闭</button>
   </div>
 </div>
 
@@ -3116,9 +3124,8 @@ function renderStockTabContent() {
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
           <div>
             <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-              <span class="tag tag-blue" style="font-size:9px;">${r.broker}</span>
               <span class="tag tag-gold" style="font-size:9px;">${r.rating}</span>
-              ${r.targetPrice ? `<span style="font-size:10px; color:var(--text-muted);">目标价 ¥${r.targetPrice}</span>` : ''}
+              <span class="tag tag-blue" style="font-size:9px;">${r.broker}</span>
             </div>
             <div style="font-size:13px; font-weight:600;">${r.title}</div>
             <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">${r.summary}</div>
@@ -3786,11 +3793,11 @@ renderMeetingPreviewCards(meetingsPreviewAi, meetingPreviewEl);
 
 // ========== SOURCE FEED ==========
 const feedData = [
-  { time: '14:58', source: '财联社电报', tag: 'tag-gold', kw: '英伟达', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节' },
-  { time: '14:42', source: '券商研报', tag: 'tag-blue', kw: '宁德时代', text: '中信证券上调宁德时代目标价至280元，维持"买入"评级，核心逻辑为欧洲关税下调+储能业务超预期' },
-  { time: '14:15', source: '上市公司公告', tag: 'tag-cyan', kw: '万科A', text: '万科A：拟向不超过35名特定投资者配股，募集资金不超过150亿元，用于偿还有息负债' },
-  { time: '13:50', source: '财联社电报', tag: 'tag-gold', kw: '光伏', text: '隆基绿能被曝将下调组件报价5-8%以争夺市场份额，行业价格战或再度加剧' },
-  { time: '13:22', source: '行业媒体', tag: 'tag-blue', kw: '消费', text: '商务部公布五一黄金周消费数据：社零同比+6.8%，其中免税渠道增速最快达+22%' },
+  { time: '14:58', source: '财联社', tag: 'tag-gold', kw: '英伟达', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节' },
+  { time: '14:42', source: '证券时报', tag: 'tag-blue', kw: '宁德时代', text: '中信证券上调宁德时代目标价至280元，维持"买入"评级，核心逻辑为欧洲关税下调+储能业务超预期' },
+  { time: '14:15', source: '上交所', tag: 'tag-cyan', kw: '万科A', text: '万科A：拟向不超过35名特定投资者配股，募集资金不超过150亿元，用于偿还有息负债' },
+  { time: '13:50', source: '界面新闻', tag: 'tag-gold', kw: '光伏', text: '隆基绿能被曝将下调组件报价5-8%以争夺市场份额，行业价格战或再度加剧' },
+  { time: '13:22', source: '每日经济', tag: 'tag-blue', kw: '消费', text: '商务部公布五一黄金周消费数据：社零同比+6.8%，其中免税渠道增速最快达+22%' },
 ];
 
 const sourceFeedEl = document.getElementById('source-feed');
@@ -4286,13 +4293,6 @@ function buildEndedMeetingHTML(m) {
             <div><div style="font-size:18px; font-weight:700; color:var(--accent-blue);">${score}</div><div style="font-size:10px; color:var(--text-muted);">综合评分</div></div>
           </div>
         </div>
-        ${stockCardsHtml}
-        <div style="margin-top:12px;">
-          <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">相关主题会议</div>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <div style="padding:8px; background:var(--bg-primary); border-radius:6px; cursor:pointer; font-size:11px;" class="hotlist-row">${m.tag}产业链深度研讨 · 近期</div>
-          </div>
-        </div>
       </div>
     </div>`;
 }
@@ -4648,21 +4648,20 @@ document.querySelectorAll('.monitor-tab').forEach(tab => {
 
 // ========== TIMELINE DATA ==========
 const timelineData = [
-  { time: '14:58', source: '财联社电报', kw: '英伟达', researcher: '陈明远', industry: 'tech', title: '英伟达中国区负责人抵京，H20芯片合规出口推进', url: 'https://www.cls.cn/detail/1234567', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节。据产业链人士透露，首批H20芯片已通过海关审批。' },
-  { time: '14:42', source: '中信证券研报', kw: '宁德时代', researcher: '刘思远', industry: 'manufacture', title: '中信上调宁德时代目标价至280元', url: 'https://www.cs.com.cn/report/202605', text: '中信证券发布深度报告，上调宁德时代目标价至280元，核心逻辑：① 欧盟关税下调预期 ② 储能业务收入占比提升至25% ③ 固态电池中试线进展超预期。' },
-  { time: '14:15', source: '上交所公告', kw: '万科A', researcher: '', industry: 'finance', title: '万科A拟配股融资150亿偿还有息负债', url: 'https://www.sse.com.cn/disclosure/bond/announcement/c/9876543.shtml', text: '万科A(000002)：拟向不超过35名特定投资者配股，募集资金总额不超过人民币150亿元，全部用于偿还公司有息负债。' },
+  { time: '14:58', source: '财联社', kw: '英伟达', researcher: '陈明远', industry: 'tech', title: '英伟达中国区负责人抵京，H20芯片合规出口推进', url: 'https://www.cls.cn/detail/1234567', text: '【独家】英伟达中国区负责人已抵京，明日将与工信部官员会面讨论H20芯片合规出口细节。据产业链人士透露，首批H20芯片已通过海关审批。' },
+  { time: '14:42', source: '证券时报', kw: '宁德时代', researcher: '刘思远', industry: 'manufacture', title: '中信上调宁德时代目标价至280元', url: 'https://www.cs.com.cn/report/202605', text: '中信证券发布深度报告，上调宁德时代目标价至280元，核心逻辑：① 欧盟关税下调预期 ② 储能业务收入占比提升至25% ③ 固态电池中试线进展超预期。' },
+  { time: '14:15', source: '上交所', kw: '万科A', researcher: '', industry: 'finance', title: '万科A拟配股融资150亿偿还有息负债', url: 'https://www.sse.com.cn/disclosure/bond/announcement/c/9876543.shtml', text: '万科A(000002)：拟向不超过35名特定投资者配股，募集资金总额不超过人民币150亿元，全部用于偿还公司有息负债。' },
   { time: '13:50', source: '机器之心', kw: '光伏', researcher: '刘思远', industry: 'manufacture', title: '隆基绿能下调组件报价5-8%，价格战风险加剧', url: 'https://www.jiqizhixin.com/articles/20260520-pv', text: '隆基绿能内部人士确认将下调组件报价5-8%，目标是夺回东南亚市场份额。此举可能引发新一轮价格战。通威股份、晶科能源盘中一度跳水。' },
-  { time: '13:22', source: '商务部官网', kw: '消费', researcher: '', industry: 'consume', title: '五一黄金周社零同比+6.8%超预期', url: 'https://www.mofcom.gov.cn/article/ae/sjjd/202605/20260503456789.shtml', text: '商务部公布五一黄金周消费数据：社零同比+6.8%（前值+4.2%），其中免税渠道增速最快+22%，餐饮+12.3%，汽车+8.7%。' },
+  { time: '13:22', source: '每日经济', kw: '消费', researcher: '', industry: 'consume', title: '五一黄金周社零同比+6.8%超预期', url: 'https://www.mofcom.gov.cn/article/ae/sjjd/202605/20260503456789.shtml', text: '商务部公布五一黄金周消费数据：社零同比+6.8%（前值+4.2%），其中免税渠道增速最快+22%，餐饮+12.3%，汽车+8.7%。' },
   { time: '12:45', source: '量子位', kw: '半导体', researcher: '周磊', industry: 'tech', title: '中芯国际天津28nm产线扩产至月产5万片', url: 'https://www.qbitai.com/2026/05/semiconductor-smic.html', text: '中芯国际天津工厂传出扩产消息，成熟制程28nm产线月产能将从3万片提升至5万片，预计Q4达产。' },
-  { time: '11:30', source: '华泰证券研报', kw: '中科曙光', researcher: '陈明远', industry: 'ai', title: '中科曙光Q2 AI服务器订单环比增长60%', url: 'https://www.htsc.com.cn/research/detail/202605201130', text: '华泰证券电子团队调研纪要：中科曙光Q2 AI服务器订单环比增长60%，主要来自互联网大厂和政府智算中心项目。' },
-  { time: '10:15', source: 'Wind资讯', kw: '地产', researcher: '', industry: 'finance', title: '住建部研究新一轮房地产支持政策', url: 'https://www.wind.com.cn/news/202605/property-policy.html', text: '住建部：将研究出台新一轮房地产支持政策，重点关注一线城市限购松绑和房贷利率下调空间。' },
+  { time: '11:30', source: '华泰证券', kw: '中科曙光', researcher: '陈明远', industry: 'ai', title: '中科曙光Q2 AI服务器订单环比增长60%', url: 'https://www.htsc.com.cn/research/detail/202605201130', text: '华泰证券电子团队调研纪要：中科曙光Q2 AI服务器订单环比增长60%，主要来自互联网大厂和政府智算中心项目。' },
+  { time: '10:15', source: 'Wind', kw: '地产', researcher: '', industry: 'finance', title: '住建部研究新一轮房地产支持政策', url: 'https://www.wind.com.cn/news/202605/property-policy.html', text: '住建部：将研究出台新一轮房地产支持政策，重点关注一线城市限购松绑和房贷利率下调空间。' },
   { time: '09:42', source: '路透社', kw: '中美', researcher: '张峰', industry: 'ai', title: '中美就AI安全和半导体供应链达成初步共识', url: 'https://www.reuters.com/technology/us-china-tech-cooperation-2026-05-20', text: '据路透社援引知情人士，中美双方已就部分科技领域合作达成初步共识，涉及AI安全和半导体供应链。正式声明预计本周五发布。' },
-  { time: '09:15', source: '财联社电报', kw: '新能源', researcher: '刘思远', industry: 'manufacture', title: '欧盟拟将中国电动车关税下调至17-20%', url: 'https://www.cls.cn/detail/1234590', text: '欧盟内部文件显示，拟将中国电动车关税从当前的37.6%下调至17-20%区间，具体税率将在6月初公布。宁德时代、比亚迪盘前竞价涨幅均超2%。' },
+  { time: '09:15', source: '财联社', kw: '新能源', researcher: '刘思远', industry: 'manufacture', title: '欧盟拟将中国电动车关税下调至17-20%', url: 'https://www.cls.cn/detail/1234590', text: '欧盟内部文件显示，拟将中国电动车关税从当前的37.6%下调至17-20%区间，具体税率将在6月初公布。宁德时代、比亚迪盘前竞价涨幅均超2%。' },
 ];
 
 const timelineFeedEl = document.getElementById('timeline-feed');
 timelineData.forEach((t, i) => {
-  const researcherTag = t.researcher ? `<span class="tl-researcher">👤 ${t.researcher}</span>` : '';
   timelineFeedEl.innerHTML += `
     <div class="timeline-item">
       <div class="timeline-dot-col">
@@ -4673,8 +4672,6 @@ timelineData.forEach((t, i) => {
         <div class="tl-header">
           <span class="tl-time">${t.time}</span>
           <span class="tl-source">${t.source}</span>
-          <span class="tl-keyword">${t.kw}</span>
-          ${researcherTag}
         </div>
         <div class="tl-text">${t.text}</div>
         <a class="tl-link" href="${t.url}" target="_blank">${t.title} →</a>
@@ -4746,7 +4743,6 @@ function filterMonitorByIndustry(industry) {
   el.innerHTML = '';
   const filtered = industry === 'all' ? timelineData : timelineData.filter(t => t.industry === industry);
   filtered.forEach((t, i) => {
-    const researcherTag = t.researcher ? `<span class="tl-researcher">👤 ${t.researcher}</span>` : '';
     el.innerHTML += `
       <div class="timeline-item">
         <div class="timeline-dot-col">
@@ -4757,8 +4753,6 @@ function filterMonitorByIndustry(industry) {
           <div class="tl-header">
             <span class="tl-time">${t.time}</span>
             <span class="tl-source">${t.source}</span>
-            <span class="tl-keyword">${t.kw}</span>
-            ${researcherTag}
           </div>
           <div class="tl-text">${t.text}</div>
           <a class="tl-link" href="${t.url}" target="_blank">${t.title} →</a>
@@ -5064,13 +5058,104 @@ function switchHomeVersion(version) {
   document.getElementById('home-ai-view').style.display = version === 'ai' ? '' : 'none';
   document.getElementById('home-market-view').style.display = version === 'market' ? '' : 'none';
   if (version === 'market') {
-    renderMarketTabContent('hot');
-    renderMeetingPreviewCards(meetingsPreviewMarket, document.getElementById('meeting-preview-market'));
-    const mktFeed = document.getElementById('source-feed-market');
-    if (mktFeed && !mktFeed.innerHTML) {
-      const srcFeed = document.getElementById('source-feed');
-      if (srcFeed) mktFeed.innerHTML = srcFeed.innerHTML;
-    }
+    renderMarketSections();
+  }
+}
+
+function renderMarketSections() {
+  const hotEl = document.getElementById('mkt-sec-hot');
+  if (hotEl && !hotEl.innerHTML) renderMarketStockRanking('mkt-sec-hot', marketStockRankingData, 'market-hot', true);
+  const riseEl = document.getElementById('mkt-sec-rise');
+  if (riseEl && !riseEl.innerHTML) renderMarketStockRanking('mkt-sec-rise', marketStockRiseData, 'market-rise', true);
+  renderMeetingPreviewCards(meetingsPreviewMarket, document.getElementById('meeting-preview-market'));
+  const mktFeed = document.getElementById('source-feed-market');
+  if (mktFeed && !mktFeed.innerHTML) {
+    const srcFeed = document.getElementById('source-feed');
+    if (srcFeed) mktFeed.innerHTML = srcFeed.innerHTML;
+  }
+  const mktMinEl = document.getElementById('mkt-minutes-list');
+  if (mktMinEl && !mktMinEl.innerHTML) {
+    const top5 = minutesData.slice(0, 5);
+    mktMinEl.innerHTML = top5.map(m => `
+      <div style="padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('minutes')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <span class="tag ${m.type==='expert'?'tag-cyan':'tag-blue'}" style="font-size:9px; padding:1px 5px;">${m.type==='expert'?'专家':'常规'}</span>
+          <span style="font-size:12px; font-weight:600;">${m.title}</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${m.summary||''}</div>
+      </div>
+    `).join('');
+  }
+  const mktRepEl = document.getElementById('mkt-reports-list');
+  if (mktRepEl && !mktRepEl.innerHTML) {
+    const top4 = reportsData.slice(0, 4);
+    mktRepEl.innerHTML = top4.map(r => `
+      <div style="padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('reports')">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${r.rating||'研报'}</span>
+          ${r.stocks && r.stocks.length ? r.stocks.map(s => `<span style="font-size:9px; color:var(--accent-blue); background:rgba(59,130,246,0.1); padding:1px 6px; border-radius:3px;">${s}</span>`).join('') : ''}
+          <span style="font-size:11px; color:var(--text-secondary);">${r.broker}</span>
+        </div>
+        <div style="font-size:12px; font-weight:600;">${r.title}</div>
+      </div>
+    `).join('');
+  }
+  const mktCalEl = document.getElementById('mkt-calendar-events');
+  if (mktCalEl && !mktCalEl.innerHTML) {
+    const typeLabelsC = { earnings:'业绩会', strategy:'策略会', 'expert-call':'专家电话会', launch:'发布会', shareholder:'股东大会', conference:'行业峰会', roadshow:'路演' };
+    const typeColorsC = { earnings:'tag-gold', strategy:'tag-blue', 'expert-call':'tag-cyan', launch:'tag-green', shareholder:'tag-gold', conference:'tag-blue', roadshow:'tag-cyan' };
+    const upcoming = calendarEventsData.filter(e => e.date >= '2026-05-20').slice(0, 6);
+    mktCalEl.innerHTML = upcoming.map(e => `
+      <div style="padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('calendar')">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono); min-width:42px;">${e.date.slice(5)}</span>
+          <span class="tag ${typeColorsC[e.type]||'tag-blue'}" style="font-size:9px; padding:1px 5px;">${typeLabelsC[e.type]||e.type}</span>
+          <span style="font-size:12px; font-weight:500;">${e.title}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+  // Section b: 专家智囊团
+  const mktExpertEl = document.getElementById('mkt-expert-panel');
+  if (mktExpertEl && !mktExpertEl.innerHTML && typeof expertData !== 'undefined') {
+    const top3 = expertData.slice(0, 3);
+    mktExpertEl.innerHTML = top3.map(e => `
+      <div class="card" style="padding:14px; cursor:pointer;" onclick="showExpertDetail('${e.name.replace(/'/g, "\\'")}')">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <img src="${e.photo || 'https://i.pravatar.cc/80?u=' + encodeURIComponent(e.name)}" style="width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0;" />
+          <div style="min-width:0;">
+            <div style="font-size:12px; font-weight:700;">${e.name}</div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.identity}</div>
+          </div>
+        </div>
+        <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-bottom:6px;">${e.headline || e.field}</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+          ${(e.tags || []).slice(0,2).map(t => `<span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">${t}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+  // Section f: 活动
+  const mktActEl = document.getElementById('mkt-activities-list');
+  if (mktActEl && !mktActEl.innerHTML && typeof activitiesData !== 'undefined') {
+    const top5 = activitiesData.slice(0, 5);
+    mktActEl.innerHTML = top5.map(a => `
+      <div style="padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('research')">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">${a.type}</span>
+            <span style="font-size:12px; font-weight:600;">${a.title}</span>
+          </div>
+          <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono); flex-shrink:0; margin-left:8px;">${a.date.slice(5)}</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; padding-left:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${a.summary || ''}</div>
+        <div style="font-size:10px; color:var(--text-muted); padding-left:42px; margin-top:3px;">${a.org}</div>
+      </div>
+    `).join('');
+  }
+  const newsEl = document.getElementById('mkt-news-feed');
+  if (newsEl && !newsEl.innerHTML) {
+    renderMarketNewsRanking('mkt-news-feed', marketResearchNewsData, 'market-news');
   }
 }
 
@@ -5120,22 +5205,31 @@ function switchMarketHotTab(tab) {
   renderMarketTabContent(tab);
 }
 
-function renderMarketStockRanking(containerId, data, overlayType) {
+function renderMarketStockRanking(containerId, data, overlayType, compact) {
   const el = document.getElementById(containerId);
   if (!el || el.innerHTML) return;
   data.forEach((item, idx) => {
-    const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
-    el.innerHTML += `
-      <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('${overlayType}',${idx})">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+    if (compact) {
+      el.innerHTML += `
+        <div style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('${overlayType}',${idx})">
           <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
-          <span style="font-size:13px; font-weight:600;">${item.title}</span>
-          <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
-          <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
-        </div>
-        <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
-        <div style="padding-left:30px;">${tagsHtml}</div>
-      </div>`;
+          <span style="font-size:12px; font-weight:600; flex:1;">${item.title}</span>
+          <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:11px; font-weight:600;">${item.change}</span>
+        </div>`;
+    } else {
+      const tagsHtml = item.tags.map(t => `<span class="mono" style="font-size:10px; margin-right:10px;"><span style="color:var(--text-primary)">${t.name}</span> <span class="${t.up ? 'val-up' : 'val-down'}">${t.up ? '↑' : '↓'}</span></span>`).join('');
+      el.innerHTML += `
+        <div style="padding:12px 0; border-bottom:1px solid rgba(226,230,239,0.6); cursor:pointer;" onclick="openDetailOverlay('${overlayType}',${idx})">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span class="hotlist-rank ${item.rank <= 3 ? 'top3' : 'normal'}" style="font-size:11px;">${item.rank}</span>
+            <span style="font-size:13px; font-weight:600;">${item.title}</span>
+            <span class="mono ${item.up ? 'val-up' : 'val-down'}" style="font-size:12px;font-weight:600;">${item.change}</span>
+            <span style="margin-left:auto;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(255,170,0,0.08);color:var(--accent-gold);cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openAiGlobal();newAiSession('joke')">生成点评</span>
+          </div>
+          <div style="font-size:11px; color:var(--text-secondary); line-height:1.7; margin-bottom:8px; padding-left:30px;">${item.content}</div>
+          <div style="padding-left:30px;">${tagsHtml}</div>
+        </div>`;
+    }
   });
 }
 
@@ -5596,7 +5690,7 @@ const sceneConfig = {
   home: { title:'AI 投研助手', suggestions:['分析今日市场主线','生成自选股早报','AI板块最新动态'] },
   'ai-research': { title:'AI 投研助手', suggestions:['生成个股一页纸','帮我听会议','生成调研大纲'] },
   meetings: { title:'AI 会议助手', suggestions:['预约下一场专家访谈','对比本周会议观点','导出纪要摘要PDF'] },
-  monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','生成行业点评'] },
+  monitor: { title:'AI 监控助手', suggestions:['新建监控器','分析今日信源','管理监控器'] },
   minutes: { title:'AI 纪要助手', suggestions:['搜索最新纪要','总结本周会议要点','按行业筛选纪要'] },
   stock: { title:'AI 个股助手', suggestions:['加入自选股','产业链详细分析','同业估值对比'] },
   calendar: { title:'AI 日历助手', suggestions:['本周重要事件','添加跟踪事件','提醒我参会'] },
@@ -5955,35 +6049,17 @@ function renderMinutes(data) {
 
 let minutesFilterState = { type:'all', industry:'all', org:'all' };
 
-function filterMinutesByType(type, el) {
-  minutesFilterState.type = type;
-  document.querySelectorAll('#minutes-type-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyMinutesFilter();
-}
-function filterMinutesByIndustry(ind, el) {
-  minutesFilterState.industry = ind;
-  document.querySelectorAll('#minutes-industry-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyMinutesFilter();
-}
-function filterMinutesByOrg(org, el) {
-  minutesFilterState.org = org;
-  document.querySelectorAll('#minutes-org-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyMinutesFilter();
-}
-function filterMinutes() {
-  applyMinutesFilter();
-}
 function applyMinutesFilter() {
+  minutesFilterState.type = document.getElementById('minutes-type-select')?.value || 'all';
+  minutesFilterState.industry = document.getElementById('minutes-industry-select')?.value || 'all';
+  minutesFilterState.org = document.getElementById('minutes-org-select')?.value || 'all';
   const s = minutesFilterState;
-  const q = (document.getElementById('minutes-search-input')?.value||'').toLowerCase();
+  const q = (document.getElementById('minutes-search')?.value || '').trim().toLowerCase();
   let filtered = minutesData.filter(m => {
     if (s.type!=='all' && m.type!==s.type) return false;
     if (s.industry!=='all' && m.industry!==s.industry) return false;
     if (s.org!=='all' && m.org!==s.org) return false;
-    if (q && !m.title.toLowerCase().includes(q) && !m.summary.toLowerCase().includes(q)) return false;
+    if (q && !m.title.toLowerCase().includes(q) && !(m.summary||'').toLowerCase().includes(q) && !(m.stocks||[]).some(st=>st.toLowerCase().includes(q))) return false;
     return true;
   });
   renderMinutes(filtered);
@@ -5991,21 +6067,25 @@ function applyMinutesFilter() {
 
 // ========== CALENDAR PAGE DATA & LOGIC ==========
 const calendarEventsData = [
-  { date:'2026-05-20', title:'千里科技Q1业绩说明会', type:'earnings', time:'14:00', stock:'千里科技' },
-  { date:'2026-05-21', title:'中信AI产业链投资策略会', type:'strategy', time:'09:30', stock:'' },
-  { date:'2026-05-22', title:'国产GPU生态与AI推理芯片前瞻', type:'expert-call', time:'15:00', stock:'海光信息' },
-  { date:'2026-05-23', title:'阶跃星辰Step-3内测体验日', type:'launch', time:'10:00', stock:'' },
-  { date:'2026-05-25', title:'阶跃星辰新品发布会', type:'launch', time:'14:00', stock:'千里科技' },
-  { date:'2026-05-26', title:'宁德时代股东大会', type:'shareholder', time:'09:30', stock:'宁德时代' },
-  { date:'2026-05-27', title:'华泰TMT行业闭门会', type:'strategy', time:'14:00', stock:'' },
-  { date:'2026-05-28', title:'DeepSeek V4发布会', type:'launch', time:'10:00', stock:'' },
-  { date:'2026-05-29', title:'比亚迪智能驾驶开放日', type:'launch', time:'09:00', stock:'比亚迪' },
-  { date:'2026-05-30', title:'半导体设备国产化论坛', type:'conference', time:'09:00', stock:'北方华创' },
-  { date:'2026-06-02', title:'英伟达GTC China 2026', type:'conference', time:'09:00', stock:'' },
-  { date:'2026-06-03', title:'模芯联盟峰会', type:'conference', time:'09:00', stock:'' },
-  { date:'2026-06-05', title:'中信证券AI应用专家电话会', type:'expert-call', time:'16:00', stock:'' },
-  { date:'2026-06-10', title:'璟哥AI投资线下见面会', type:'roadshow', time:'14:00', stock:'' },
-  { date:'2026-06-12', title:'阶跃星辰B轮融资签约仪式', type:'launch', time:'10:00', stock:'' },
+  { date:'2026-05-20', title:'千里科技Q1业绩说明会', type:'earnings', time:'14:00', stock:'千里科技', location:'线上·腾讯会议', summary:'Q1营收同比+128%超预期，AI终端出货量环比翻倍' },
+  { date:'2026-05-21', title:'中信AI产业链投资策略会', type:'strategy', time:'09:30', stock:'', location:'上海·中信大厦', summary:'聚焦算力/应用/数据三条主线，发布AI产业链全景图' },
+  { date:'2026-05-22', title:'国产GPU生态与AI推理芯片前瞻', type:'expert-call', time:'15:00', stock:'海光信息', location:'线上·Zoom', summary:'DCU四代性能逼近H100 80%，推理场景性价比优势显著' },
+  { date:'2026-05-23', title:'阶跃星辰Step-3内测体验日', type:'launch', time:'10:00', stock:'', location:'北京·中关村', summary:'万亿参数模型首次开放内测，重点展示长文本推理能力' },
+  { date:'2026-05-24', title:'2026世界人工智能大会(WAIC)', type:'conference', time:'09:00', stock:'', location:'上海·世博展览馆', summary:'全球AI年度盛会，覆盖大模型/具身智能/AI安全三大主题' },
+  { date:'2026-05-24', title:'中国半导体产业峰会', type:'conference', time:'14:00', stock:'北方华创', location:'上海·浦东嘉里', summary:'聚焦先进制程设备国产替代进展，发布芯片自主可控白皮书' },
+  { date:'2026-05-25', title:'阶跃星辰新品发布会', type:'launch', time:'14:00', stock:'千里科技', location:'北京·国家会议中心', summary:'发布Step-3正式版+端侧蒸馏模型，千里科技首批适配' },
+  { date:'2026-05-26', title:'宁德时代股东大会', type:'shareholder', time:'09:30', stock:'宁德时代', location:'宁德·时代中心', summary:'讨论海外产能扩张计划及固态电池商业化时间表' },
+  { date:'2026-05-27', title:'华泰TMT行业闭门会', type:'strategy', time:'14:00', stock:'', location:'深圳·华泰办公室', summary:'年中策略核心观点分享，覆盖半导体/AI应用/消费电子' },
+  { date:'2026-05-28', title:'DeepSeek V4发布会', type:'launch', time:'10:00', stock:'', location:'杭州·未来科技城', summary:'开源MoE架构升级，推理效率提升2倍，API定价再降50%' },
+  { date:'2026-05-29', title:'比亚迪智能驾驶开放日', type:'launch', time:'09:00', stock:'比亚迪', location:'深圳·比亚迪全球总部', summary:'天神之眼2.0首秀，城市NOA覆盖100+城市' },
+  { date:'2026-05-30', title:'半导体设备国产化论坛', type:'conference', time:'09:00', stock:'北方华创', location:'上海·张江科学城', summary:'刻蚀/沉积/光刻三大环节国产化进展全盘点' },
+  { date:'2026-06-02', title:'英伟达GTC China 2026', type:'conference', time:'09:00', stock:'', location:'上海·世博展览馆', summary:'黄仁勋演讲，预计发布中国特供芯片新方案' },
+  { date:'2026-06-03', title:'模芯联盟峰会', type:'conference', time:'09:00', stock:'', location:'北京·国家会议中心', summary:'国产AI芯片生态联盟年度大会，发布兼容性白皮书' },
+  { date:'2026-06-05', title:'中信证券AI应用专家电话会', type:'expert-call', time:'16:00', stock:'', location:'线上·Teams', summary:'复盘上半年AI应用落地进展，筛选下半年投资主线' },
+  { date:'2026-06-08', title:'苹果WWDC 2026', type:'conference', time:'01:00', stock:'', location:'线上直播', summary:'Apple Intelligence 2.0发布，Siri全面接入大模型能力' },
+  { date:'2026-06-10', title:'璟哥AI投资线下见面会', type:'roadshow', time:'14:00', stock:'', location:'深圳·深业上城', summary:'AI产业链投资方法论分享，Q&A互动环节' },
+  { date:'2026-06-12', title:'阶跃星辰B轮融资签约仪式', type:'launch', time:'10:00', stock:'', location:'北京·中关村壹号', summary:'估值突破300亿，国资/互联网大厂联合领投' },
+  { date:'2026-06-15', title:'谷歌I/O Connect中国开发者大会', type:'conference', time:'10:00', stock:'', location:'上海·前滩太古里', summary:'Gemini 2.5 Pro中国合规版路线图披露，Android AI能力开放' },
 ];
 
 let calendarYear = 2026, calendarMonth = 5;
@@ -6028,7 +6108,7 @@ function renderCalendar() {
     const isToday = dateStr === '2026-05-20';
     html += `<div style="padding:8px; background:var(--bg-secondary); min-height:70px; cursor:pointer; ${isToday?'border:2px solid var(--accent-blue);':''}" onclick="showCalendarDay('${dateStr}')">
       <div style="font-size:12px; font-weight:${isToday?'700':'500'}; color:${isToday?'var(--accent-blue)':'var(--text-primary)'}; margin-bottom:4px;">${d}</div>
-      ${events.slice(0,2).map(e => `<div style="font-size:9px; padding:2px 4px; background:${getEventColor(e.type)}; color:white; border-radius:3px; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.title.substring(0,8)}</div>`).join('')}
+      ${events.slice(0,2).map(e => `<div style="font-size:9px; padding:2px 4px; border:1px solid ${getEventColor(e.type)}; color:${getEventColor(e.type)}; border-radius:3px; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.title.substring(0,8)}</div>`).join('')}
       ${events.length>2?`<div style="font-size:9px; color:var(--text-muted);">+${events.length-2}更多</div>`:''}
     </div>`;
   }
@@ -6051,13 +6131,17 @@ function showCalendarDay(dateStr) {
     return;
   }
   listEl.innerHTML = events.map(e => `
-    <div style="padding:10px; background:var(--bg-primary); border-radius:8px; border-left:3px solid ${getEventColor(e.type)};">
-      <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+    <div style="padding:12px; background:var(--bg-primary); border-radius:8px; border-left:3px solid ${getEventColor(e.type)};">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
         <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${e.time}</span>
         <span class="tag" style="font-size:9px; padding:1px 5px; background:${getEventColor(e.type)}20; color:${getEventColor(e.type)};">${{earnings:'业绩会',strategy:'策略会',launch:'发布会','expert-call':'专家电话会',shareholder:'股东大会',conference:'行业峰会',roadshow:'路演'}[e.type]||e.type}</span>
       </div>
-      <div style="font-size:12px; font-weight:600; margin-bottom:4px;">${e.title}</div>
-      ${e.stock?`<span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${e.stock}</span>`:''}
+      <div style="font-size:13px; font-weight:600; margin-bottom:6px;">${e.title}</div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; margin-bottom:8px;">${e.summary}</div>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        ${e.location?`<div style="display:flex; align-items:center; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">📍</span><span style="font-size:11px; color:var(--text-secondary);">${e.location}</span></div>`:''}
+        ${e.stock?`<div style="display:flex; align-items:center; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">📊</span><span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${e.stock}</span></div>`:''}
+      </div>
     </div>
   `).join('');
 }
@@ -6101,23 +6185,15 @@ function renderResearch(data) {
 
 let researchFilterState = { type:'all', industry:'all' };
 
-function filterResearchByType(type, el) {
-  researchFilterState.type = type;
-  document.querySelectorAll('#research-type-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyResearchFilter();
-}
-function filterResearchByIndustry(ind, el) {
-  researchFilterState.industry = ind;
-  document.querySelectorAll('#research-industry-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyResearchFilter();
-}
 function applyResearchFilter() {
+  researchFilterState.type = document.getElementById('research-type-select')?.value || 'all';
+  researchFilterState.industry = document.getElementById('research-industry-select')?.value || 'all';
   const s = researchFilterState;
+  const q = (document.getElementById('research-search')?.value || '').trim().toLowerCase();
   let filtered = researchData.filter(r => {
     if (s.type!=='all' && r.type!==s.type) return false;
     if (s.industry!=='all' && r.industry!==s.industry) return false;
+    if (q && !r.title.toLowerCase().includes(q) && !(r.summary||'').toLowerCase().includes(q) && !(r.stocks||[]).some(st=>st.toLowerCase().includes(q))) return false;
     return true;
   });
   renderResearch(filtered);
@@ -6145,42 +6221,28 @@ function renderReports(data) {
   list.innerHTML = data.map(r => `
     <div class="card" style="padding:14px; cursor:pointer;" onclick="showToast('打开研报：${r.title}')">
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-        <span style="font-size:11px; font-weight:600; color:var(--accent-blue);">${r.broker}</span>
         <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${r.date}</span>
         ${r.rating?`<span class="tag ${r.rating==='买入'?'tag-cyan':r.rating==='推荐'?'tag-blue':'tag-gold'}" style="font-size:9px; padding:1px 5px;">${r.rating}</span>`:''}
-        ${r.targetPrice?`<span style="font-size:10px; color:var(--red); font-weight:600;">目标价 ¥${r.targetPrice}</span>`:''}
+        ${r.stocks.length?r.stocks.map(s=>`<span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${s}</span>`).join(''):''}
+        <span style="font-size:11px; font-weight:600; color:var(--accent-blue);">${r.broker}</span>
       </div>
       <div style="font-size:13px; font-weight:600; margin-bottom:6px;">${r.title}</div>
       <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; margin-bottom:8px;">${r.summary}</div>
-      ${r.stocks.length?`<div style="display:flex; gap:4px;">${r.stocks.map(s=>`<span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${s}</span>`).join('')}</div>`:''}
     </div>
   `).join('');
 }
 
 let reportsFilterState = { source:'all', industry:'all' };
 
-function filterReportsBySource(src, el) {
-  reportsFilterState.source = src;
-  document.querySelectorAll('#reports-source-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyReportsFilter();
-}
-function filterReportsByIndustry(ind, el) {
-  reportsFilterState.industry = ind;
-  document.querySelectorAll('#reports-industry-filter .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  applyReportsFilter();
-}
-function filterReports() {
-  applyReportsFilter();
-}
 function applyReportsFilter() {
+  reportsFilterState.source = document.getElementById('reports-source-select')?.value || 'all';
+  reportsFilterState.industry = document.getElementById('reports-industry-select')?.value || 'all';
   const s = reportsFilterState;
-  const q = (document.getElementById('reports-search-input')?.value||'').toLowerCase();
+  const q = (document.getElementById('reports-search')?.value || '').trim().toLowerCase();
   let filtered = reportsData.filter(r => {
     if (s.source!=='all' && r.source!==s.source) return false;
     if (s.industry!=='all' && r.industry!==s.industry) return false;
-    if (q && !r.title.toLowerCase().includes(q) && !r.broker.toLowerCase().includes(q)) return false;
+    if (q && !r.title.toLowerCase().includes(q) && !(r.summary||'').toLowerCase().includes(q) && !(r.broker||'').toLowerCase().includes(q) && !(r.stocks||[]).some(st=>st.toLowerCase().includes(q))) return false;
     return true;
   });
   renderReports(filtered);
@@ -6230,66 +6292,248 @@ const homeNewsData = [
 ];
 
 const activitiesData = [
-  { date:'2026-05-25', title:'走进阶跃星辰：大模型商业化路径探讨', type:'实地调研', org:'财跃研究院', industry:'ai' },
-  { date:'2026-05-23', title:'千里科技深圳研发中心开放日', type:'实地调研', org:'华泰证券', industry:'ai' },
-  { date:'2026-05-22', title:'英伟达H20产业链投资策略会', type:'策略会', org:'中信证券', industry:'semiconductor' },
-  { date:'2026-05-20', title:'GLP-1减重药产业链深度路演', type:'路演', org:'国泰君安', industry:'medical' },
-  { date:'2026-05-18', title:'AI Agent产品形态与投资机会研讨', type:'策略会', org:'招商证券', industry:'ai' },
-  { date:'2026-05-16', title:'储能出海：东南亚市场机遇调研', type:'草根调研', org:'兴业证券', industry:'newenergy' },
-  { date:'2026-05-14', title:'半导体设备国产化进展跟踪会', type:'策略会', org:'申万宏源', industry:'semiconductor' },
-  { date:'2026-05-12', title:'白酒渠道草根调研系列（第三期）', type:'草根调研', org:'华创证券', industry:'consume' },
+  { date:'2026-05-25', title:'走进阶跃星辰：大模型商业化路径探讨', type:'实地调研', org:'财跃研究院', industry:'ai', summary:'参观训练集群+技术座谈，重点了解B端API商业化进展与C端产品路线图' },
+  { date:'2026-05-23', title:'千里科技深圳研发中心开放日', type:'实地调研', org:'华泰证券', industry:'ai', summary:'实地验证AI终端产品研发进度，自研NPU实测体验，产线参观' },
+  { date:'2026-05-22', title:'英伟达H20产业链投资策略会', type:'策略会', org:'中信证券', industry:'semiconductor', summary:'覆盖PCB/基板/光模块/服务器四条主线，发布产业链受益标的清单' },
+  { date:'2026-05-20', title:'GLP-1减重药产业链深度路演', type:'路演', org:'国泰君安', industry:'medical', summary:'全球GLP-1市场规模测算，国内仿制药/创新药竞争格局拆解' },
+  { date:'2026-05-18', title:'AI Agent产品形态与投资机会研讨', type:'策略会', org:'招商证券', industry:'ai', summary:'梳理Agent在金融/法律/医疗三大行业的落地案例与商业模式' },
+  { date:'2026-05-16', title:'储能出海：东南亚市场机遇调研', type:'草根调研', org:'兴业证券', industry:'newenergy', summary:'泰国/越南/印尼三国储能政策与市场需求实地摸底' },
+  { date:'2026-05-14', title:'半导体设备国产化进展跟踪会', type:'策略会', org:'申万宏源', industry:'semiconductor', summary:'刻蚀/CVD/清洗设备国产替代率更新，重点关注28nm以下突破' },
+  { date:'2026-05-12', title:'白酒渠道草根调研系列（第三期）', type:'草根调研', org:'华创证券', industry:'consume', summary:'华东地区白酒终端动销恢复情况，库存去化接近尾声' },
 ];
 
 const searchResultsData = [
-  { type:'stock', title:'千里科技', subtitle:'688XXX.SH · AI应用 · +7.32%', page:'stock' },
-  { type:'stock', title:'中科曙光', subtitle:'603019.SH · AI服务器 · +5.88%', page:'stock' },
-  { type:'meeting', title:'英伟达H20产业链深度', subtitle:'陈明远 · 华泰证券 · 05-18', page:'meetings' },
-  { type:'meeting', title:'AI大模型在投研领域的实践探索', subtitle:'李晓峰 · 华锐技术 · 05-19', page:'meetings' },
-  { type:'minutes', title:'阶跃星辰Step-3训练进展与端侧部署', subtitle:'专家纪要 · AI · 05-19', page:'minutes' },
-  { type:'minutes', title:'英伟达H20产业链机会梳理', subtitle:'专家纪要 · 半导体 · 05-18', page:'minutes' },
-  { type:'report', title:'千里科技深度：端侧大模型的最优载体', subtitle:'华泰证券 · 买入 · 目标价160', page:'reports' },
-  { type:'report', title:'算力产业月度跟踪', subtitle:'中信证券 · 买入 · 05-18', page:'reports' },
-  { type:'stock', title:'海光信息', subtitle:'688041.SH · 国产GPU · +2.86%', page:'stock' },
-  { type:'stock', title:'中际旭创', subtitle:'300308.SZ · 光模块 · -1.41%', page:'stock' },
-  { type:'meeting', title:'国产GPU三足鼎立', subtitle:'周磊 · 中金公司 · 05-20', page:'meetings' },
-  { type:'report', title:'AI Agent应用落地节奏跟踪', subtitle:'海通证券 · 增持', page:'reports' },
+  { type:'stock', title:'千里科技', subtitle:'688XXX.SH · AI应用 · +7.32%', page:'stock', summary:'AI终端龙头，自研NPU芯片+端侧大模型双轮驱动，Q1营收同比+45%', source:'华泰证券', date:'2026-05-20' },
+  { type:'stock', title:'中科曙光', subtitle:'603019.SH · AI服务器 · +5.88%', page:'stock', summary:'国产AI服务器领军，Q2订单环比增长60%，受益算力需求爆发', source:'中信证券', date:'2026-05-20' },
+  { type:'meeting', title:'英伟达H20产业链深度', subtitle:'陈明远 · 华泰证券 · 05-18', page:'meetings', summary:'深度拆解H20产业链投资机会，覆盖PCB/基板/光模块/服务器四条主线', source:'华泰证券', date:'2026-05-18' },
+  { type:'meeting', title:'AI大模型在投研领域的实践探索', subtitle:'李晓峰 · 华锐技术 · 05-19', page:'meetings', summary:'分享大模型在金融研究中的最新应用实践，展示AI投研产品路线图', source:'华锐技术', date:'2026-05-19' },
+  { type:'meeting', title:'国产GPU三足鼎立', subtitle:'周磊 · 中金公司 · 05-20', page:'meetings', summary:'对比海光/寒武纪/摩尔线程三大国产GPU路线，评估技术差距与追赶节奏', source:'中金公司', date:'2026-05-20' },
+  { type:'minutes', title:'阶跃星辰Step-3训练进展与端侧部署', subtitle:'专家纪要 · AI · 05-19', page:'minutes', summary:'Step-3模型在MMLU等基准测试上已接近GPT-4.5水平，端侧部署方案Q3启动', source:'财跃研究院', date:'2026-05-19' },
+  { type:'minutes', title:'英伟达H20产业链机会梳理', subtitle:'专家纪要 · 半导体 · 05-18', page:'minutes', summary:'H20首批交付确认，产业链上游PCB厂商排产饱满，预计下半年出货量环比翻倍', source:'中信证券', date:'2026-05-18' },
+  { type:'minutes', title:'千里科技Q1业绩电话会纪要', subtitle:'常规纪要 · AI应用 · 05-16', page:'minutes', summary:'管理层确认NPU芯片毛利率突破65%，下半年产能翻倍，阶跃星辰合作进入商业化阶段', source:'千里科技IR', date:'2026-05-16' },
+  { type:'calendar', title:'阶跃星辰新品发布会', subtitle:'发布会 · 05-25 · 14:00', page:'calendar', summary:'发布Step-3正式版+端侧蒸馏模型，千里科技首批适配', source:'阶跃星辰', date:'2026-05-25' },
+  { type:'calendar', title:'DeepSeek V4发布会', subtitle:'发布会 · 05-28 · 10:00', page:'calendar', summary:'开源MoE架构升级，推理效率提升2倍，API定价再降50%', source:'DeepSeek', date:'2026-05-28' },
+  { type:'calendar', title:'英伟达GTC China 2026', subtitle:'行业峰会 · 06-02 · 09:00', page:'calendar', summary:'黄仁勋演讲，预计发布中国特供芯片新方案', source:'英伟达', date:'2026-06-02' },
+  { type:'research', title:'走进阶跃星辰（AI调研第一期）', subtitle:'实地调研 · AI · 05-15', page:'research', summary:'实地走访阶跃星辰北京总部，了解Step-3训练集群规模及商业化路径', source:'财跃研究院', date:'2026-05-15' },
+  { type:'research', title:'千里科技深圳研发中心走访', subtitle:'实地调研 · AI应用 · 05-12', page:'research', summary:'参观NPU芯片实验室，确认下一代芯片流片顺利，端侧大模型Demo表现超预期', source:'内部调研', date:'2026-05-12' },
+  { type:'research', title:'海光信息DCU四代进展电话会', subtitle:'专家电话会 · 半导体 · 05-10', page:'research', summary:'DCU四代性能接近H100 80%，自研CUDA兼容层取得突破', source:'中金公司', date:'2026-05-10' },
+  { type:'report', title:'千里科技深度：端侧大模型的最优载体', subtitle:'华泰证券 · 买入', page:'reports', summary:'端侧AI需求爆发，千里科技凭借自研NPU+软件生态构建核心壁垒', source:'华泰证券', date:'2026-05-19' },
+  { type:'report', title:'算力产业月度跟踪', subtitle:'中信证券 · 买入 · 05-18', page:'reports', summary:'国内AI算力需求持续高景气，GPU/ASIC/光模块三大赛道均量价齐升', source:'中信证券', date:'2026-05-18' },
+  { type:'report', title:'AI Agent应用落地节奏跟踪', subtitle:'海通证券 · 增持', page:'reports', summary:'Agent在金融/法律/客服三大场景率先落地，2026年市场规模预计达120亿', source:'海通证券', date:'2026-05-17' },
+  { type:'stock', title:'海光信息', subtitle:'688041.SH · 国产GPU · +2.86%', page:'stock', summary:'国产GPU三强之一，DCU四代流片顺利，客户验证进展超预期', source:'中金公司', date:'2026-05-20' },
+  { type:'stock', title:'中际旭创', subtitle:'300308.SZ · 光模块 · -1.41%', page:'stock', summary:'全球光模块龙头，800G产品量产交付，受益于北美AI算力扩建', source:'天风证券', date:'2026-05-20' },
 ];
+
+const searchStocksData = [
+  { name:'千里科技', code:'688XXX.SH', industry:'AI应用' },
+  { name:'中科曙光', code:'603019.SH', industry:'AI服务器' },
+  { name:'海光信息', code:'688041.SH', industry:'国产GPU' },
+  { name:'中际旭创', code:'300308.SZ', industry:'光模块' },
+  { name:'阶跃星辰', code:'未上市', industry:'大模型' },
+  { name:'宁德时代', code:'300750.SZ', industry:'新能源' },
+  { name:'比亚迪', code:'002594.SZ', industry:'新能源汽车' },
+  { name:'寒武纪', code:'688256.SH', industry:'AI芯片' },
+];
+
+const searchModulesData = [
+  { name:'专家会议', page:'meetings', desc:'AI专家会议直播与回放' },
+  { name:'纪要', page:'minutes', desc:'专家纪要与常规纪要库' },
+  { name:'投资日历', page:'calendar', desc:'投资事件与日程安排' },
+  { name:'研报', page:'reports', desc:'券商研报与行业报告' },
+  { name:'调研', page:'research', desc:'实地调研与产业链验证' },
+  { name:'信源监控器', page:'monitor', desc:'实时信源监控与预警' },
+  { name:'AI投研', page:'', desc:'AI辅助投研工具集', action: 'openAiGlobal()' },
+];
+
+const searchAiSummaryTemplates = {
+  'ai': '当前AI产业正处于大模型商业化加速期。阶跃星辰Step-3即将开放API，千里科技作为端侧AI龙头首批接入；英伟达H20已获批出口，产业链上游PCB/光模块厂商排产饱满。国产GPU方面，海光DCU四代流片顺利，中芯国际28nm扩产推进。建议重点关注：算力基础设施（中科曙光、中际旭创）、AI应用（千里科技）、国产替代（海光信息、寒武纪）三条投资主线。',
+  '千里科技': '千里科技（688XXX.SH）是A股AI终端龙头标的。Q1营收同比增长45%，主要驱动力来自自研NPU芯片出货放量和端侧大模型软件授权收入。华泰证券最新深度报告给予"买入"评级。近期阶跃星辰Step-3将首批接入千里科技终端设备，有望催化新一轮行情。关联专家会议2场、研报3篇、纪要1篇。',
+  '英伟达': '英伟达H20芯片合规出口取得重大进展，中国区负责人已抵京与工信部沟通。产业链方面，PCB/基板/光模块/服务器四条主线均将受益。华泰证券陈明远团队近期举办产业链深度专家会议，详细拆解了投资机会。中科曙光Q2 AI服务器订单环比增长60%，是H20产业链核心受益标的。',
+  'default': '根据平台数据分析，该关键词涉及多个投研维度的信息。综合当前市场环境、专家观点和研究报告来看，相关板块近期关注度较高。建议参考下方具体搜索结果，结合专家会议纪要和券商研报进行深入研究。'
+};
 
 function handleHomeSearch(e) {
   const val = document.getElementById('home-search-input').value.trim().toLowerCase();
   const container = document.getElementById('home-search-results');
+  if (e.key === 'Enter' && val) { openSearchResultPage(); return; }
   if (!val) { container.style.display = 'none'; return; }
   container.style.display = 'block';
-  const results = searchResultsData.filter(r => r.title.toLowerCase().includes(val) || r.subtitle.toLowerCase().includes(val));
+
+  const matchedStocks = searchStocksData.filter(s => s.name.toLowerCase().includes(val) || s.code.toLowerCase().includes(val));
+  const matchedModules = searchModulesData.filter(m => m.name.toLowerCase().includes(val) || m.desc.toLowerCase().includes(val));
+
+  let html = '';
+  if (matchedStocks.length > 0) {
+    html += `<div style="padding:8px 16px; font-size:10px; color:var(--text-muted); font-weight:600; border-bottom:1px solid var(--border);">个股</div>`;
+    html += matchedStocks.slice(0, 4).map(s => `
+      <div style="padding:10px 16px; cursor:pointer; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;" onclick="document.getElementById('home-search-results').style.display='none';document.getElementById('home-search-input').value='';navigateTo('stock')" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
+        <span style="font-size:14px;">📈</span>
+        <div style="flex:1;">
+          <div style="font-size:12px; font-weight:600;">${s.name}</div>
+          <div style="font-size:10px; color:var(--text-muted);">${s.code} · ${s.industry}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  if (matchedModules.length > 0) {
+    html += `<div style="padding:8px 16px; font-size:10px; color:var(--text-muted); font-weight:600; border-bottom:1px solid var(--border);">功能模块</div>`;
+    html += matchedModules.slice(0, 3).map(m => `
+      <div style="padding:10px 16px; cursor:pointer; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;" onclick="document.getElementById('home-search-results').style.display='none';document.getElementById('home-search-input').value='';navigateTo('${m.page}')" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
+        <span style="font-size:14px;">📂</span>
+        <div style="flex:1;">
+          <div style="font-size:12px; font-weight:600;">${m.name}</div>
+          <div style="font-size:10px; color:var(--text-muted);">${m.desc}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  if (!html) {
+    html = '<div style="padding:16px; text-align:center; color:var(--text-muted); font-size:12px;">未找到匹配结果，按回车搜索更多</div>';
+  }
+  container.innerHTML = html;
+}
+
+let searchActiveTab = 'all';
+function openSearchResultPage() {
+  const val = document.getElementById('home-search-input').value.trim().toLowerCase();
+  if (!val) return;
+  document.getElementById('home-search-results').style.display = 'none';
+  const page = document.getElementById('home-search-page');
+  page.style.display = 'block';
+  const keyword = document.getElementById('home-search-input').value.trim();
+  document.getElementById('search-result-keyword').textContent = '搜索: ' + keyword;
+  let results = searchResultsData.filter(r => r.title.toLowerCase().includes(val) || r.subtitle.toLowerCase().includes(val) || (r.summary && r.summary.toLowerCase().includes(val)));
+  if (results.length === 0) results = [...searchResultsData];
+  document.getElementById('search-result-count').textContent = '共 ' + results.length + ' 条结果';
+
+  // AI Summary
+  const summaryEl = document.getElementById('search-ai-summary');
+  let summaryText = searchAiSummaryTemplates['default'];
+  for (const key of Object.keys(searchAiSummaryTemplates)) {
+    if (key !== 'default' && val.includes(key.toLowerCase())) { summaryText = searchAiSummaryTemplates[key]; break; }
+  }
+  summaryEl.innerHTML = `
+    <div style="background:linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(139,92,246,0.08) 100%); border:1px solid rgba(59,130,246,0.2); border-radius:12px; padding:20px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <div style="width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:13px; color:#fff;">✦</span>
+        </div>
+        <span style="font-size:14px; font-weight:700;">智能总结</span>
+        <span style="font-size:10px; color:var(--accent-blue); margin-left:auto;">AI 生成</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">${summaryText}</div>
+    </div>
+  `;
+
+  // Tabs
+  const types = ['all','stock','meeting','minutes','calendar','research','report'];
+  const typeLabels = { all:'综合', stock:'个股', meeting:'专家会议', minutes:'纪要', calendar:'投资日历', research:'调研', report:'研报' };
+  const counts = { all: results.length, stock: results.filter(r=>r.type==='stock').length, meeting: results.filter(r=>r.type==='meeting').length, minutes: results.filter(r=>r.type==='minutes').length, calendar: results.filter(r=>r.type==='calendar').length, research: results.filter(r=>r.type==='research').length, report: results.filter(r=>r.type==='report').length };
+  searchActiveTab = 'all';
+  document.getElementById('search-result-tabs').innerHTML = types.filter(t => t==='all' || counts[t] > 0).map(t => `
+    <div class="home-vtab ${t==='all'?'active':''}" onclick="filterSearchResults('${t}')" style="padding:8px 16px; font-size:12px; font-weight:${t==='all'?'600':'500'}; cursor:pointer; border-bottom:2px solid ${t==='all'?'var(--accent-blue)':'transparent'}; color:${t==='all'?'var(--accent-blue)':'var(--text-muted)'};">${typeLabels[t]} (${counts[t]})</div>
+  `).join('');
+  renderSearchResults(results);
+}
+
+function filterSearchResults(tab) {
+  searchActiveTab = tab;
+  const val = document.getElementById('home-search-input').value.trim().toLowerCase();
+  let results = searchResultsData.filter(r => r.title.toLowerCase().includes(val) || r.subtitle.toLowerCase().includes(val) || (r.summary && r.summary.toLowerCase().includes(val)));
+  if (results.length === 0) results = [...searchResultsData];
+  if (tab !== 'all') results = results.filter(r => r.type === tab);
+  const types = ['all','stock','meeting','minutes','calendar','research','report'];
+  const typeLabels = { all:'综合', stock:'个股', meeting:'专家会议', minutes:'纪要', calendar:'投资日历', research:'调研', report:'研报' };
+  let allResults = searchResultsData.filter(r => r.title.toLowerCase().includes(val) || r.subtitle.toLowerCase().includes(val) || (r.summary && r.summary.toLowerCase().includes(val)));
+  if (allResults.length === 0) allResults = [...searchResultsData];
+  const counts = { all: allResults.length, stock: allResults.filter(r=>r.type==='stock').length, meeting: allResults.filter(r=>r.type==='meeting').length, minutes: allResults.filter(r=>r.type==='minutes').length, calendar: allResults.filter(r=>r.type==='calendar').length, research: allResults.filter(r=>r.type==='research').length, report: allResults.filter(r=>r.type==='report').length };
+  document.getElementById('search-result-tabs').innerHTML = types.filter(t => t==='all' || counts[t] > 0).map(t => `
+    <div class="home-vtab ${t===tab?'active':''}" onclick="filterSearchResults('${t}')" style="padding:8px 16px; font-size:12px; font-weight:${t===tab?'600':'500'}; cursor:pointer; border-bottom:2px solid ${t===tab?'var(--accent-blue)':'transparent'}; color:${t===tab?'var(--accent-blue)':'var(--text-muted)'};">${typeLabels[t]} (${counts[t]})</div>
+  `).join('');
+  renderSearchResults(results);
+}
+
+function renderSearchResults(results) {
+  const typeLabels = { stock:'个股', meeting:'专家会议', minutes:'纪要', calendar:'投资日历', research:'调研', report:'研报' };
+  const typeColors = { stock:'tag-cyan', meeting:'tag-blue', minutes:'tag-gold', calendar:'tag-green', research:'tag-cyan', report:'tag-blue' };
+  const container = document.getElementById('search-result-list');
   if (results.length === 0) {
-    container.innerHTML = '<div style="padding:16px; text-align:center; color:var(--text-muted); font-size:12px;">未找到相关结果</div>';
+    container.innerHTML = '<div style="padding:40px; text-align:center; color:var(--text-muted);"><div style="font-size:32px; margin-bottom:12px;">🔍</div><div style="font-size:13px;">未找到相关结果，换个关键词试试</div></div>';
     return;
   }
-  const typeLabels = { stock:'个股', meeting:'会议', minutes:'纪要', report:'研报' };
-  const typeColors = { stock:'tag-cyan', meeting:'tag-blue', minutes:'tag-gold', report:'tag-blue' };
   container.innerHTML = results.map(r => `
-    <div style="padding:10px 16px; cursor:pointer; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;" onclick="document.getElementById('home-search-results').style.display='none';document.getElementById('home-search-input').value='';navigateTo('${r.page}');" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
-      <span class="tag ${typeColors[r.type]}" style="font-size:9px; padding:2px 6px;">${typeLabels[r.type]}</span>
-      <div>
-        <div style="font-size:12px; font-weight:600;">${r.title}</div>
-        <div style="font-size:10px; color:var(--text-muted);">${r.subtitle}</div>
+    <div style="padding:16px; border:1px solid var(--border); border-radius:10px; margin-bottom:10px; cursor:pointer; transition:all .15s;" onclick="closeSearchResultPage();navigateTo('${r.page}')" onmouseover="this.style.borderColor='var(--accent-blue)';this.style.background='var(--bg-secondary)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='transparent'">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-size:13px; font-weight:700; color:var(--accent-blue);">${r.title}</span>
+        <span class="tag ${typeColors[r.type]}" style="font-size:9px; padding:1px 6px;">${typeLabels[r.type]}</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.6; margin-bottom:8px;">${r.summary || r.subtitle}</div>
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:10px; color:var(--text-muted);">${r.source || ''} ${r.date ? ' · ' + r.date : ''}</span>
+        <span style="font-size:10px; color:var(--accent-blue); font-weight:600;">查看详情 →</span>
       </div>
     </div>
   `).join('');
 }
 
+function closeSearchResultPage() {
+  document.getElementById('home-search-page').style.display = 'none';
+}
+
+function shareMeeting(index) {
+  const aiMeetings = meetingCardsData.filter(m => m.group === 'ai');
+  const m = aiMeetings[index] || meetingCardsData[0];
+  const overlay = document.getElementById('share-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  document.getElementById('share-card-content').innerHTML = `
+    <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:14px; padding:24px; color:var(--text-primary); width:100%;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+        <div style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); display:flex; align-items:center; justify-content:center; font-size:14px; color:#fff;">🎙</div>
+        <span style="font-size:11px; font-weight:600; color:var(--text-muted);">AI投研工作台 · 专家会议</span>
+      </div>
+      <div style="font-size:15px; font-weight:700; line-height:1.5; margin-bottom:12px;">${m.title}</div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">👤 ${m.expert}</div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">🕐 ${m.date}</div>
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span class="tag ${m.tagClass}" style="font-size:9px; padding:2px 6px;">${m.tag}</span>
+        <span style="font-size:10px; color:var(--text-muted);">${m.attendees} 人已报名</span>
+      </div>
+      <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:9px; color:var(--text-muted);">扫码或长按识别进入会议</span>
+        <div style="width:44px; height:44px; background:var(--bg-primary); border:1px solid var(--border); border-radius:6px; display:flex; align-items:center; justify-content:center;">
+          <div style="width:36px; height:36px; background:repeating-conic-gradient(var(--text-muted) 0% 25%, transparent 0% 50%) 0 0 / 6px 6px; border-radius:2px; opacity:0.4;"></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeShareOverlay() {
+  document.getElementById('share-overlay').style.display = 'none';
+}
+
+function shareAction(type) {
+  const actions = { link: '链接已复制到剪贴板', poster: '生成分享图片...' };
+  showToast(actions[type] || '操作成功');
+  if (type === 'link') setTimeout(() => closeShareOverlay(), 600);
+}
+
 function renderHomeModules() {
-  // Section a: AI专家会议 (3 cards)
+  // Section a: AI专家会议 (3 cards with share)
   const meetEl = document.getElementById('home-expert-meetings');
   if (meetEl) {
     const top3 = meetingCardsData.filter(m => m.group === 'ai').slice(0, 3);
-    meetEl.innerHTML = top3.map(m => `
-      <div class="card" style="padding:12px; cursor:pointer;" onclick="navigateTo('meetings')">
+    meetEl.innerHTML = top3.map((m, i) => `
+      <div class="card" style="padding:12px; cursor:pointer; position:relative;" onclick="navigateTo('meetings')">
         <div style="font-size:12px; font-weight:600; margin-bottom:6px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${m.title}</div>
         <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">${m.expert.split('·')[0].trim()}</div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span class="tag ${m.tagClass}" style="font-size:9px; padding:1px 5px;">${m.tag}</span>
-          <span class="status-badge ${m.statusClass === 'live' ? 'status-live' : m.statusClass === 'ended' ? 'status-done' : 'status-pending'}" style="font-size:9px;">${m.status}</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="status-badge ${m.statusClass === 'live' ? 'status-live' : m.statusClass === 'ended' ? 'status-done' : 'status-pending'}" style="font-size:9px;">${m.status}</span>
+            <span onclick="event.stopPropagation();shareMeeting(${i})" style="font-size:11px; cursor:pointer; color:var(--accent-blue); transition:opacity .15s; font-weight:600; display:flex; align-items:center; gap:2px;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" title="分享"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>分享</span>
+          </div>
         </div>
       </div>
     `).join('');
@@ -6300,75 +6544,101 @@ function renderHomeModules() {
   if (expertEl && typeof expertData !== 'undefined') {
     const top3 = expertData.slice(0, 3);
     expertEl.innerHTML = top3.map(e => `
-      <div class="card" style="padding:12px; text-align:center; cursor:pointer;" onclick="navigateTo('meetings')">
-        <img src="${e.photo || 'https://i.pravatar.cc/80?u=' + encodeURIComponent(e.name)}" style="width:48px; height:48px; border-radius:50%; object-fit:cover; margin-bottom:8px;" />
-        <div style="font-size:12px; font-weight:600;">${e.name}</div>
-        <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${e.title}</div>
-        <div style="font-size:10px; color:var(--accent-blue); margin-top:4px;">${e.focus}</div>
+      <div class="card" style="padding:14px; cursor:pointer;" onclick="showExpertDetail('${e.name.replace(/'/g, "\\'")}')">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <img src="${e.photo || 'https://i.pravatar.cc/80?u=' + encodeURIComponent(e.name)}" style="width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0;" />
+          <div style="min-width:0;">
+            <div style="font-size:12px; font-weight:700;">${e.name}</div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.identity}</div>
+          </div>
+        </div>
+        <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; margin-bottom:6px;">${e.headline || e.field}</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+          ${(e.tags || []).slice(0,2).map(t => `<span class="tag tag-cyan" style="font-size:9px; padding:1px 5px;">${t}</span>`).join('')}
+        </div>
       </div>
     `).join('');
   }
 
-  // Section c: 纪要库 (5 items)
+  // Section c: AI纪要库 (5 items with summary)
   const minEl = document.getElementById('home-minutes-list');
   if (minEl) {
     const top5 = minutesData.slice(0, 5);
     minEl.innerHTML = top5.map(n => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="navigateTo('minutes')">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="tag ${n.type === 'expert' ? 'tag-cyan' : 'tag-blue'}" style="font-size:9px; padding:1px 5px;">${n.type === 'expert' ? '专家' : '常规'}</span>
-          <span style="font-size:12px; font-weight:500;">${n.title}</span>
+      <div style="padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('minutes')">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="tag ${n.type === 'expert' ? 'tag-cyan' : 'tag-blue'}" style="font-size:9px; padding:1px 5px;">${n.type === 'expert' ? '专家' : '常规'}</span>
+            <span style="font-size:12px; font-weight:600;">${n.title}</span>
+          </div>
+          <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono); flex-shrink:0; margin-left:8px;">${n.date.slice(5)}</span>
         </div>
-        <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${n.date.slice(5)}</span>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; padding-left:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${n.summary}</div>
+        ${n.expert ? `<div style="font-size:10px; color:var(--text-muted); padding-left:42px; margin-top:3px;">专家：${n.expert}</div>` : ''}
       </div>
     `).join('');
   }
 
-  // Section d: AI研究报告 (4 items)
+  // Section d: AI研究报告 (4 items with summary)
   const repEl = document.getElementById('home-reports-list');
   if (repEl) {
     const top4 = reportsData.slice(0, 4);
     repEl.innerHTML = top4.map(r => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('reports')">
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-          <span style="font-size:11px; font-weight:500; color:var(--text-muted);">${r.broker}</span>
-          <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${r.rating}</span>
-          ${r.targetPrice ? `<span style="font-size:10px; color:var(--green); font-family:var(--font-mono);">¥${r.targetPrice}</span>` : ''}
+      <div style="padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('reports')">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="tag tag-gold" style="font-size:9px; padding:1px 5px;">${r.rating}</span>
+            ${r.stocks && r.stocks.length ? r.stocks.map(s => `<span style="font-size:9px; color:var(--accent-blue); background:rgba(59,130,246,0.1); padding:1px 6px; border-radius:3px;">${s}</span>`).join('') : ''}
+            <span style="font-size:11px; color:var(--text-secondary); font-weight:500;">${r.broker}</span>
+            <span style="font-size:12px; font-weight:600;">${r.title}</span>
+          </div>
+          <span style="font-size:10px; color:var(--text-muted); flex-shrink:0; margin-left:8px;">${r.date ? r.date.slice(5) : ''}</span>
         </div>
-        <div style="font-size:12px; font-weight:600;">${r.title}</div>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; padding-left:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${r.summary}</div>
       </div>
     `).join('');
   }
 
-  // Section e: AI投资日历 (upcoming 5 events)
+  // Section e: AI投资日历 (upcoming events, grid layout)
   const calEl = document.getElementById('home-calendar-events');
   if (calEl) {
-    const upcoming = calendarEventsData.filter(e => e.date >= '2026-05-20').slice(0, 5);
-    calEl.innerHTML = upcoming.map(e => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; cursor:pointer;" onclick="navigateTo('calendar')">
-        <div style="min-width:44px; text-align:center; padding:6px; background:var(--bg-secondary); border-radius:6px;">
-          <div style="font-size:14px; font-weight:700; color:var(--accent-blue); font-family:var(--font-mono);">${parseInt(e.date.split('-')[2])}</div>
-          <div style="font-size:9px; color:var(--text-muted);">${parseInt(e.date.split('-')[1])}月</div>
+    const typeLabelsC = { earnings:'业绩', strategy:'策略会', 'expert-call':'专家电话会', launch:'发布会', shareholder:'股东大会', conference:'行业峰会', roadshow:'路演' };
+    const typeColorsC = { earnings:'tag-gold', strategy:'tag-blue', 'expert-call':'tag-cyan', launch:'tag-green', shareholder:'tag-gold', conference:'tag-blue', roadshow:'tag-cyan' };
+    const upcoming = calendarEventsData.filter(e => e.date >= '2026-05-20').slice(0, 3);
+    calEl.innerHTML = `<div style="display:flex; align-items:stretch; gap:0;">` + upcoming.map((e, idx) => `
+      <div style="flex:1; display:flex; align-items:stretch;">
+        <div style="flex:1; padding:16px; border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:border-color .15s;" onclick="navigateTo('calendar')" onmouseover="this.style.borderColor='var(--accent-blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <div style="min-width:40px; text-align:center; padding:6px; background:var(--bg-secondary); border-radius:8px;">
+              <div style="font-size:16px; font-weight:700; color:var(--accent-blue); font-family:var(--font-mono);">${parseInt(e.date.split('-')[2])}</div>
+              <div style="font-size:9px; color:var(--text-muted);">${parseInt(e.date.split('-')[1])}月</div>
+            </div>
+            <span class="tag ${typeColorsC[e.type] || 'tag-blue'}" style="font-size:9px; padding:1px 5px;">${typeLabelsC[e.type] || e.type}</span>
+          </div>
+          <div style="font-size:12px; font-weight:600; line-height:1.5; margin-bottom:6px;">${e.title}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">${e.time}${e.stock ? ' · ' + e.stock : ''}</div>
+          <div style="font-size:10px; color:var(--text-secondary); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${e.summary || '关注行业动态与投资机会'}</div>
         </div>
-        <div>
-          <div style="font-size:12px; font-weight:600;">${e.title}</div>
-          <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${e.type} · ${e.org || ''}</div>
-        </div>
+        ${idx < upcoming.length - 1 ? '<div style="display:flex; align-items:center; padding:0 6px;"><div style="width:24px; height:1px; border-top:1px dashed var(--border);"></div></div>' : ''}
       </div>
-    `).join('');
+    `).join('') + '</div>';
   }
 
-  // Section f: AI活动 (5 items)
+  // Section f: AI活动 (5 items with summary)
   const actEl = document.getElementById('home-activities-list');
   if (actEl) {
     const top5 = activitiesData.slice(0, 5);
     actEl.innerHTML = top5.map(a => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="navigateTo('research')">
-        <div>
-          <div style="font-size:12px; font-weight:600;">${a.title}</div>
-          <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${a.org} · ${a.date}</div>
+      <div style="padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer;" onclick="navigateTo('research')">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="tag tag-blue" style="font-size:9px; padding:1px 5px;">${a.type}</span>
+            <span style="font-size:12px; font-weight:600;">${a.title}</span>
+          </div>
+          <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono); flex-shrink:0; margin-left:8px;">${a.date.slice(5)}</span>
         </div>
-        <span class="tag tag-blue" style="font-size:9px;">${a.type}</span>
+        <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; padding-left:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${a.summary || ''}</div>
+        <div style="font-size:10px; color:var(--text-muted); padding-left:42px; margin-top:3px;">${a.org}</div>
       </div>
     `).join('');
   }
@@ -6406,10 +6676,13 @@ function renderHomeModules() {
   // Module d: AI资讯热点
   const newsEl = document.getElementById('home-news-feed');
   if (newsEl) {
-    newsEl.innerHTML = homeNewsData.map(n => `
-      <div style="padding:8px 0; border-bottom:1px solid var(--border);">
-        <div style="font-size:12px; font-weight:500; line-height:1.5; margin-bottom:3px;">${n.title}</div>
-        <div style="font-size:10px; color:var(--text-muted);">${n.source} · ${n.time}</div>
+    newsEl.innerHTML = homeNewsData.map((n, idx) => `
+      <div style="padding:8px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;">
+        <span style="font-size:11px; font-weight:700; color:${idx < 3 ? 'var(--accent-blue)' : 'var(--text-muted)'}; min-width:16px; text-align:center; margin-top:2px;">${idx + 1}</span>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:12px; font-weight:500; line-height:1.5; margin-bottom:3px;">${n.title}</div>
+          <div style="font-size:10px; color:var(--text-muted);">${n.source} · ${n.time}</div>
+        </div>
       </div>
     `).join('');
   }
