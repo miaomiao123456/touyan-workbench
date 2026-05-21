@@ -340,10 +340,10 @@ body {
 }
 .ai-global-overlay.show {
   display: grid;
-  grid-template-columns: 220px 1fr 360px;
+  grid-template-columns: 200px 1fr;
 }
 .ai-global-overlay.show.no-product {
-  grid-template-columns: 220px 1fr 280px;
+  grid-template-columns: 200px 1fr;
 }
 .ai-global-left {
   background: var(--bg-card);
@@ -520,6 +520,48 @@ body {
 .ai-global-right-footer-actions { display:flex; gap:8px; margin-top:8px; }
 .ai-global-right-footer-btn { font-size:11px; padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--bg-card); cursor:pointer; color:var(--text-secondary); }
 .ai-global-right-footer-btn:hover { border-color:var(--accent-blue); color:var(--accent-blue); }
+
+/* AI Library panel (成果库) */
+.ai-library-header { display:flex; align-items:center; justify-content:space-between; padding:16px 32px; border-bottom:1px solid var(--border); background:var(--bg-card); }
+.ai-library-title { font-size:16px; font-weight:700; color:var(--text-primary); }
+.ai-library-body { flex:1; overflow-y:auto; padding:24px 32px; }
+
+/* AI Floating Layer (浮层) */
+.ai-floating-layer { position:absolute; top:0; left:0; right:0; bottom:0; background:var(--bg-secondary); z-index:10; display:flex; flex-direction:column; animation:fadeIn 0.15s; }
+.ai-floating-header { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; border-bottom:1px solid var(--border); background:var(--bg-card); }
+.ai-floating-back { font-size:13px; color:var(--accent-blue); cursor:pointer; font-weight:500; }
+.ai-floating-back:hover { text-decoration:underline; }
+.ai-floating-body { flex:1; overflow-y:auto; padding:0; display:flex; flex-direction:column; }
+
+/* AI Library card items */
+.ai-lib-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-bottom:12px; cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s; }
+.ai-lib-card:hover { border-color:var(--accent-blue); box-shadow:0 2px 12px rgba(45,127,249,0.08); }
+.ai-lib-card-title { font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:6px; }
+.ai-lib-card-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; align-items:center; }
+.ai-lib-card-summary { font-size:12px; color:var(--text-secondary); line-height:1.6; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.ai-lib-card-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+
+/* AI Library status badges */
+.ai-lib-status { font-size:10px; padding:2px 8px; border-radius:4px; font-weight:500; }
+.ai-lib-status-pending { background:rgba(255,170,0,0.1); color:var(--accent-gold); }
+.ai-lib-status-running { background:rgba(45,127,249,0.1); color:var(--accent-blue); }
+.ai-lib-status-done { background:rgba(0,184,148,0.1); color:var(--accent-cyan); }
+
+/* AI Gallery grid */
+.ai-gallery-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:16px; }
+.ai-gallery-item { border-radius:10px; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; }
+.ai-gallery-item:hover { transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,0.1); }
+.ai-gallery-item img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+.ai-gallery-item-caption { padding:10px 12px; font-size:11px; color:var(--text-secondary); background:var(--bg-card); }
+
+/* AI Floating chat (for creation flows) */
+.ai-float-chat { flex:1; display:flex; flex-direction:column; max-width:800px; margin:0 auto; width:100%; }
+.ai-float-chat-body { flex:1; overflow-y:auto; padding:32px; display:flex; flex-direction:column; gap:16px; }
+.ai-float-chat-footer { border-top:1px solid var(--border); padding:16px 32px; background:var(--bg-card); }
+.ai-float-chat-input-row { display:flex; gap:10px; }
+.ai-float-chat-input-row input { flex:1; border:1px solid var(--border); border-radius:10px; padding:12px 18px; font-size:13px; outline:none; background:var(--bg-secondary); }
+.ai-float-chat-input-row input:focus { border-color:var(--accent-blue); }
+.ai-float-chat-input-row button { background:var(--accent-blue); color:#fff; border:none; border-radius:10px; padding:12px 24px; font-size:13px; cursor:pointer; }
 
 /* Float group (浮球态) */
 .ai-float-group {
@@ -2024,10 +2066,9 @@ body {
     <span class="nav-icon">◉</span>
     <span>首页</span>
   </div>
-  <div class="nav-item" onclick="openAiGlobal()">
+  <div class="nav-item" onclick="openAiGlobal()" style="cursor:pointer;">
     <span class="nav-icon">✦</span>
     <span>AI投研</span>
-    <span class="nav-ai-label">Cowork</span>
   </div>
   <div class="nav-item" data-page="meetings">
     <span class="nav-icon">◎</span>
@@ -2361,6 +2402,84 @@ body {
     </div><!-- end home-market-view -->
   </div>
 
+  <!-- ==================== AI RESEARCH PAGE ==================== -->
+  <div class="page" id="page-ai-research">
+    <div style="padding:24px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <h2 style="font-size:20px; font-weight:700;">AI投研</h2>
+        <button class="btn btn-primary btn-sm" onclick="openAiGlobal()" style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:14px;">✦</span> 进入 Cowork
+        </button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:16px; margin-bottom:32px;">
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('meeting-assistant')">
+          <div style="font-size:24px; margin-bottom:10px;">🎙</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">会议助手</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">AI代为参会，自动录音转文字、生成纪要</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('gallery')">
+          <div style="font-size:24px; margin-bottom:10px;">🖼</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">图库</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">AI生成产业链图、财务走势图等投研图表</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('stock-analysis')">
+          <div style="font-size:24px; margin-bottom:10px;">📊</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">个股一页纸</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">一键生成个股深度分析报告</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('research-outline')">
+          <div style="font-size:24px; margin-bottom:10px;">📋</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">调研大纲</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">AI生成结构化调研大纲和问题清单</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('joke')">
+          <div style="font-size:24px; margin-bottom:10px;">✦</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">写点评</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">AI辅助撰写盘面点评和行业短评</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('monitor-center')">
+          <div style="font-size:24px; margin-bottom:10px;">📡</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">信源监控中心</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">配置和管理多渠道信源监控规则</div>
+        </div>
+        <div class="card" style="padding:20px; cursor:pointer; transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openAiGlobal(); switchAiTool('schedule')">
+          <div style="font-size:24px; margin-bottom:10px;">⏰</div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">定时任务</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">设置定时执行的投研自动化任务</div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:14px; font-weight:600; margin-bottom:12px;">最近会话</div>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="ai-research-recent">
+          <div class="card" style="padding:12px 16px; display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="openAiGlobal()">
+            <span style="font-size:16px;">🎙</span>
+            <div style="flex:1;">
+              <div style="font-size:12px; font-weight:500;">英伟达H20产业链专家纪要</div>
+              <div style="font-size:10px; color:var(--text-muted);">会议助手 · 2026-05-20 14:30</div>
+            </div>
+            <span style="font-size:10px; color:var(--text-muted);">›</span>
+          </div>
+          <div class="card" style="padding:12px 16px; display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="openAiGlobal()">
+            <span style="font-size:16px;">🖼</span>
+            <div style="flex:1;">
+              <div style="font-size:12px; font-weight:500;">AI算力产业链全景图</div>
+              <div style="font-size:10px; color:var(--text-muted);">图库 · 2026-05-19 09:15</div>
+            </div>
+            <span style="font-size:10px; color:var(--text-muted);">›</span>
+          </div>
+          <div class="card" style="padding:12px 16px; display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="openAiGlobal()">
+            <span style="font-size:16px;">📊</span>
+            <div style="flex:1;">
+              <div style="font-size:12px; font-weight:500;">千里科技一页纸</div>
+              <div style="font-size:10px; color:var(--text-muted);">个股一页纸 · 2026-05-18 16:00</div>
+            </div>
+            <span style="font-size:10px; color:var(--text-muted);">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== AI MEETINGS SYSTEM ==================== -->
   <div class="page" id="page-meetings">
 
@@ -2613,7 +2732,7 @@ body {
           <option value="internal">内部调研</option>
         </select>
       </div>
-      <div class="notes-card-grid" id="minutes-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px;">
+      <div id="minutes-grid" style="display:flex; flex-direction:column; gap:12px;">
       </div>
     </div>
   </div>
@@ -2780,100 +2899,137 @@ body {
 
 <!-- AI GLOBAL FULLSCREEN (三栏 Cowork 布局) -->
 <div class="ai-global-overlay" id="ai-global">
+  <!-- 左侧工具栏 -->
   <div class="ai-global-left">
     <div class="ai-global-back" onclick="closeAiGlobal()">← 返回主页</div>
     <div class="ai-global-actions">
-      <div class="ai-global-action active" onclick="newAiSession('general')">
-        <span class="ai-action-icon">+</span>
-        <span>新建对话</span>
-      </div>
-      <div class="ai-global-action" onclick="newAiSession('meeting-assistant')">
+      <div class="ai-global-action active" data-tool="meeting-assistant" onclick="switchAiTool('meeting-assistant')">
         <span class="ai-action-icon">🎙</span>
         <span>会议助手</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('gallery')">
+      <div class="ai-global-action" data-tool="gallery" onclick="switchAiTool('gallery')">
         <span class="ai-action-icon">🖼</span>
         <span>图库</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('stock-analysis')">
+      <div class="ai-global-action" data-tool="stock-analysis" onclick="switchAiTool('stock-analysis')">
         <span class="ai-action-icon">📊</span>
         <span>个股一页纸</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('research-outline')">
-        <span class="ai-action-icon">📋</span>
-        <span>调研大纲</span>
-      </div>
-      <div class="ai-global-action" onclick="newAiSession('joke')">
+      <div class="ai-global-action" data-tool="joke" onclick="switchAiTool('joke')">
         <span class="ai-action-icon">✦</span>
         <span>写点评</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('monitor-center')">
+      <div class="ai-global-action" data-tool="research-outline" onclick="switchAiTool('research-outline')">
+        <span class="ai-action-icon">📋</span>
+        <span>调研大纲</span>
+      </div>
+      <div class="ai-global-action" data-tool="monitor-center" onclick="switchAiTool('monitor-center')">
         <span class="ai-action-icon">📡</span>
         <span>信源监控中心</span>
       </div>
-      <div class="ai-global-action" onclick="newAiSession('schedule')">
+      <div class="ai-global-action" data-tool="schedule" onclick="switchAiTool('schedule')">
         <span class="ai-action-icon">⏰</span>
         <span>定时任务</span>
       </div>
     </div>
-    <div class="ai-global-history-label">最近</div>
-    <div class="ai-global-history" id="ai-global-history"></div>
-  </div>
-  <div class="ai-global-center">
-    <!-- 初始聊天模式 -->
-    <div class="ai-global-chat-initial">
-      <div class="ai-global-chat-header" id="ai-global-chat-header">
-        <span style="color:var(--accent-cyan);">✦</span> AI 投研助手
+    <div style="flex:1;"></div>
+    <div class="ai-global-actions" style="border-top:1px solid var(--border); border-bottom:none; margin-bottom:0; padding-bottom:0; padding-top:12px; margin-top:12px;">
+      <div class="ai-global-action" data-tool="history" onclick="switchAiTool('history')">
+        <span class="ai-action-icon">💬</span>
+        <span>最近会话</span>
       </div>
-      <div class="ai-global-chat-body" id="ai-global-chat-body"></div>
-      <div class="ai-global-chat-footer">
-        <div class="ai-global-input-row">
-          <input id="ai-global-input" placeholder="输入你的需求..." onkeydown="if(event.key==='Enter')sendGlobalChat()" />
-          <button onclick="sendGlobalChat()">发送</button>
+    </div>
+  </div>
+  <!-- 成果库主区域 -->
+  <div class="ai-global-center" id="ai-library-panel" style="display:flex; flex-direction:row; overflow:hidden;">
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div class="ai-library-header">
+        <div class="ai-library-title" id="ai-library-title">会议助手</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="btn btn-primary btn-sm" id="ai-library-create-btn" onclick="handleLibraryCreate()">＋ 新建</button>
         </div>
       </div>
+      <div class="ai-library-body" id="ai-library-body"></div>
     </div>
-    <!-- 产物展示模式 -->
-    <div class="ai-product-view">
-      <div class="ai-product-tabs">
-        <div class="ai-product-tab active" onclick="switchProductTab(this,'products')">📦 产物</div>
-        <div class="ai-product-tab" onclick="switchProductTab(this,'files')">📁 全部文件</div>
-        <div class="ai-product-tab" onclick="switchProductTab(this,'changes')">↔ 变更</div>
-        <div class="ai-product-tab" onclick="switchProductTab(this,'browser')">🌐 浏览器</div>
+    <div id="ai-right-chat-panel" style="display:none; width:380px; border-left:1px solid var(--border); flex-direction:column; background:var(--bg-card);">
+      <div style="padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:13px; font-weight:600;" id="ai-right-chat-title">AI 图库助手</div>
+        <span onclick="closeAiRightChat()" style="cursor:pointer; font-size:16px; color:var(--text-muted); width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:4px;" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">&times;</span>
       </div>
-      <div class="ai-product-body">
-        <div class="ai-product-file-list" id="ai-product-file-list"></div>
-        <div class="ai-product-preview" id="ai-product-preview"></div>
+      <div id="ai-right-chat-body" style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px;">
+        <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">描述你想要的内容，AI将为你生成</div>
       </div>
-    </div>
-  </div>
-  <div class="ai-global-right">
-    <!-- 默认模式: progress + documents -->
-    <div class="ai-global-right-default" style="display:none;">
-      <div class="ai-global-right-section">
-        <div class="ai-global-right-title">Progress</div>
-        <div id="ai-global-progress"></div>
-      </div>
-      <div class="ai-global-right-section">
-        <div class="ai-global-right-title">Documents</div>
-        <div id="ai-global-documents"></div>
-      </div>
-    </div>
-    <!-- 产物模式: 右侧变为聊天 -->
-    <div class="ai-global-right-chat" id="ai-global-right-chat" style="display:none; flex-direction:column;">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text-muted);">对话</div>
-      <div class="ai-global-right-chat-body" id="ai-global-right-chat-body"></div>
-      <div class="ai-global-right-products" id="ai-global-right-products"></div>
-      <div class="ai-global-right-footer">
-        <input id="ai-global-right-input" placeholder="输入消息..." onkeydown="if(event.key==='Enter')sendRightChat()" />
-        <div class="ai-global-right-footer-actions">
-          <span class="ai-global-right-footer-btn">📦 Craft</span>
-          <span class="ai-global-right-footer-btn">⚙ Auto</span>
-          <span class="ai-global-right-footer-btn">🔗 技能</span>
+      <div style="border-top:1px solid var(--border); padding:12px 16px; background:var(--bg-card);">
+        <div style="display:flex; gap:8px;">
+          <input id="ai-right-chat-input" placeholder="描述内容..." onkeydown="if(event.key==='Enter')sendRightChat()" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12px; outline:none; background:var(--bg-secondary); color:var(--text-primary);" />
+          <button onclick="sendRightChat()" style="background:var(--accent-blue); color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:12px; cursor:pointer;">发送</button>
         </div>
       </div>
     </div>
   </div>
+  <!-- 浮层（新建/详情） -->
+  <div class="ai-floating-layer" id="ai-floating-layer" style="display:none;">
+    <div class="ai-floating-header">
+      <div class="ai-floating-back" id="ai-floating-back" onclick="closeAiFloatingLayer()">← 返回</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-sm" onclick="showAiShareMenu()" style="font-size:11px; padding:4px 12px; background:rgba(45,127,249,0.08); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;">分享 ▾</button>
+      </div>
+    </div>
+    <div class="ai-floating-body" id="ai-floating-body"></div>
+  </div>
+</div>
+
+<!-- 会议新建独立 Modal -->
+<div id="meeting-create-modal" style="display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;" onclick="if(event.target===this)closeMeetingModal()">
+  <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:14px; width:580px; max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:slideUp 0.25s;">
+    <div style="padding:20px 24px 0; display:flex; align-items:center; justify-content:space-between;">
+      <div style="font-size:18px; font-weight:700;">添加会议</div>
+      <span onclick="closeMeetingModal()" style="cursor:pointer; font-size:18px; color:var(--text-muted); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px; transition:background 0.15s;" onmouseover="this.style.background='var(--bg-card)'" onmouseout="this.style.background='transparent'">&times;</span>
+    </div>
+    <div style="padding:20px 24px;">
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">粘贴会议链接、通知文本或截图，AI自动解析会议信息并代为参会</div>
+      <div style="display:flex; gap:12px; margin-bottom:20px;">
+        <div style="flex:1; padding:14px; border:1px solid var(--border); border-radius:10px; background:var(--bg-card); cursor:pointer; transition:border-color 0.15s;" id="meeting-tab-link" onclick="switchMeetingTab('link')">
+          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">🔗 会议链接/信息</div>
+          <div style="font-size:11px; color:var(--text-muted);">粘贴会议通知，AI自动解析</div>
+        </div>
+        <div style="flex:1; padding:14px; border:1px solid var(--border); border-radius:10px; background:var(--bg-card); cursor:pointer; transition:border-color 0.15s;" id="meeting-tab-audio" onclick="switchMeetingTab('audio')">
+          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">🎧 上传会议录音</div>
+          <div style="font-size:11px; color:var(--text-muted);">上传音频文件，AI转写生成纪要</div>
+        </div>
+      </div>
+      <div id="meeting-modal-link-panel">
+        <div style="margin-bottom:16px;">
+          <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:6px;">会议信息</label>
+          <textarea id="modal-meeting-input" placeholder="粘贴会议链接、邀请通知或直接输入会议号..." style="width:100%; height:100px; border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px; background:var(--bg-card); color:var(--text-primary); resize:none; outline:none; font-family:inherit; box-sizing:border-box;"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="parseModalMeetingInfo()" style="width:100%; padding:10px; font-size:13px;">AI 解析会议信息</button>
+        <div id="modal-meeting-parsed" style="margin-top:16px;"></div>
+      </div>
+      <div id="meeting-modal-audio-panel" style="display:none;">
+        <div style="border:2px dashed var(--border); border-radius:10px; padding:32px; text-align:center; cursor:pointer; transition:border-color 0.15s;" onclick="document.getElementById('audio-file-input').click()" onmouseover="this.style.borderColor='var(--accent-blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:28px; margin-bottom:8px;">🎙</div>
+          <div style="font-size:13px; font-weight:600; margin-bottom:4px;">点击上传音频文件</div>
+          <div style="font-size:11px; color:var(--text-muted);">支持 MP3 / WAV / M4A / FLAC，最大 500MB</div>
+          <input type="file" id="audio-file-input" accept="audio/*" style="display:none;" onchange="handleAudioUpload(this)">
+        </div>
+        <div id="audio-upload-status" style="margin-top:16px;"></div>
+      </div>
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+        <div style="font-size:12px; font-weight:600; margin-bottom:10px;">支持的会议类型</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">腾讯会议</span>
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">Zoom</span>
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">飞书会议</span>
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">Webex</span>
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">电话会议</span>
+          <span class="tag tag-blue" style="font-size:11px; padding:3px 8px;">券商路演</span>
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:var(--text-muted); line-height:1.6;">
+          会前15分钟自动提醒 · 静默旁听不发言 · 自动录音转写 · 会后生成投研级纪要
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3008,7 +3164,7 @@ function navigateTo(pageId, subtab) {
 }
 
 // Sidebar click handlers
-document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+document.querySelectorAll('.sidebar .nav-item[data-page]').forEach(item => {
   item.addEventListener('click', () => navigateTo(item.dataset.page));
 });
 
@@ -4992,45 +5148,1037 @@ let currentSession = { id: 99, mode: 'general', title: '新对话', messages: []
 function openAiGlobal() {
   const overlay = document.getElementById('ai-global');
   overlay.classList.add('show');
-  if (!overlay.classList.contains('has-product')) overlay.classList.add('no-product');
   document.getElementById('ai-float-group').style.display = 'none';
   document.getElementById('global-ai-panel').style.display = 'none';
-  if (!currentSession.messages || currentSession.messages.length === 0) {
-    currentSession = { id: Date.now(), mode: 'general', title: '新对话', messages: [], documents: [], progress: [] };
-    document.querySelectorAll('.ai-global-action').forEach((el, i) => el.classList.toggle('active', i === 0));
-  }
-  renderHistory();
-  renderGlobalChat();
-  renderDocuments();
+  if (!currentAiTool) currentAiTool = 'meeting-assistant';
+  switchAiTool(currentAiTool);
 }
 
 function closeAiGlobal() {
   const overlay = document.getElementById('ai-global');
   overlay.classList.remove('show', 'has-product', 'no-product');
   document.getElementById('ai-float-group').style.display = '';
-  document.getElementById('ai-global-right-chat').style.display = 'none';
-  document.querySelector('.ai-global-right-default').style.display = 'none';
+  document.getElementById('ai-floating-layer').style.display = 'none';
   renderFloatSuggestions();
 }
 
 function expandToGlobal() {
   document.getElementById('global-ai-panel').style.display = 'none';
   openAiGlobal();
-  if (currentSession.messages.length > 0) {
-    setTimeout(() => showProductView('doc-1'), 300);
+}
+
+let currentAiTool = 'meeting-assistant';
+
+function switchAiTool(tool) {
+  currentAiTool = tool;
+  document.querySelectorAll('.ai-global-action').forEach(el => {
+    el.classList.toggle('active', el.dataset.tool === tool);
+  });
+  document.getElementById('ai-floating-layer').style.display = 'none';
+  closeAiRightChat();
+  renderAiLibrary(tool);
+}
+
+const aiToolTitles = {
+  'meeting-assistant': '会议助手',
+  'gallery': '图库',
+  'stock-analysis': '个股一页纸',
+  'joke': '写点评',
+  'research-outline': '调研大纲',
+  'monitor-center': '信源监控中心',
+  'schedule': '定时任务',
+  'history': '最近会话'
+};
+
+// Demo data for 会议助手
+const aiMeetingLibData = [
+  { id:1, title:'英伟达H20产业链专家会', status:'done', date:'2026-05-18', platform:'腾讯会议', duration:'62min', summary:'H20芯片国内出货预期上调，产业链Q3有望迎来量价齐升...', stocks:['英伟达','中科曙光'] },
+  { id:2, title:'阶跃星辰新品发布会', status:'done', date:'2026-05-16', platform:'Zoom', duration:'45min', summary:'Step-2 Pro发布，推理速度提升3倍，面向企业级市场...', stocks:['阶跃星辰'] },
+  { id:3, title:'千里科技Q1业绩说明会', status:'done', date:'2026-05-15', platform:'电话会议', duration:'38min', summary:'Q1营收同比+42%，端侧模型出货超预期，指引上调...', stocks:['千里科技'] },
+  { id:4, title:'DeepSeek V4技术路线闭门会', status:'running', date:'2026-05-20', platform:'飞书会议', duration:'-', summary:'会议进行中...', stocks:['DeepSeek'] },
+  { id:5, title:'模芯联盟峰会', status:'pending', date:'2026-06-03', platform:'线下+直播', duration:'-', summary:'待参会', stocks:[] },
+  { id:6, title:'海光信息DCU产品沟通会', status:'pending', date:'2026-05-22', platform:'腾讯会议', duration:'-', summary:'待参会', stocks:['海光信息'] },
+];
+
+// Demo data for 图库
+const aiGalleryLibData = [
+  { id:1, title:'寒武纪历史PE-Bands', date:'2026-05-18', category:'估值类', prompt:'生成寒武纪近三年PE走势图，标注关键催化事件节点',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">寒武纪历史PE与关键催化事件</text><text x="16" y="36" font-size="8" fill="#999">PE倍数</text><line x1="40" y1="42" x2="40" y2="195" stroke="#e5e7eb" stroke-width="0.5"/><line x1="40" y1="195" x2="340" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="40" y1="60" x2="340" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="40" y1="100" x2="340" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="40" y1="140" x2="340" y2="140" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><text x="16" y="64" font-size="7" fill="#94a3b8">400x</text><text x="16" y="104" font-size="7" fill="#94a3b8">300x</text><text x="16" y="144" font-size="7" fill="#94a3b8">200x</text><text x="16" y="198" font-size="7" fill="#94a3b8">100x</text><polyline fill="none" stroke="#2563eb" stroke-width="1.8" points="45,175 65,172 85,170 105,168 125,165 145,155 165,148 185,140 200,100 210,75 220,70 230,68 240,72 255,65 270,60 285,70 300,65 315,62 330,58"/><circle cx="145" cy="155" r="4" fill="#fff" stroke="#6b7280" stroke-width="1.5"/><line x1="145" y1="159" x2="145" y2="175" stroke="#9ca3af" stroke-width="0.5"/><text x="100" y="184" font-size="6.5" fill="#6b7280">2024年中: H20漏门</text><circle cx="200" cy="100" r="4" fill="#fff" stroke="#6b7280" stroke-width="1.5"/><line x1="200" y1="86" x2="200" y2="96" stroke="#9ca3af" stroke-width="0.5"/><text x="170" y="82" font-size="6.5" fill="#6b7280">2025年初: 扭亏为盈</text><circle cx="315" cy="62" r="4" fill="#fff" stroke="#6b7280" stroke-width="1.5"/><text x="270" y="52" font-size="6.5" fill="#6b7280">2026: PE突破355x</text><text x="50" y="210" font-size="7" fill="#94a3b8">2023.03</text><text x="140" y="210" font-size="7" fill="#94a3b8">2024.03</text><text x="230" y="210" font-size="7" fill="#94a3b8">2025.03</text><text x="310" y="210" font-size="7" fill="#94a3b8">2026</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: Wind及券商研究所数据</text></svg>')}` },
+  { id:2, title:'AI算力产业链全景图', date:'2026-05-17', category:'行业对比类', prompt:'绘制AI算力产业链上中下游全景图，标注主要公司',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="110" y="20" font-size="11" font-weight="bold" fill="#222">AI算力产业链全景结构图</text><rect x="12" y="32" width="105" height="22" rx="3" fill="#2563eb"/><text x="22" y="47" font-size="9" font-weight="bold" fill="#fff">上游基础硬件层</text><rect x="127" y="32" width="105" height="22" rx="3" fill="#2563eb"/><text x="133" y="47" font-size="9" font-weight="bold" fill="#fff">中游算力网络与平台</text><rect x="243" y="32" width="105" height="22" rx="3" fill="#2563eb"/><text x="253" y="47" font-size="9" font-weight="bold" fill="#fff">下游应用与场景</text><rect x="12" y="62" width="105" height="95" rx="4" fill="none" stroke="#2563eb" stroke-width="1"/><rect x="127" y="62" width="105" height="95" rx="4" fill="none" stroke="#2563eb" stroke-width="1"/><rect x="243" y="62" width="105" height="95" rx="4" fill="none" stroke="#2563eb" stroke-width="1"/><text x="25" y="78" font-size="7" fill="#64748b">GPU/ASIC芯片</text><text x="25" y="92" font-size="7" fill="#64748b">AI服务器</text><text x="25" y="106" font-size="7" fill="#64748b">光通信设备</text><text x="25" y="120" font-size="7" fill="#64748b">液冷温控</text><text x="25" y="134" font-size="7" fill="#64748b">数据中心交换机</text><text x="25" y="148" font-size="7" fill="#64748b">PCB基板</text><text x="140" y="78" font-size="7" fill="#64748b">AIDC智算中心</text><text x="140" y="92" font-size="7" fill="#64748b">云计算平台</text><text x="140" y="106" font-size="7" fill="#64748b">边缘计算</text><text x="140" y="120" font-size="7" fill="#64748b">算力调度与租赁</text><text x="256" y="78" font-size="7" fill="#64748b">互联网行业应用</text><text x="256" y="92" font-size="7" fill="#64748b">金融政企</text><text x="256" y="106" font-size="7" fill="#64748b">端侧AI设备</text><text x="256" y="120" font-size="7" fill="#64748b">多模态大模型</text><path d="M117,100 L127,100" stroke="#2563eb" fill="none" stroke-width="1" marker-end="url(#a)"/><path d="M232,100 L243,100" stroke="#2563eb" fill="none" stroke-width="1"/><text x="18" y="175" font-size="6.5" fill="#2563eb">英伟达 海光信息</text><text x="18" y="186" font-size="6.5" fill="#2563eb">中科曙光 浪潮信息</text><text x="133" y="175" font-size="6.5" fill="#2563eb">阿里云 华为云</text><text x="133" y="186" font-size="6.5" fill="#2563eb">商汤科技</text><text x="249" y="175" font-size="6.5" fill="#2563eb">千里科技 科大讯飞</text><text x="249" y="186" font-size="6.5" fill="#2563eb">金山办公 用友网络</text><text x="16" y="210" font-size="6" fill="#cbd5e1">资料来源: 第三方市场研究机构、相关公司公开报告</text></svg>')}` },
+  { id:3, title:'全球AI算力需求趋势', date:'2026-05-15', category:'业绩类', prompt:'2023-2026全球AI算力需求柱状图，按训练/推理拆分',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">全球AI算力需求 (EFLOPS)</text><text x="16" y="36" font-size="8" fill="#999">按训练/推理拆分</text><line x1="55" y1="195" x2="290" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="55" y1="60" x2="290" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="100" x2="290" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="140" x2="290" y2="140" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><rect x="60" y="155" width="35" height="40" fill="#93c5fd" rx="2"/><rect x="60" y="140" width="35" height="15" fill="#2563eb" rx="2"/><rect x="120" y="125" width="35" height="70" fill="#93c5fd" rx="2"/><rect x="120" y="100" width="35" height="25" fill="#2563eb" rx="2"/><rect x="180" y="90" width="35" height="105" fill="#93c5fd" rx="2"/><rect x="180" y="60" width="35" height="30" fill="#2563eb" rx="2"/><rect x="240" y="60" width="35" height="135" fill="#93c5fd" rx="2"/><rect x="240" y="38" width="35" height="22" fill="#2563eb" rx="2"/><text x="70" y="210" font-size="8" fill="#64748b">2023</text><text x="128" y="210" font-size="8" fill="#64748b">2024</text><text x="186" y="210" font-size="8" fill="#64748b">2025E</text><text x="248" y="210" font-size="8" fill="#64748b">2026E</text><text x="70" y="136" font-size="8" font-weight="bold" fill="#1e40af">1.2</text><text x="130" y="96" font-size="8" font-weight="bold" fill="#1e40af">2.8</text><text x="190" y="56" font-size="8" font-weight="bold" fill="#1e40af">5.4</text><text x="250" y="34" font-size="8" font-weight="bold" fill="#1e40af">8.1</text><rect x="295" y="60" width="8" height="8" fill="#93c5fd"/><text x="306" y="67" font-size="7" fill="#64748b">推理</text><rect x="295" y="74" width="8" height="8" fill="#2563eb"/><text x="306" y="81" font-size="7" fill="#64748b">训练</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: IDC、各公司财报</text></svg>')}` },
+  { id:4, title:'千里科技营收拆分', date:'2026-05-14', category:'业绩类', prompt:'千里科技2024-2026营收按业务线拆分堆叠柱状图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">千里科技营收拆分 (亿元)</text><text x="16" y="36" font-size="8" fill="#999">按业务线拆分</text><line x1="55" y1="195" x2="280" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="55" y1="60" x2="280" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="100" x2="280" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="140" x2="280" y2="140" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><rect x="65" y="130" width="50" height="65" fill="#93c5fd" rx="2"/><rect x="65" y="105" width="50" height="25" fill="#4ade80" rx="2"/><rect x="65" y="92" width="50" height="13" fill="#f9a8d4" rx="2"/><rect x="145" y="100" width="50" height="95" fill="#93c5fd" rx="2"/><rect x="145" y="68" width="50" height="32" fill="#4ade80" rx="2"/><rect x="145" y="52" width="50" height="16" fill="#f9a8d4" rx="2"/><rect x="225" y="68" width="50" height="127" fill="#93c5fd" rx="2"/><rect x="225" y="40" width="50" height="28" fill="#4ade80" rx="2"/><rect x="225" y="28" width="50" height="12" fill="#f9a8d4" rx="2"/><text x="78" y="88" font-size="8" font-weight="bold" fill="#1e40af">32.5</text><text x="157" y="48" font-size="8" font-weight="bold" fill="#1e40af">48.7</text><text x="238" y="24" font-size="8" font-weight="bold" fill="#1e40af">68.2</text><text x="78" y="210" font-size="8" fill="#64748b">2024</text><text x="155" y="210" font-size="8" fill="#64748b">2025E</text><text x="235" y="210" font-size="8" fill="#64748b">2026E</text><rect x="290" y="60" width="8" height="8" fill="#93c5fd"/><text x="301" y="67" font-size="7" fill="#64748b">端侧AI</text><rect x="290" y="74" width="8" height="8" fill="#4ade80"/><text x="301" y="81" font-size="7" fill="#64748b">云服务</text><rect x="290" y="88" width="8" height="8" fill="#f9a8d4"/><text x="301" y="95" font-size="7" fill="#64748b">软件授权</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 公司财报、券商预测</text></svg>')}` },
+  { id:5, title:'主流大模型能力雷达图', date:'2026-05-12', category:'结论类', prompt:'对比GPT-5/Claude-4/Step-2 Pro/DeepSeek-V4在推理、创作、代码、多模态等维度的能力',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">主流大模型能力对比</text><polygon points="160,52 218,88 210,145 110,145 102,88" fill="none" stroke="#e2e8f0" stroke-width="0.8"/><polygon points="160,72 200,97 195,135 125,135 120,97" fill="none" stroke="#e2e8f0" stroke-width="0.8"/><polygon points="160,92 182,106 180,125 140,125 138,106" fill="none" stroke="#e2e8f0" stroke-width="0.8"/><line x1="160" y1="52" x2="160" y2="145" stroke="#f1f5f9" stroke-width="0.5"/><line x1="102" y1="88" x2="218" y2="88" stroke="#f1f5f9" stroke-width="0.5"/><polygon points="160,56 215,86 206,142 114,140 106,90" fill="rgba(37,99,235,0.12)" stroke="#2563eb" stroke-width="1.5"/><polygon points="160,60 210,90 200,143 118,138 108,86" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" stroke-width="1.5"/><polygon points="160,65 205,92 202,140 120,143 110,92" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/><text x="152" y="46" font-size="8" fill="#475569">推理</text><text x="222" y="92" font-size="8" fill="#475569">代码</text><text x="210" y="155" font-size="8" fill="#475569">创作</text><text x="85" y="155" font-size="8" fill="#475569">多模态</text><text x="82" y="86" font-size="8" fill="#475569">知识</text><rect x="260" y="60" width="8" height="8" rx="1" fill="#2563eb"/><text x="272" y="67" font-size="8" fill="#475569">GPT-5</text><rect x="260" y="78" width="8" height="8" rx="1" fill="#8b5cf6"/><text x="272" y="85" font-size="8" fill="#475569">Claude-4</text><rect x="260" y="96" width="8" height="8" rx="1" fill="#10b981"/><text x="272" y="103" font-size="8" fill="#475569">Step-2 Pro</text><text x="16" y="232" font-size="6" fill="#cbd5e1">评测基准: SuperGLUE / HumanEval / MMLU</text></svg>')}` },
+  { id:6, title:'北向资金行业流入热力图', date:'2026-05-10', category:'行业对比类', prompt:'近30日北向资金按申万一级行业净流入热力图，标注金额',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">北向资金30日行业净流入</text><text x="16" y="36" font-size="8" fill="#999">单位: 亿元</text><rect x="16" y="46" width="100" height="42" rx="4" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.8"/><text x="26" y="64" font-size="9" font-weight="bold" fill="#1e40af">电子</text><text x="26" y="80" font-size="10" font-weight="bold" fill="#2563eb">+128.5</text><rect x="122" y="46" width="100" height="42" rx="4" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.8"/><text x="132" y="64" font-size="9" font-weight="bold" fill="#1e40af">计算机</text><text x="132" y="80" font-size="10" font-weight="bold" fill="#2563eb">+96.3</text><rect x="228" y="46" width="100" height="42" rx="4" fill="#e0f2fe" stroke="#bae6fd" stroke-width="0.8"/><text x="238" y="64" font-size="9" font-weight="bold" fill="#1e40af">通信</text><text x="238" y="80" font-size="10" font-weight="bold" fill="#2563eb">+72.1</text><rect x="16" y="96" width="100" height="42" rx="4" fill="#e0f2fe" stroke="#bae6fd" stroke-width="0.8"/><text x="26" y="114" font-size="9" font-weight="bold" fill="#1e40af">电力设备</text><text x="26" y="130" font-size="10" font-weight="bold" fill="#0284c7">+54.8</text><rect x="122" y="96" width="100" height="42" rx="4" fill="#f0f9ff" stroke="#e0f2fe" stroke-width="0.8"/><text x="132" y="114" font-size="9" font-weight="bold" fill="#475569">医药</text><text x="132" y="130" font-size="10" font-weight="bold" fill="#0284c7">+31.2</text><rect x="228" y="96" width="100" height="42" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/><text x="238" y="114" font-size="9" fill="#64748b">食品饮料</text><text x="238" y="130" font-size="9" fill="#94a3b8">+5.4</text><rect x="16" y="146" width="100" height="42" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/><text x="26" y="164" font-size="9" fill="#64748b">银行</text><text x="26" y="180" font-size="9" fill="#94a3b8">-2.1</text><rect x="122" y="146" width="100" height="42" rx="4" fill="#fef2f2" stroke="#fecaca" stroke-width="0.8"/><text x="132" y="164" font-size="9" fill="#991b1b">地产</text><text x="132" y="180" font-size="9" font-weight="bold" fill="#dc2626">-28.6</text><rect x="228" y="146" width="100" height="42" rx="4" fill="#fef2f2" stroke="#fecaca" stroke-width="0.8"/><text x="238" y="164" font-size="9" fill="#991b1b">煤炭</text><text x="238" y="180" font-size="9" font-weight="bold" fill="#dc2626">-41.3</text><text x="16" y="210" font-size="6" fill="#cbd5e1">资料来源: Wind、沪深港通数据</text></svg>')}` },
+  { id:7, title:'光模块龙头毛利率对比', date:'2026-05-09', category:'业绩类', prompt:'中际旭创/新易盛/天孚通信近四季度毛利率趋势对比折线图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">光模块龙头毛利率趋势对比</text><text x="16" y="36" font-size="8" fill="#999">近四季度 (%)</text><line x1="50" y1="195" x2="320" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="50" y1="60" x2="320" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="105" x2="320" y2="105" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="150" x2="320" y2="150" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><text x="20" y="64" font-size="7" fill="#94a3b8">45%</text><text x="20" y="109" font-size="7" fill="#94a3b8">35%</text><text x="20" y="154" font-size="7" fill="#94a3b8">25%</text><text x="20" y="199" font-size="7" fill="#94a3b8">15%</text><polyline fill="none" stroke="#2563eb" stroke-width="2" points="80,120 150,105 220,95 290,85"/><polyline fill="none" stroke="#10b981" stroke-width="2" points="80,135 150,125 220,118 290,108"/><polyline fill="none" stroke="#f59e0b" stroke-width="2" points="80,85 150,78 220,72 290,65"/><circle cx="290" cy="85" r="3" fill="#2563eb"/><circle cx="290" cy="108" r="3" fill="#10b981"/><circle cx="290" cy="65" r="3" fill="#f59e0b"/><text x="295" y="88" font-size="7" fill="#2563eb">36.2%</text><text x="295" y="111" font-size="7" fill="#10b981">30.5%</text><text x="295" y="68" font-size="7" fill="#f59e0b">43.8%</text><text x="70" y="210" font-size="7" fill="#94a3b8">25Q1</text><text x="140" y="210" font-size="7" fill="#94a3b8">25Q2</text><text x="210" y="210" font-size="7" fill="#94a3b8">25Q3</text><text x="280" y="210" font-size="7" fill="#94a3b8">25Q4</text><rect x="60" y="224" width="8" height="3" fill="#2563eb"/><text x="72" y="227" font-size="7" fill="#64748b">中际旭创</text><rect x="125" y="224" width="8" height="3" fill="#10b981"/><text x="137" y="227" font-size="7" fill="#64748b">新易盛</text><rect x="178" y="224" width="8" height="3" fill="#f59e0b"/><text x="190" y="227" font-size="7" fill="#64748b">天孚通信</text></svg>')}` },
+  { id:8, title:'AI大模型融资规模排名', date:'2026-05-08', category:'行业对比类', prompt:'2025-2026年中国AI大模型公司融资总额TOP10横向条形图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">中国AI大模型融资TOP10 (亿美元)</text><text x="16" y="36" font-size="8" fill="#999">2025-2026年累计</text><text x="16" y="60" font-size="8" fill="#475569">阶跃星辰</text><rect x="85" y="50" width="220" height="14" rx="2" fill="#2563eb"/><text x="310" y="61" font-size="8" fill="#1e40af">35.0</text><text x="16" y="80" font-size="8" fill="#475569">月之暗面</text><rect x="85" y="70" width="188" height="14" rx="2" fill="#3b82f6"/><text x="278" y="81" font-size="8" fill="#1e40af">30.0</text><text x="16" y="100" font-size="8" fill="#475569">智谱AI</text><rect x="85" y="90" width="157" height="14" rx="2" fill="#60a5fa"/><text x="247" y="101" font-size="8" fill="#1e40af">25.0</text><text x="16" y="120" font-size="8" fill="#475569">百川智能</text><rect x="85" y="110" width="126" height="14" rx="2" fill="#93c5fd"/><text x="216" y="121" font-size="8" fill="#1e40af">20.0</text><text x="16" y="140" font-size="8" fill="#475569">MiniMax</text><rect x="85" y="130" width="113" height="14" rx="2" fill="#93c5fd"/><text x="203" y="141" font-size="8" fill="#1e40af">18.0</text><text x="16" y="160" font-size="8" fill="#475569">零一万物</text><rect x="85" y="150" width="94" height="14" rx="2" fill="#bfdbfe"/><text x="184" y="161" font-size="8" fill="#64748b">15.0</text><text x="16" y="180" font-size="8" fill="#475569">深度求索</text><rect x="85" y="170" width="75" height="14" rx="2" fill="#bfdbfe"/><text x="165" y="181" font-size="8" fill="#64748b">12.0</text><text x="16" y="200" font-size="8" fill="#475569">面壁智能</text><rect x="85" y="190" width="50" height="14" rx="2" fill="#dbeafe"/><text x="140" y="201" font-size="8" fill="#64748b">8.0</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: IT桔子、36氪</text></svg>')}` },
+  { id:9, title:'海光信息DCU出货量预测', date:'2026-05-07', category:'业绩类', prompt:'海光信息2024-2027年DCU芯片出货量及增速预测柱线图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">海光DCU出货量及增速</text><text x="16" y="36" font-size="8" fill="#999">万颗 / YoY%</text><line x1="55" y1="190" x2="300" y2="190" stroke="#cbd5e1" stroke-width="1"/><line x1="55" y1="65" x2="300" y2="65" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="110" x2="300" y2="110" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="55" y1="150" x2="300" y2="150" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><rect x="65" y="158" width="40" height="32" fill="#93c5fd" rx="2"/><rect x="125" y="128" width="40" height="62" fill="#60a5fa" rx="2"/><rect x="185" y="90" width="40" height="100" fill="#3b82f6" rx="2"/><rect x="245" y="65" width="40" height="125" fill="#2563eb" rx="2"/><text x="75" y="154" font-size="8" font-weight="bold" fill="#1e40af">8</text><text x="133" y="124" font-size="8" font-weight="bold" fill="#1e40af">15</text><text x="193" y="86" font-size="8" font-weight="bold" fill="#1e40af">28</text><text x="253" y="61" font-size="8" font-weight="bold" fill="#1e40af">42</text><polyline fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" points="85,105 145,108 205,95 265,90"/><circle cx="145" cy="108" r="3" fill="#f59e0b"/><text x="148" y="104" font-size="7" fill="#f59e0b">+88%</text><circle cx="205" cy="95" r="3" fill="#f59e0b"/><text x="208" y="91" font-size="7" fill="#f59e0b">+87%</text><circle cx="265" cy="90" r="3" fill="#f59e0b"/><text x="268" y="86" font-size="7" fill="#f59e0b">+50%</text><text x="75" y="205" font-size="8" fill="#64748b">2024</text><text x="133" y="205" font-size="8" fill="#64748b">2025E</text><text x="193" y="205" font-size="8" fill="#64748b">2026E</text><text x="253" y="205" font-size="8" fill="#64748b">2027E</text><rect x="55" y="222" width="8" height="8" fill="#3b82f6"/><text x="67" y="229" font-size="7" fill="#64748b">出货量(万颗)</text><line x1="140" y1="226" x2="160" y2="226" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4"/><text x="164" y="229" font-size="7" fill="#64748b">YoY增速</text></svg>')}` },
+  { id:10, title:'端侧AI渗透率S曲线', date:'2026-05-05', category:'结论类', prompt:'全球端侧AI渗透率S曲线预测(2023-2030)，标注关键拐点',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">端侧AI渗透率S曲线预测</text><text x="16" y="36" font-size="8" fill="#999">全球, 2023-2030E (%)</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="50" y1="55" x2="330" y2="55" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="100" x2="330" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="148" x2="330" y2="148" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><text x="22" y="59" font-size="7" fill="#94a3b8">80%</text><text x="22" y="104" font-size="7" fill="#94a3b8">55%</text><text x="22" y="152" font-size="7" fill="#94a3b8">28%</text><text x="22" y="199" font-size="7" fill="#94a3b8">0%</text><path d="M60,188 C90,186 110,182 140,170 C170,155 190,138 210,110 C230,82 250,68 280,60 C300,56 320,54 330,54" fill="none" stroke="#2563eb" stroke-width="2.5"/><circle cx="140" cy="170" r="4" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="100" y="164" font-size="7" fill="#2563eb" font-weight="bold">2025: 渗透拐点</text><circle cx="210" cy="110" r="4" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="215" y="106" font-size="7" fill="#2563eb" font-weight="bold">2027: 快速放量</text><circle cx="280" cy="60" r="4" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="240" y="52" font-size="7" fill="#2563eb" font-weight="bold">2029: 主流化</text><rect x="130" y="115" width="90" height="28" rx="4" fill="rgba(37,99,235,0.08)" stroke="rgba(37,99,235,0.2)" stroke-width="0.5"/><text x="138" y="128" font-size="7" fill="#2563eb">当前位置: ~28%</text><text x="138" y="139" font-size="6.5" fill="#64748b">加速渗透阶段</text><text x="52" y="210" font-size="7" fill="#94a3b8">2023</text><text x="92" y="210" font-size="7" fill="#94a3b8">2024</text><text x="132" y="210" font-size="7" fill="#94a3b8">2025</text><text x="172" y="210" font-size="7" fill="#94a3b8">2026E</text><text x="212" y="210" font-size="7" fill="#94a3b8">2027E</text><text x="252" y="210" font-size="7" fill="#94a3b8">2028E</text><text x="302" y="210" font-size="7" fill="#94a3b8">2030E</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: IDC、Canalys预测</text></svg>')}` },
+  { id:11, title:'科大讯飞分业务估值拆分', date:'2026-05-03', category:'估值类', prompt:'科大讯飞SOTP估值拆分饼图：教育/医疗/开放平台/智能硬件/其他',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">科大讯飞SOTP估值拆分</text><text x="16" y="36" font-size="8" fill="#999">总市值: 1680亿元</text><circle cx="145" cy="135" r="72" fill="none" stroke="#e2e8f0" stroke-width="1"/><path d="M145,63 A72,72 0 0,1 211,105 L145,135 Z" fill="#2563eb"/><path d="M211,105 A72,72 0 0,1 195,200 L145,135 Z" fill="#3b82f6"/><path d="M195,200 A72,72 0 0,1 100,195 L145,135 Z" fill="#60a5fa"/><path d="M100,195 A72,72 0 0,1 78,110 L145,135 Z" fill="#93c5fd"/><path d="M78,110 A72,72 0 0,1 145,63 L145,135 Z" fill="#bfdbfe"/><rect x="245" y="65" width="10" height="10" rx="2" fill="#2563eb"/><text x="260" y="74" font-size="9" fill="#475569">教育 35%</text><text x="260" y="84" font-size="7" fill="#94a3b8">588亿</text><rect x="245" y="95" width="10" height="10" rx="2" fill="#3b82f6"/><text x="260" y="104" font-size="9" fill="#475569">医疗 22%</text><text x="260" y="114" font-size="7" fill="#94a3b8">370亿</text><rect x="245" y="125" width="10" height="10" rx="2" fill="#60a5fa"/><text x="260" y="134" font-size="9" fill="#475569">开放平台 20%</text><text x="260" y="144" font-size="7" fill="#94a3b8">336亿</text><rect x="245" y="155" width="10" height="10" rx="2" fill="#93c5fd"/><text x="260" y="164" font-size="9" fill="#475569">智能硬件 15%</text><text x="260" y="174" font-size="7" fill="#94a3b8">252亿</text><rect x="245" y="185" width="10" height="10" rx="2" fill="#bfdbfe"/><text x="260" y="194" font-size="9" fill="#475569">其他 8%</text><text x="260" y="204" font-size="7" fill="#94a3b8">134亿</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 券商研究所、Wind</text></svg>')}` },
+  { id:12, title:'CPO vs传统光模块成本对比', date:'2026-05-01', category:'结论类', prompt:'CPO共封装光学与传统可插拔光模块在功耗、带宽、成本三维度的对比雷达图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">CPO vs 传统光模块综合对比</text><text x="16" y="36" font-size="8" fill="#999">三维度对比分析</text><rect x="20" y="50" width="150" height="80" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/><text x="30" y="68" font-size="9" font-weight="bold" fill="#1e40af">CPO共封装光学</text><text x="30" y="84" font-size="8" fill="#475569">功耗降低: 4-10x</text><text x="30" y="97" font-size="8" fill="#475569">带宽密度: 8x提升</text><text x="30" y="110" font-size="8" fill="#475569">延迟降低: 90-95%</text><text x="30" y="123" font-size="8" fill="#10b981" font-weight="600">综合优势 ★★★★★</text><rect x="190" y="50" width="150" height="80" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/><text x="200" y="68" font-size="9" font-weight="bold" fill="#991b1b">传统可插拔光模块</text><text x="200" y="84" font-size="8" fill="#475569">功耗: 基准线</text><text x="200" y="97" font-size="8" fill="#475569">带宽密度: 受限于PCB</text><text x="200" y="110" font-size="8" fill="#475569">延迟: 15-30cm传输距离</text><text x="200" y="123" font-size="8" fill="#dc2626" font-weight="600">综合劣势 ★★☆☆☆</text><line x1="95" y1="135" x2="95" y2="155" stroke="#2563eb" stroke-width="1.5" marker-end="none"/><line x1="265" y1="135" x2="265" y2="155" stroke="#dc2626" stroke-width="1.5"/><rect x="20" y="158" width="320" height="50" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/><text x="30" y="176" font-size="9" font-weight="bold" fill="#166534">结论</text><text x="30" y="192" font-size="8" fill="#475569">COUPE平台量产将推动CPO渗透率从2026年20%→2028年55%，传统光模块份额逐步被侵蚀</text><text x="30" y="203" font-size="7" fill="#64748b">但两者将长期共存，可插拔方案在低速率和灵活场景仍有优势</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 台积电技术白皮书、LightCounting</text></svg>')}` },
+  { id:13, title:'A股AI板块市值TOP15', date:'2026-04-28', category:'行业对比类', prompt:'A股AI相关上市公司市值排名前15，气泡图展示市值与涨幅关系',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">A股AI板块市值TOP15</text><text x="16" y="36" font-size="8" fill="#999">气泡大小=市值 颜色=年涨幅</text><circle cx="80" cy="100" r="32" fill="#2563eb" opacity="0.6"/><text x="68" y="103" font-size="8" fill="#fff" font-weight="bold">寒武纪</text><circle cx="160" cy="120" r="26" fill="#3b82f6" opacity="0.6"/><text x="145" y="123" font-size="7" fill="#fff" font-weight="bold">中科曙光</text><circle cx="240" cy="90" r="22" fill="#10b981" opacity="0.6"/><text x="226" y="93" font-size="7" fill="#fff" font-weight="bold">千里科技</text><circle cx="300" cy="140" r="20" fill="#60a5fa" opacity="0.6"/><text x="287" y="143" font-size="7" fill="#fff" font-weight="bold">海光信息</text><circle cx="120" cy="170" r="18" fill="#f59e0b" opacity="0.6"/><text x="108" y="173" font-size="7" fill="#fff" font-weight="bold">科大讯飞</text><circle cx="200" cy="165" r="15" fill="#8b5cf6" opacity="0.5"/><text x="189" y="168" font-size="6" fill="#fff">中际旭创</text><circle cx="60" cy="175" r="13" fill="#06b6d4" opacity="0.5"/><text x="50" y="178" font-size="6" fill="#fff">金山办公</text><circle cx="280" cy="180" r="12" fill="#ec4899" opacity="0.5"/><text x="270" y="183" font-size="6" fill="#fff">昆仑万维</text><circle cx="330" cy="100" r="11" fill="#14b8a6" opacity="0.5"/><text x="321" y="103" font-size="6" fill="#fff">拓尔思</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: Wind，截至2026.04.28</text></svg>')}` },
+  { id:14, title:'GPU算力供需缺口预测', date:'2026-04-25', category:'业绩类', prompt:'2024-2028年全球GPU算力供给vs需求走势，标注缺口区域',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">GPU算力供需缺口预测</text><text x="16" y="36" font-size="8" fill="#999">单位: EFLOPS</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><polygon fill="#fee2e2" opacity="0.4" points="50,180 106,165 162,140 218,100 274,55 330,30 330,70 274,95 218,130 162,155 106,172 50,182"/><polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,3" points="50,180 106,165 162,140 218,100 274,55 330,30"/><polyline fill="none" stroke="#2563eb" stroke-width="2" points="50,182 106,172 162,155 218,130 274,95 330,70"/><circle cx="274" cy="55" r="3" fill="#dc2626"/><circle cx="274" cy="95" r="3" fill="#2563eb"/><text x="210" y="50" font-size="7" fill="#dc2626">需求 12.8EF</text><text x="210" y="92" font-size="7" fill="#2563eb">供给 8.2EF</text><text x="228" y="73" font-size="8" fill="#991b1b" font-weight="bold">缺口36%</text><text x="50" y="210" font-size="7" fill="#94a3b8">2024</text><text x="106" y="210" font-size="7" fill="#94a3b8">2025</text><text x="162" y="210" font-size="7" fill="#94a3b8">2026E</text><text x="218" y="210" font-size="7" fill="#94a3b8">2027E</text><text x="274" y="210" font-size="7" fill="#94a3b8">2028E</text><rect x="60" y="222" width="8" height="3" fill="#dc2626"/><text x="72" y="225" font-size="7" fill="#64748b">算力需求</text><rect x="140" y="222" width="8" height="3" fill="#2563eb"/><text x="152" y="225" font-size="7" fill="#64748b">算力供给</text><rect x="220" y="222" width="8" height="3" fill="#fee2e2"/><text x="232" y="225" font-size="7" fill="#64748b">缺口区域</text></svg>')}` },
+  { id:15, title:'中国AI应用DAU排名', date:'2026-04-22', category:'行业对比类', prompt:'国内AI应用月活/日活排名TOP8横向对比',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">中国AI应用DAU排名 TOP8</text><text x="16" y="36" font-size="8" fill="#999">2026年4月 (万)</text><text x="16" y="60" font-size="8" fill="#475569">豆包</text><rect x="60" y="50" width="250" height="14" rx="2" fill="#7c3aed"/><text x="315" y="61" font-size="8" fill="#5b21b6">5800</text><text x="16" y="80" font-size="8" fill="#475569">Kimi</text><rect x="60" y="70" width="210" height="14" rx="2" fill="#8b5cf6"/><text x="275" y="81" font-size="8" fill="#5b21b6">4200</text><text x="16" y="100" font-size="8" fill="#475569">文心一言</text><rect x="60" y="90" width="180" height="14" rx="2" fill="#a78bfa"/><text x="245" y="101" font-size="8" fill="#5b21b6">3600</text><text x="16" y="120" font-size="8" fill="#475569">通义千问</text><rect x="60" y="110" width="145" height="14" rx="2" fill="#c4b5fd"/><text x="210" y="121" font-size="8" fill="#64748b">2900</text><text x="16" y="140" font-size="8" fill="#475569">DeepSeek</text><rect x="60" y="130" width="130" height="14" rx="2" fill="#c4b5fd"/><text x="195" y="141" font-size="8" fill="#64748b">2600</text><text x="16" y="160" font-size="8" fill="#475569">智谱清言</text><rect x="60" y="150" width="90" height="14" rx="2" fill="#ddd6fe"/><text x="155" y="161" font-size="8" fill="#64748b">1800</text><text x="16" y="180" font-size="8" fill="#475569">讯飞星火</text><rect x="60" y="170" width="75" height="14" rx="2" fill="#ddd6fe"/><text x="140" y="181" font-size="8" fill="#64748b">1500</text><text x="16" y="200" font-size="8" fill="#475569">海螺AI</text><rect x="60" y="190" width="55" height="14" rx="2" fill="#ede9fe"/><text x="120" y="201" font-size="8" fill="#64748b">1100</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: QuestMobile 2026.04</text></svg>')}` },
+  { id:16, title:'算力租赁价格走势', date:'2026-04-20', category:'业绩类', prompt:'H100/H800/A100云端算力租赁价格季度走势对比折线图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">算力租赁价格走势</text><text x="16" y="36" font-size="8" fill="#999">$/GPU·小时</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><line x1="50" y1="80" x2="330" y2="80" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="120" x2="330" y2="120" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="50" y1="160" x2="330" y2="160" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><polyline fill="none" stroke="#dc2626" stroke-width="2" points="70,85 120,90 170,100 220,115 270,125 310,135"/><polyline fill="none" stroke="#2563eb" stroke-width="2" points="70,105 120,115 170,130 220,145 270,155 310,162"/><polyline fill="none" stroke="#10b981" stroke-width="2" points="70,140 120,152 170,163 220,172 270,178 310,182"/><circle cx="310" cy="135" r="3" fill="#dc2626"/><circle cx="310" cy="162" r="3" fill="#2563eb"/><circle cx="310" cy="182" r="3" fill="#10b981"/><text x="315" y="138" font-size="7" fill="#dc2626">$2.85</text><text x="315" y="165" font-size="7" fill="#2563eb">$1.92</text><text x="315" y="185" font-size="7" fill="#10b981">$1.05</text><text x="60" y="210" font-size="7" fill="#94a3b8">24Q1</text><text x="110" y="210" font-size="7" fill="#94a3b8">24Q3</text><text x="160" y="210" font-size="7" fill="#94a3b8">25Q1</text><text x="210" y="210" font-size="7" fill="#94a3b8">25Q3</text><text x="260" y="210" font-size="7" fill="#94a3b8">26Q1</text><rect x="60" y="222" width="8" height="3" fill="#dc2626"/><text x="72" y="225" font-size="7" fill="#64748b">H100</text><rect x="120" y="222" width="8" height="3" fill="#2563eb"/><text x="132" y="225" font-size="7" fill="#64748b">H800</text><rect x="180" y="222" width="8" height="3" fill="#10b981"/><text x="192" y="225" font-size="7" fill="#64748b">A100</text></svg>')}` },
+  { id:17, title:'智能驾驶渗透率拆分', date:'2026-04-18', category:'结论类', prompt:'L2/L2+/L3/L4级别自动驾驶渗透率2023-2027堆积面积图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">智能驾驶渗透率拆分</text><text x="16" y="36" font-size="8" fill="#999">各级别占新车销量比例 (%)</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><polygon fill="#dbeafe" points="50,195 120,195 190,195 260,195 330,195 330,175 260,178 190,183 120,188 50,190"/><polygon fill="#93c5fd" points="50,190 120,188 190,183 260,178 330,175 330,140 260,150 190,162 120,175 50,180"/><polygon fill="#3b82f6" points="50,180 120,175 190,162 260,150 330,140 330,95 260,115 190,135 120,155 50,168"/><polygon fill="#1d4ed8" points="50,168 120,155 190,135 260,115 330,95 330,80 260,100 190,125 120,148 50,162"/><text x="280" y="190" font-size="7" fill="#1e40af">L2: 25%</text><text x="280" y="162" font-size="7" fill="#2563eb">L2+: 35%</text><text x="280" y="125" font-size="7" fill="#fff">L3: 22%</text><text x="280" y="92" font-size="7" fill="#fff">L4: 8%</text><text x="50" y="210" font-size="7" fill="#94a3b8">2023</text><text x="120" y="210" font-size="7" fill="#94a3b8">2024</text><text x="190" y="210" font-size="7" fill="#94a3b8">2025</text><text x="260" y="210" font-size="7" fill="#94a3b8">2026E</text><text x="325" y="210" font-size="7" fill="#94a3b8">27E</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 中汽协、高工智能汽车</text></svg>')}` },
+  { id:18, title:'AIGC商业化收入拆分', date:'2026-04-15', category:'估值类', prompt:'AIGC各细分领域商业化收入占比饼图：文本/图像/视频/代码/音频',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">AIGC商业化收入拆分</text><text x="16" y="36" font-size="8" fill="#999">2026E 各细分占比</text><circle cx="150" cy="135" r="70" fill="#2563eb"/><path d="M150,135 L150,65 A70,70 0 0,1 209,100 Z" fill="#3b82f6"/><path d="M150,135 L209,100 A70,70 0 0,1 210,165 Z" fill="#60a5fa"/><path d="M150,135 L210,165 A70,70 0 0,1 150,205 Z" fill="#93c5fd"/><path d="M150,135 L150,205 A70,70 0 0,1 90,170 Z" fill="#bfdbfe"/><rect x="240" y="75" width="10" height="10" rx="2" fill="#2563eb"/><text x="255" y="84" font-size="8" fill="#475569">文本生成 38%</text><rect x="240" y="95" width="10" height="10" rx="2" fill="#3b82f6"/><text x="255" y="104" font-size="8" fill="#475569">代码助手 25%</text><rect x="240" y="115" width="10" height="10" rx="2" fill="#60a5fa"/><text x="255" y="124" font-size="8" fill="#475569">图像生成 18%</text><rect x="240" y="135" width="10" height="10" rx="2" fill="#93c5fd"/><text x="255" y="144" font-size="8" fill="#475569">视频生成 12%</text><rect x="240" y="155" width="10" height="10" rx="2" fill="#bfdbfe"/><text x="255" y="164" font-size="8" fill="#475569">音频/其他 7%</text><text x="240" y="190" font-size="9" font-weight="bold" fill="#1e40af">总规模: 580亿元</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 艾瑞咨询、IDC</text></svg>')}` },
+  { id:19, title:'存储芯片价格周期', date:'2026-04-12', category:'业绩类', prompt:'DDR5/HBM3E/NAND价格指数近两年走势与周期标注',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">存储芯片价格周期</text><text x="16" y="36" font-size="8" fill="#999">价格指数 (基期=100)</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><rect x="50" y="50" width="90" height="145" fill="#dcfce7" opacity="0.3"/><rect x="140" y="50" width="70" height="145" fill="#fee2e2" opacity="0.3"/><rect x="210" y="50" width="120" height="145" fill="#dcfce7" opacity="0.3"/><text x="70" y="48" font-size="7" fill="#16a34a">上行周期</text><text x="155" y="48" font-size="7" fill="#dc2626">下行</text><text x="245" y="48" font-size="7" fill="#16a34a">新一轮上行</text><polyline fill="none" stroke="#dc2626" stroke-width="2" points="55,160 80,140 105,100 130,80 155,90 180,120 200,140 225,130 250,105 275,80 300,65 325,55"/><polyline fill="none" stroke="#7c3aed" stroke-width="2" points="55,170 80,155 105,130 130,110 155,115 180,130 200,145 225,135 250,115 275,95 300,75 325,60"/><polyline fill="none" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="4" points="55,150 80,145 105,135 130,130 155,140 180,155 200,165 225,158 250,145 275,130 300,115 325,105"/><text x="50" y="210" font-size="7" fill="#94a3b8">24Q1</text><text x="140" y="210" font-size="7" fill="#94a3b8">25Q1</text><text x="230" y="210" font-size="7" fill="#94a3b8">25Q4</text><text x="310" y="210" font-size="7" fill="#94a3b8">26Q2</text><rect x="60" y="222" width="8" height="3" fill="#dc2626"/><text x="72" y="225" font-size="7" fill="#64748b">DDR5</text><rect x="120" y="222" width="8" height="3" fill="#7c3aed"/><text x="132" y="225" font-size="7" fill="#64748b">HBM3E</text><rect x="190" y="222" width="8" height="3" fill="#0891b2"/><text x="202" y="225" font-size="7" fill="#64748b">NAND</text></svg>')}` },
+  { id:20, title:'机器人产业链图谱', date:'2026-04-10', category:'行业对比类', prompt:'人形机器人产业链上中下游全景图，标注核心供应商',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">人形机器人产业链图谱</text><rect x="20" y="45" width="100" height="25" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/><text x="40" y="62" font-size="9" font-weight="bold" fill="#92400e">上游零部件</text><rect x="130" y="45" width="100" height="25" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/><text x="155" y="62" font-size="9" font-weight="bold" fill="#1e40af">中游本体</text><rect x="240" y="45" width="100" height="25" rx="4" fill="#dcfce7" stroke="#10b981" stroke-width="1"/><text x="258" y="62" font-size="9" font-weight="bold" fill="#166534">下游应用</text><line x1="120" y1="57" x2="130" y2="57" stroke="#94a3b8" stroke-width="1"/><line x1="230" y1="57" x2="240" y2="57" stroke="#94a3b8" stroke-width="1"/><rect x="20" y="80" width="85" height="18" rx="3" fill="#fffbeb"/><text x="28" y="93" font-size="7" fill="#78350f">减速器: 绿的谐波</text><rect x="20" y="102" width="85" height="18" rx="3" fill="#fffbeb"/><text x="28" y="115" font-size="7" fill="#78350f">伺服电机: 汇川</text><rect x="20" y="124" width="85" height="18" rx="3" fill="#fffbeb"/><text x="28" y="137" font-size="7" fill="#78350f">传感器: 柯力传感</text><rect x="20" y="146" width="85" height="18" rx="3" fill="#fffbeb"/><text x="28" y="159" font-size="7" fill="#78350f">丝杠: 贝斯特</text><rect x="130" y="80" width="85" height="18" rx="3" fill="#eff6ff"/><text x="138" y="93" font-size="7" fill="#1e40af">特斯拉Optimus</text><rect x="130" y="102" width="85" height="18" rx="3" fill="#eff6ff"/><text x="138" y="115" font-size="7" fill="#1e40af">优必选Walker</text><rect x="130" y="124" width="85" height="18" rx="3" fill="#eff6ff"/><text x="138" y="137" font-size="7" fill="#1e40af">小米CyberOne</text><rect x="240" y="80" width="85" height="18" rx="3" fill="#f0fdf4"/><text x="248" y="93" font-size="7" fill="#166534">工业制造</text><rect x="240" y="102" width="85" height="18" rx="3" fill="#f0fdf4"/><text x="248" y="115" font-size="7" fill="#166534">物流仓储</text><rect x="240" y="124" width="85" height="18" rx="3" fill="#f0fdf4"/><text x="248" y="137" font-size="7" fill="#166534">家庭服务</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: GGII、各公司公告</text></svg>')}` },
+  { id:21, title:'中信AI指数vs纳斯达克', date:'2026-04-08', category:'估值类', prompt:'中信AI指数与纳斯达克AI子指数近一年走势对比，标注关键事件',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">中信AI指数 vs 纳斯达克AI子指数</text><text x="16" y="36" font-size="8" fill="#999">近一年涨跌幅 (%)</text><line x1="50" y1="120" x2="330" y2="120" stroke="#e2e8f0" stroke-width="0.5"/><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><text x="30" y="65" font-size="7" fill="#94a3b8">+60%</text><text x="30" y="124" font-size="7" fill="#94a3b8">0%</text><text x="30" y="180" font-size="7" fill="#94a3b8">-30%</text><polyline fill="none" stroke="#dc2626" stroke-width="2" points="55,130 80,125 105,115 130,105 150,140 170,135 190,100 210,85 230,80 250,75 270,70 290,65 310,60 325,55"/><polyline fill="none" stroke="#2563eb" stroke-width="2" points="55,125 80,120 105,118 130,115 150,125 170,120 190,112 210,108 230,105 250,100 270,98 290,95 310,92 325,90"/><text x="260" y="52" font-size="8" fill="#dc2626" font-weight="bold">中信AI +68%</text><text x="260" y="87" font-size="8" fill="#2563eb" font-weight="bold">纳指AI +32%</text><text x="50" y="210" font-size="7" fill="#94a3b8">2025.05</text><text x="140" y="210" font-size="7" fill="#94a3b8">2025.09</text><text x="230" y="210" font-size="7" fill="#94a3b8">2026.01</text><text x="310" y="210" font-size="7" fill="#94a3b8">04</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: Wind、Bloomberg</text></svg>')}` },
+  { id:22, title:'大模型推理成本下降曲线', date:'2026-04-05', category:'结论类', prompt:'GPT-4级模型推理API价格从2023到2026的下降趋势图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">大模型推理成本下降曲线</text><text x="16" y="36" font-size="8" fill="#999">GPT-4级模型 $/1M tokens</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><polyline fill="none" stroke="#10b981" stroke-width="2.5" points="70,60 120,85 170,120 220,155 270,172 320,182"/><circle cx="70" cy="60" r="5" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="55" y="52" font-size="8" fill="#10b981" font-weight="bold">$30</text><circle cx="120" cy="85" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="105" y="78" font-size="8" fill="#10b981">$20</text><circle cx="170" cy="120" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="155" y="113" font-size="8" fill="#10b981">$10</text><circle cx="220" cy="155" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="210" y="148" font-size="8" fill="#10b981">$3</text><circle cx="270" cy="172" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="258" y="167" font-size="8" fill="#10b981">$1.5</text><circle cx="320" cy="182" r="4" fill="#fff" stroke="#10b981" stroke-width="2"/><text x="305" y="177" font-size="8" fill="#10b981" font-weight="bold">$0.8</text><text x="130" y="160" font-size="10" fill="#166534" font-weight="bold">↓ 97% (3年)</text><text x="60" y="210" font-size="7" fill="#94a3b8">2023.03</text><text x="120" y="210" font-size="7" fill="#94a3b8">2023.11</text><text x="180" y="210" font-size="7" fill="#94a3b8">2024.06</text><text x="235" y="210" font-size="7" fill="#94a3b8">2025.03</text><text x="290" y="210" font-size="7" fill="#94a3b8">2026</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: 各公司API定价、a]6z</text></svg>')}` },
+  { id:23, title:'半导体设备国产化率', date:'2026-04-02', category:'业绩类', prompt:'光刻机/刻蚀/薄膜沉积/检测各环节国产化率2022vs2026对比',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">半导体设备国产化率</text><text x="16" y="36" font-size="8" fill="#999">2022 vs 2026E (%)</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><rect x="60" y="165" width="22" height="30" fill="#bfdbfe" rx="2"/><rect x="85" y="130" width="22" height="65" fill="#2563eb" rx="2"/><text x="65" y="183" font-size="7" fill="#1e40af">8%</text><text x="88" y="157" font-size="7" fill="#fff">18%</text><rect x="130" y="130" width="22" height="65" fill="#bfdbfe" rx="2"/><rect x="155" y="85" width="22" height="110" fill="#2563eb" rx="2"/><text x="133" y="157" font-size="7" fill="#1e40af">18%</text><text x="158" y="135" font-size="7" fill="#fff">38%</text><rect x="200" y="145" width="22" height="50" fill="#bfdbfe" rx="2"/><rect x="225" y="100" width="22" height="95" fill="#2563eb" rx="2"/><text x="203" y="168" font-size="7" fill="#1e40af">14%</text><text x="228" y="142" font-size="7" fill="#fff">32%</text><rect x="270" y="120" width="22" height="75" fill="#bfdbfe" rx="2"/><rect x="295" y="75" width="22" height="120" fill="#2563eb" rx="2"/><text x="273" y="155" font-size="7" fill="#1e40af">22%</text><text x="298" y="130" font-size="7" fill="#fff">42%</text><text x="63" y="210" font-size="7" fill="#94a3b8">光刻</text><text x="135" y="210" font-size="7" fill="#94a3b8">刻蚀</text><text x="200" y="210" font-size="7" fill="#94a3b8">薄膜</text><text x="272" y="210" font-size="7" fill="#94a3b8">检测</text><rect x="60" y="224" width="8" height="8" fill="#bfdbfe" rx="1"/><text x="72" y="231" font-size="7" fill="#64748b">2022</text><rect x="120" y="224" width="8" height="8" fill="#2563eb" rx="1"/><text x="132" y="231" font-size="7" fill="#64748b">2026E</text></svg>')}` },
+  { id:24, title:'AI Agent市场规模预测', date:'2026-03-28', category:'估值类', prompt:'2024-2028年全球AI Agent市场规模及增速预测柱状折线组合图',
+    thumb:`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><rect fill="#fff" width="360" height="240"/><text x="16" y="22" font-size="12" font-weight="bold" fill="#222">AI Agent市场规模预测</text><text x="16" y="36" font-size="8" fill="#999">全球 (亿美元) + YoY增速</text><line x1="50" y1="195" x2="330" y2="195" stroke="#cbd5e1" stroke-width="1"/><rect x="65" y="160" width="35" height="35" fill="#93c5fd" rx="2"/><rect x="125" y="130" width="35" height="65" fill="#60a5fa" rx="2"/><rect x="185" y="95" width="35" height="100" fill="#3b82f6" rx="2"/><rect x="245" y="60" width="35" height="135" fill="#2563eb" rx="2"/><rect x="305" y="40" width="35" height="155" fill="#1d4ed8" rx="2"/><text x="73" y="155" font-size="8" fill="#1e40af">120</text><text x="133" y="125" font-size="8" fill="#1e40af">280</text><text x="193" y="90" font-size="8" fill="#1e40af">520</text><text x="250" y="55" font-size="8" fill="#fff">890</text><text x="308" y="35" font-size="8" fill="#1d4ed8">1350</text><polyline fill="none" stroke="#f59e0b" stroke-width="2" points="82,80 142,72 202,68 262,60 322,55"/><circle cx="82" cy="80" r="3" fill="#f59e0b"/><circle cx="142" cy="72" r="3" fill="#f59e0b"/><circle cx="202" cy="68" r="3" fill="#f59e0b"/><circle cx="262" cy="60" r="3" fill="#f59e0b"/><circle cx="322" cy="55" r="3" fill="#f59e0b"/><text x="65" y="76" font-size="7" fill="#f59e0b">+95%</text><text x="125" y="68" font-size="7" fill="#f59e0b">+133%</text><text x="185" y="64" font-size="7" fill="#f59e0b">+86%</text><text x="245" y="56" font-size="7" fill="#f59e0b">+71%</text><text x="310" y="51" font-size="7" fill="#f59e0b">+52%</text><text x="68" y="210" font-size="7" fill="#94a3b8">2024</text><text x="128" y="210" font-size="7" fill="#94a3b8">2025</text><text x="188" y="210" font-size="7" fill="#94a3b8">2026E</text><text x="248" y="210" font-size="7" fill="#94a3b8">2027E</text><text x="308" y="210" font-size="7" fill="#94a3b8">2028E</text><text x="16" y="232" font-size="6" fill="#cbd5e1">资料来源: Gartner、McKinsey</text></svg>')}` },
+];
+
+// Demo data for 个股一页纸
+const aiStockAnalysisLibData = [
+  { id:1, stock:'千里科技', code:'688100', date:'2026-05-19', summary:'端侧大模型最优载体，Q1业绩超预期，维持买入评级', rating:'买入', target:'160', price:'138.50', change:'+3.2%',
+    sections: {
+      logic: '端侧大模型最优载体：公司自研NPU架构在端侧推理能效比达业界领先水平，Q1营收12.8亿(+42% YoY)，净利润2.1亿(+67% YoY)，超一致预期15%。AI PC/AI手机渗透率快速提升，公司作为核心芯片供应商将持续受益。催化剂包括端侧大模型新品发布、海外Tier-1客户导入、AI PC放量。',
+      industry: '所属AI端侧芯片行业，2026年全球AI端侧推理芯片市场规模预计达280亿美元(+65% YoY)，中国市场占比约35%。行业处于快速成长期，渗透率从2025年的12%提升至2026年的28%。商业模式为Fabless芯片设计+IP授权双轮驱动，毛利率中枢58-62%。',
+      chain: '上游：台积电(先进制程代工)、三星(HBM供应)、日月光(封测)；中游：公司自身(芯片设计)，竞争对手包括高通、联发科、苹果自研；下游：AI PC OEM(联想、惠普、戴尔)、手机厂商(小米、OPPO、vivo)、IoT设备厂商。公司在端侧NPU IP市占率约22%，位列国内第一、全球第三。',
+      market: '全球AI端侧芯片TAM：2025年170亿→2026年280亿→2028年520亿美元(CAGR 45%)。公司可触达市场(SAM)约80亿美元，当前市占率~8%，目标2028年提升至15%。核心假设：AI PC渗透率2026年28%→2028年55%；端侧推理占比从15%提升至35%。',
+      competition: '第一梯队：高通(骁龙X Elite，份额35%)、苹果(M系列，份额25%)；第二梯队：千里科技(NPU-3，份额8%)、联发科(天玑9400，份额12%)；第三梯队：Intel(Meteor Lake，份额10%)。公司核心优势：能效比领先15%、本土客户关系深厚、性价比突出。',
+      targets: '千里科技(688100)：买入，目标价160元，对应2027年35xPE；寒武纪(688256)：增持，推理芯片协同效应；中芯国际(688981)：关注，先进制程产能扩张受益。',
+      price: [128,131,127,133,136,132,138,135,140,137,142,139,145,141,138]
+    }
+  },
+  { id:2, stock:'寒武纪', code:'688256', date:'2026-05-18', summary:'推理芯片国产替代加速，MLU370出货放量', rating:'增持', target:'380', price:'352.80', change:'+1.8%',
+    sections: {
+      logic: '国产AI推理芯片龙头，MLU370系列进入规模出货期。受益于国产替代加速，政府及国企客户采购份额持续提升。2026Q1收入6.2亿(+85% YoY)，亏损大幅收窄。技术路线对标英伟达A100，推理性能达其80%但价格仅60%。',
+      industry: '中国AI芯片市场2026年规模约450亿元(+55%)，推理芯片占比从30%提升至45%。行业受政策强力推动，国产化率目标从当前15%提升至2028年35%。',
+      chain: '上游：中芯国际/华虹(代工)、长电科技(封测)；中游：寒武纪(芯片设计)，竞品包括华为昇腾、壁仞科技、燧原科技；下游：互联网云厂商(百度、阿里、腾讯)、运营商(中国移动、电信)、政府智算中心。',
+      market: '中国AI推理芯片TAM：2026年200亿→2028年450亿元。公司目标市占率从当前5%提升至2028年12%，对应收入54亿元。',
+      competition: '华为昇腾(份额28%)绝对领先，寒武纪(份额5%)位列第二梯队，壁仞/燧原紧随其后。公司优势在于软件生态(Cambricon Neuware)和早期客户积累。',
+      targets: '寒武纪(688256)：增持，目标价380元；海光信息(688041)：买入，DCU协同；华为(未上市)：行业标杆参考。',
+      price: [340,338,345,350,348,355,360,358,352,356,349,353,357,351,353]
+    }
+  },
+  { id:3, stock:'阶跃星辰', code:'STEP-US', date:'2026-05-16', summary:'Step-2 Pro发布带动估值重塑，C端+B端双轮驱动', rating:'推荐', target:'-', price:'28.50', change:'+5.6%',
+    sections: {
+      logic: 'Step-2 Pro大模型发布标志技术代际突破：推理成本下降60%，多模态能力全面对标GPT-5。C端「跃问」MAU突破8000万，B端API调用量环比+120%。估值从40亿美元重塑至80亿美元区间。',
+      industry: '全球基础大模型市场2026年规模约180亿美元，中国占比20%。行业进入洗牌期，头部5家（OpenAI/Anthropic/Google/阶跃/月之暗面）占据80%市场。',
+      chain: '上游：英伟达(GPU)、算力云(AWS/Azure)；中游：阶跃星辰(模型研发)，竞品包括月之暗面、智谱AI、百川智能；下游：企业客户(金融/教育/医疗)、C端应用、开发者生态。',
+      market: '中国大模型API市场2026年约35亿美元，阶跃星辰份额约12%。C端付费用户预计2026年底达500万，ARPU约15元/月。',
+      competition: '月之暗面(Kimi，C端领先)、智谱AI(B端领先)、百川智能(行业垂直)。阶跃星辰优势：C+B双轮、技术迭代速度快、团队背景强（前微软亚研院核心）。',
+      targets: '阶跃星辰(STEP-US)：推荐，估值80亿美元中枢；商汤科技(0020.HK)：关注，大模型平台化转型。',
+      price: [22,23,21,24,25,23,26,24,27,25,28,26,29,27,29]
+    }
+  },
+  { id:4, stock:'海光信息', code:'688041', date:'2026-05-14', summary:'DCU四代流片顺利，数据中心客户扩展', rating:'买入', target:'95', price:'82.30', change:'+2.1%',
+    sections: {
+      logic: 'x86+DCU双轮驱动，DCU四代（深算二号）流片成功，性能对标A100达85%。数据中心CPU市占率稳步提升至8%，DCU在国产智算中心份额快速扩张。2026Q1营收18亿(+52%)，利润率改善趋势明确。',
+      industry: '中国服务器CPU市场2026年约320亿元，国产化率目标30%。DCU/GPGPU市场约200亿元，国产化率15%。双重国产替代驱动。',
+      chain: '上游：台积电/中芯国际(代工)；中游：海光信息(CPU+DCU设计)，CPU竞品为Intel/AMD/鲲鹏，DCU竞品为寒武纪/壁仞；下游：浪潮/新华三/中科曙光(服务器OEM)、运营商、互联网厂商。',
+      market: '公司CPU+DCU合计TAM约520亿元(2026)，目标市占率从6%→2028年15%，对应78亿元收入。',
+      competition: 'CPU端：Intel(60%)>AMD(20%)>海光(8%)>鲲鹏(7%)；DCU端：英伟达(75%)>华为昇腾(12%)>海光(5%)。双线作战格局。',
+      targets: '海光信息(688041)：买入，目标价95元(2027年40xPE)；中科曙光(603019)：增持，核心服务器OEM受益。',
+      price: [75,77,74,78,80,79,82,81,83,80,84,82,85,83,82]
+    }
+  },
+  { id:5, stock:'科大讯飞', code:'002230', date:'2026-05-12', summary:'星火大模型4.0商业化提速，教育+医疗场景渗透加深', rating:'增持', target:'72', price:'63.20', change:'-0.8%',
+    sections: {
+      logic: '星火大模型4.0在教育和医疗两大垂直场景商业化领先。教育AI产品覆盖3.2万所学校(+40%)，智慧医疗签约超500家三甲医院。2026Q1营收52亿(+28%)，B/G端收入占比提升至65%。核心看点在于大模型落地变现能力验证。',
+      industry: 'AI+教育市场2026年约800亿元(+35%)，AI+医疗约400亿元(+45%)。两大场景数字化渗透率仍较低（教育25%、医疗15%），增长空间大。',
+      chain: '上游：GPU算力(华为昇腾为主)、数据标注；中游：科大讯飞(AI平台+应用)，竞品包括好未来(教育)、医渡科技(医疗)、百度(通用AI)；下游：学校/教育局(G端)、医院/卫健委(G端)、C端学习设备。',
+      market: '教育+医疗两大场景可触达市场约300亿元，公司当前份额约12%(36亿元)，目标2028年提升至18%。',
+      competition: '教育AI：讯飞(30%)>好未来(20%)>网易有道(10%)；医疗AI：讯飞(15%)>医渡科技(12%)>平安健康(10%)。讯飞优势在于语音技术底层能力和G端渠道。',
+      targets: '科大讯飞(002230)：增持，目标价72元；好未来(TAL)：关注，教育AI竞争格局观察。',
+      price: [65,64,66,63,65,64,67,65,63,64,62,63,64,63,63]
+    }
+  },
+];
+
+// Demo data for 写点评
+const aiJokeLibData = [
+  { id:1, title:'AI算力产业链周度点评', date:'2026-05-19', summary:'本周AI算力板块整体上涨6.2%，英伟达H20出货预期上调带动产业链全面走强...' },
+  { id:2, title:'大模型商业化进展点评', date:'2026-05-17', summary:'阶跃星辰Step-2 Pro发布，推理成本下降60%，商业化拐点加速到来...' },
+  { id:3, title:'北向资金异动点评', date:'2026-05-16', summary:'北向资金连续3日大幅流入AI板块，累计净买入超45亿，重点加仓算力硬件...' },
+  { id:4, title:'千里科技业绩快评', date:'2026-05-15', summary:'Q1营收12.8亿(+42% YoY)，净利润2.1亿(+67%)，超一致预期15%...' },
+];
+
+// Demo data for 调研大纲
+const aiResearchOutlineLibData = [
+  { id:1, title:'阶跃星辰深度调研', date:'2026-05-18', type:'实地调研', summary:'围绕Step-2 Pro技术路线、商业化进展、竞争格局三大维度展开...' },
+  { id:2, title:'千里科技供应链调研', date:'2026-05-16', type:'产业链验证', summary:'验证端侧芯片出货量、核心客户导入进度、库存周期...' },
+  { id:3, title:'算力基础设施草根调研', date:'2026-05-14', type:'草根调研', summary:'走访3家IDC运营商，了解机柜上架率、电力供应、客户需求...' },
+];
+
+function renderAiLibrary(tool) {
+  const titleEl = document.getElementById('ai-library-title');
+  const bodyEl = document.getElementById('ai-library-body');
+  const createBtn = document.getElementById('ai-library-create-btn');
+  titleEl.textContent = aiToolTitles[tool] || tool;
+  createBtn.style.display = (tool === 'history') ? 'none' : '';
+
+  if (tool === 'meeting-assistant') {
+    bodyEl.innerHTML = renderMeetingLibrary();
+  } else if (tool === 'gallery') {
+    bodyEl.innerHTML = renderGalleryLibrary();
+  } else if (tool === 'stock-analysis') {
+    bodyEl.innerHTML = renderStockAnalysisLibrary();
+  } else if (tool === 'joke') {
+    bodyEl.innerHTML = renderJokeLibrary();
+  } else if (tool === 'research-outline') {
+    bodyEl.innerHTML = renderResearchOutlineLibrary();
+  } else if (tool === 'monitor-center') {
+    bodyEl.innerHTML = renderMonitorLibrary();
+  } else if (tool === 'schedule') {
+    bodyEl.innerHTML = renderScheduleLibrary();
+  } else if (tool === 'history') {
+    bodyEl.innerHTML = renderSessionHistory();
   }
 }
 
+function renderMeetingLibrary() {
+  const statusLabels = { pending:'待参会', running:'参会中', done:'已完成' };
+  const statusCls = { pending:'ai-lib-status-pending', running:'ai-lib-status-running', done:'ai-lib-status-done' };
+  const sorted = [...aiMeetingLibData].sort((a,b) => b.date.localeCompare(a.date));
+  return sorted.map(m => `
+    <div class="ai-lib-card" onclick="openAiFloatingLayer('meeting-detail',${m.id})">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <div class="ai-lib-card-title">${m.title}</div>
+        <span class="ai-lib-status ${statusCls[m.status]}">${statusLabels[m.status]}</span>
+      </div>
+      <div class="ai-lib-card-meta">
+        <span>${m.date}</span><span>${m.platform}</span>${m.duration !== '-' ? `<span>${m.duration}</span>` : ''}
+      </div>
+      <div class="ai-lib-card-summary">${m.summary}</div>
+      ${m.stocks.length ? `<div class="ai-lib-card-tags">${m.stocks.map(s => `<span class="tag tag-cyan" style="font-size:10px; padding:1px 6px;">${s}</span>`).join('')}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+let galleryFilter = '全部';
+let galleryTab = 'research';
+
+const myGalleryData = [
+  { id:101, title:'千里科技PE-Band', category:'估值类', date:'2026-05-20', thumb:'' },
+  { id:102, title:'AI算力板块月度涨幅', category:'行业对比类', date:'2026-05-18', thumb:'' },
+  { id:103, title:'寒武纪收入拆分', category:'业绩类', date:'2026-05-15', thumb:'' },
+  { id:104, title:'端侧AI渗透率预测', category:'结论类', date:'2026-05-12', thumb:'' },
+  { id:105, title:'光模块价格走势', category:'行业对比类', date:'2026-05-10', thumb:'' },
+  { id:106, title:'阶跃星辰用户增长曲线', category:'业绩类', date:'2026-05-08', thumb:'' }
+];
+myGalleryData.forEach(g => {
+  const colors = {'估值类':['#2563eb','#93c5fd'],'业绩类':['#00b894','#81ecec'],'行业对比类':['#e17055','#fab1a0'],'结论类':['#6c5ce7','#a29bfe']}[g.category]||['#2563eb','#93c5fd'];
+  g.thumb = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect fill="#f8fafc" width="200" height="120"/><rect x="15" y="85" width="16" height="25" fill="${colors[1]}" rx="2"/><rect x="38" y="70" width="16" height="40" fill="${colors[1]}" rx="2"/><rect x="61" y="55" width="16" height="55" fill="${colors[0]}" rx="2"/><rect x="84" y="40" width="16" height="70" fill="${colors[0]}" rx="2"/><rect x="107" y="50" width="16" height="60" fill="${colors[0]}" rx="2"/><rect x="130" y="30" width="16" height="80" fill="${colors[0]}" rx="2"/><rect x="153" y="20" width="16" height="90" fill="${colors[0]}" rx="2"/><text x="100" y="14" text-anchor="middle" font-size="8" fill="#64748b">${g.title.slice(0,8)}</text></svg>`);
+});
+
+function renderGalleryLibrary() {
+  const categories = ['全部', '估值类', '业绩类', '行业对比类', '结论类'];
+  return `<div style="display:flex; gap:0; margin-bottom:14px; border-bottom:1px solid var(--border);">
+    <div onclick="galleryTab='research'; renderAiLibrary('gallery');" style="padding:8px 16px; font-size:12px; font-weight:500; cursor:pointer; border-bottom:2px solid ${galleryTab==='research' ? 'var(--accent-blue)' : 'transparent'}; color:${galleryTab==='research' ? 'var(--accent-blue)' : 'var(--text-secondary)'};">投研图库</div>
+    <div onclick="galleryTab='mine'; renderAiLibrary('gallery');" style="padding:8px 16px; font-size:12px; font-weight:500; cursor:pointer; border-bottom:2px solid ${galleryTab==='mine' ? 'var(--accent-blue)' : 'transparent'}; color:${galleryTab==='mine' ? 'var(--accent-blue)' : 'var(--text-secondary)'};">我的图库</div>
+  </div>` + (galleryTab === 'research' ? renderGalleryResearch(categories) : renderGalleryMine(categories));
+}
+
+function renderGalleryResearch(categories) {
+  const filtered = galleryFilter === '全部' ? aiGalleryLibData : aiGalleryLibData.filter(g => g.category === galleryFilter);
+  return `<div style="margin-bottom:12px; display:flex; gap:6px; flex-wrap:wrap;">
+    ${categories.map(c => `<span onclick="galleryFilter='${c}'; renderAiLibrary('gallery');" style="font-size:11px; padding:4px 10px; border-radius:12px; cursor:pointer; transition:all 0.15s; ${galleryFilter===c ? 'background:var(--accent-blue); color:#fff;' : 'background:var(--bg-secondary); color:var(--text-secondary);'}">${c}</span>`).join('')}
+  </div>
+  <div class="ai-gallery-grid">${filtered.map(g => `
+    <div class="ai-gallery-item" onclick="openAiFloatingLayer('gallery-detail',${g.id})">
+      <img src="${g.thumb}" alt="${g.title}" />
+      <div class="ai-gallery-item-caption">
+        <span class="tag" style="font-size:9px; padding:1px 5px; background:rgba(45,127,249,0.1); color:var(--accent-blue); margin-right:4px;">${g.category}</span>
+        ${g.title}
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderGalleryMine(categories) {
+  const filtered = galleryFilter === '全部' ? myGalleryData : myGalleryData.filter(g => g.category === galleryFilter);
+  return `<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+    <span style="font-size:11px; color:var(--text-muted);">${myGalleryData.length} 张图表</span>
+  </div>
+  <div style="margin-bottom:12px; display:flex; gap:6px; flex-wrap:wrap;">
+    ${categories.map(c => `<span onclick="galleryFilter='${c}'; renderAiLibrary('gallery');" style="font-size:11px; padding:4px 10px; border-radius:12px; cursor:pointer; transition:all 0.15s; ${galleryFilter===c ? 'background:var(--accent-blue); color:#fff;' : 'background:var(--bg-secondary); color:var(--text-secondary);'}">${c}</span>`).join('')}
+  </div>
+  <div class="ai-gallery-grid">${filtered.map(g => `
+    <div class="ai-gallery-item" onclick="openAiFloatingLayer('gallery-detail',${g.id})">
+      <img src="${g.thumb}" alt="${g.title}" />
+      <div class="ai-gallery-item-caption">
+        <span class="tag" style="font-size:9px; padding:1px 5px; background:rgba(45,127,249,0.1); color:var(--accent-blue); margin-right:4px;">${g.category}</span>
+        ${g.title}
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderStockAnalysisLibrary() {
+  return aiStockAnalysisLibData.map(s => `
+    <div class="ai-lib-card" onclick="openAiFloatingLayer('stock-detail',${s.id})">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+        <div class="ai-lib-card-title" style="margin-bottom:0;">${s.stock}</div>
+        <span style="font-size:10px; color:var(--text-muted);">${s.code || ''}</span>
+        <span class="tag tag-gold" style="font-size:10px; padding:1px 6px;">${s.rating}</span>
+        <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">${s.date}</span>
+      </div>
+      <div class="ai-lib-card-summary">${s.summary}</div>
+      <div style="display:flex; gap:4px; margin-top:6px; flex-wrap:wrap;">
+        ${['投资逻辑','行业','产业链','空间','竞争','标的'].map(t => `<span style="font-size:9px; padding:1px 5px; border-radius:3px; background:rgba(45,127,249,0.08); color:var(--accent-blue);">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderJokeLibrary() {
+  return aiJokeLibData.map(j => `
+    <div class="ai-lib-card" onclick="openAiFloatingLayer('joke-detail',${j.id})">
+      <div class="ai-lib-card-title">${j.title}</div>
+      <div class="ai-lib-card-meta"><span>${j.date}</span></div>
+      <div class="ai-lib-card-summary">${j.summary}</div>
+    </div>
+  `).join('');
+}
+
+function renderResearchOutlineLibrary() {
+  return aiResearchOutlineLibData.map(r => `
+    <div class="ai-lib-card" onclick="openAiFloatingLayer('outline-detail',${r.id})">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <div class="ai-lib-card-title" style="margin-bottom:0;">${r.title}</div>
+        <span class="tag tag-blue" style="font-size:10px; padding:1px 6px;">${r.type}</span>
+      </div>
+      <div class="ai-lib-card-meta"><span>${r.date}</span></div>
+      <div class="ai-lib-card-summary">${r.summary}</div>
+    </div>
+  `).join('');
+}
+
+function renderMonitorLibrary() {
+  return `<div style="padding:8px 0;">
+    ${monitorSettings.map((m,i) => `
+      <div class="ai-lib-card" onclick="openAiFloatingLayer('monitor-detail',${i})">
+        <div class="ai-lib-card-title">${m.name}</div>
+        <div class="ai-lib-card-meta"><span>关键词: ${m.keywords.join(', ')}</span></div>
+        <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
+          <span class="ai-lib-status ai-lib-status-done">运行中</span>
+          <span style="font-size:10px; color:var(--text-muted);">更新频率: ${m.freq || '实时'}</span>
+        </div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderScheduleLibrary() {
+  const tasks = [
+    { title:'每日自选股早报', time:'每日 08:30', on:true },
+    { title:'周五策略周报生成', time:'每周五 17:00', on:true },
+    { title:'北向资金异动提醒', time:'实时', on:false },
+    { title:'英伟达H20专家会', time:'2026-05-22 14:00', on:true },
+    { title:'模芯联盟峰会', time:'2026-06-03 09:00', on:true },
+  ];
+  return tasks.map(t => `
+    <div class="ai-lib-card">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div class="ai-lib-card-title">${t.title}</div>
+          <div class="ai-lib-card-meta"><span>${t.time}</span></div>
+        </div>
+        <div style="width:36px;height:20px;border-radius:10px;background:${t.on?'var(--accent-blue)':'var(--border)'};position:relative;cursor:pointer;" onclick="this.style.background=this.style.background.includes('blue')?'var(--border)':'var(--accent-blue)';this.querySelector('span').style.left=this.style.background.includes('blue')?'18px':'2px'">
+          <span style="position:absolute;top:2px;left:${t.on?'18px':'2px'};width:16px;height:16px;border-radius:50%;background:#fff;transition:0.2s;"></span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSessionHistory() {
+  const icons = { general:'💬', joke:'✦', 'monitor-center':'📡', schedule:'⏰', 'meeting-assistant':'🎙', gallery:'🖼', 'stock-analysis':'📊', 'research-outline':'📋' };
+  if (!aiSessions.length) return '<div style="text-align:center; padding:40px; color:var(--text-muted); font-size:13px;">暂无会话历史</div>';
+  return aiSessions.map(s => `
+    <div class="ai-lib-card" onclick="openAiFloatingLayer('session',${s.id})">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:14px;">${icons[s.mode] || '💬'}</span>
+        <div class="ai-lib-card-title" style="margin-bottom:0;">${s.title}</div>
+      </div>
+      <div class="ai-lib-card-meta" style="margin-top:4px;"><span>${s.mode ? aiToolTitles[s.mode] || '对话' : '对话'}</span></div>
+    </div>
+  `).join('');
+}
+
+const rightChatTools = ['gallery', 'stock-analysis', 'joke', 'research-outline', 'monitor-center', 'schedule'];
+
+function handleLibraryCreate() {
+  if (currentAiTool === 'meeting-assistant') {
+    openMeetingModal();
+  } else if (rightChatTools.includes(currentAiTool)) {
+    openAiRightChat(currentAiTool);
+  } else {
+    openAiFloatingLayer('create');
+  }
+}
+
+function openAiRightChat(tool) {
+  const panel = document.getElementById('ai-right-chat-panel');
+  const title = document.getElementById('ai-right-chat-title');
+  const body = document.getElementById('ai-right-chat-body');
+  const input = document.getElementById('ai-right-chat-input');
+  panel.style.display = 'flex';
+  const titles = { gallery:'AI 图库助手', 'stock-analysis':'AI 个股分析', joke:'AI 写点评', 'research-outline':'AI 调研大纲', 'monitor-center':'AI 信源监控', schedule:'AI 定时任务' };
+  const placeholders = { gallery:'描述图表内容，如：寒武纪近一年PE走势图...', 'stock-analysis':'输入个股名称，如：千里科技...', joke:'描述点评主题，如：今日AI算力板块表现...', 'research-outline':'输入调研主题，如：阶跃星辰商业化进展...', 'monitor-center':'描述监控需求，如：监控寒武纪相关新闻...', schedule:'描述定时任务，如：每天9点推送AI板块异动...' };
+  const hints = { gallery:'描述你想生成的图表内容，AI将为你创作', 'stock-analysis':'输入个股名称或代码，AI为你生成一页纸', joke:'描述点评主题，AI为你撰写投研点评', 'research-outline':'输入调研主题，AI为你生成调研大纲', 'monitor-center':'描述你想监控的信源和关键词，AI为你配置', schedule:'描述定时任务内容和触发时间，AI为你设置' };
+  title.textContent = titles[tool] || 'AI 助手';
+  input.placeholder = placeholders[tool] || '输入内容...';
+  body.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">${hints[tool] || '输入内容，AI为你生成'}</div>`;
+}
+
+function closeAiRightChat() {
+  document.getElementById('ai-right-chat-panel').style.display = 'none';
+}
+
+function sendRightChat() {
+  const input = document.getElementById('ai-right-chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const body = document.getElementById('ai-right-chat-body');
+  body.innerHTML += `<div style="align-self:flex-end; background:var(--accent-blue); color:#fff; padding:10px 14px; border-radius:10px; font-size:12px; max-width:85%;">${msg}</div>`;
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    body.innerHTML += getRightChatReply(currentAiTool, msg);
+    body.scrollTop = body.scrollHeight;
+  }, 600);
+}
+
+function getRightChatReply(tool, msg) {
+  if (tool === 'gallery') {
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; margin-bottom:10px;">正在为你生成「${msg}」...</div>
+      <div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; text-align:center; margin-bottom:10px;">
+        <svg viewBox="0 0 400 200" style="width:100%;"><rect fill="#fff" width="400" height="200"/><text x="20" y="24" font-size="11" font-weight="bold" fill="#222">${msg.slice(0,20)}</text><line x1="30" y1="175" x2="370" y2="175" stroke="#cbd5e1" stroke-width="1"/><line x1="30" y1="60" x2="370" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="30" y1="100" x2="370" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="30" y1="140" x2="370" y2="140" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><polyline fill="none" stroke="#2563eb" stroke-width="2" points="30,160 80,140 130,120 180,90 230,100 280,60 350,45"/><rect x="50" y="100" width="20" height="75" fill="#93c5fd" rx="2"/><rect x="100" y="80" width="20" height="95" fill="#93c5fd" rx="2"/><rect x="150" y="60" width="20" height="115" fill="#93c5fd" rx="2"/><rect x="200" y="50" width="20" height="125" fill="#60a5fa" rx="2"/><rect x="250" y="35" width="20" height="140" fill="#60a5fa" rx="2"/><rect x="300" y="25" width="20" height="150" fill="#2563eb" rx="2"/></svg>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存到图库')">保存到图库</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="startEditElement(this)">编辑元素</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="startEditPrompt(this, '${msg.replace(/'/g, "\\'")}')">修改提示词</button>
+      </div>
+    </div>`;
+  } else if (tool === 'stock-analysis') {
+    const stockPrices = {'千里科技':'138.50|+3.2%','寒武纪':'352.80|+1.8%','阶跃星辰':'28.50|+5.6%','海光信息':'92.30|+2.1%','科大讯飞':'68.75|-0.8%'};
+    const priceInfo = stockPrices[msg] || '-- | --';
+    const [curPrice, curChange] = priceInfo.split('|');
+    const changeColor = (curChange||'').trim().startsWith('-') ? '#e74c3c' : '#00b894';
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">📊 ${msg} · AI一页纸</div>
+      <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px; padding:8px 10px; background:var(--bg-card); border-radius:6px; border:1px solid var(--border);">
+        <span style="font-size:18px; font-weight:700;">${curPrice}</span>
+        <span style="font-size:13px; font-weight:600; color:${changeColor};">${curChange}</span>
+        <span style="font-size:10px; color:var(--text-muted); margin-left:auto;">实时行情</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.8; margin-bottom:8px;">✓ 基本面数据拉取<br>✓ 产业链映射完成<br>✓ 竞争格局分析完成<br>✓ 市场空间测算完成<br>✓ 投资逻辑生成完成</div>
+      <div style="padding:10px; background:var(--bg-card); border-radius:6px; font-size:11px; line-height:1.8; margin-bottom:6px;">
+        <strong>核心投资逻辑：</strong>AI端侧落地+业绩高增长<br>
+        <strong>行业：</strong>AI端侧芯片，2026年TAM 280亿美元(+65%)<br>
+        <strong>产业链位置：</strong>中游芯片设计，上承台积电代工、下接OEM客户<br>
+        <strong>竞争格局：</strong>全球第三、国内第一(份额8%)<br>
+        <strong>评级：</strong>买入 | <strong>目标价：</strong>¥160 | <strong>当前价：</strong>¥${curPrice.trim()}
+      </div>
+      <div style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">含6大板块：投资逻辑/行业全景/产业链/市场空间/竞争格局/重点标的</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存到成果库')">保存</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button>
+      </div>
+    </div>`;
+  } else if (tool === 'joke') {
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:6px;">${msg}</div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">今日AI算力板块大涨3.2%，核心驱动来自英伟达H20出货预期上调。产业链验证显示，Q3算力需求将迎来集中释放期，建议重点关注服务器ODM和光模块环节。</div>
+      <div style="margin-top:8px; display:flex; gap:6px;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存')">保存</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button>
+      </div>
+    </div>`;
+  } else if (tool === 'research-outline') {
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:6px;">调研大纲：${msg}</div>
+      <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">一、公司基本面<br>1.1 营收结构与增速<br>1.2 核心产品进展<br><br>二、行业竞争格局<br>2.1 市场份额变化<br>2.2 技术壁垒分析<br><br>三、关键验证点<br>3.1 客户拓展情况<br>3.2 产能利用率</div>
+      <div style="margin-top:8px; display:flex; gap:6px;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存')">保存</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button>
+      </div>
+    </div>`;
+  } else if (tool === 'monitor-center') {
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">📡 信源监控已配置</div>
+      <div style="padding:10px; background:var(--bg-card); border-radius:6px; font-size:11px; line-height:1.8; margin-bottom:8px;">
+        <strong>监控主题：</strong>${msg}<br>
+        <strong>信源范围：</strong>新闻媒体 / 公告 / 研报 / 社交媒体<br>
+        <strong>推送频率：</strong>实时推送（重要）/ 每日汇总（常规）<br>
+        <strong>关键词：</strong>${msg.slice(0,6)}、产业链、业绩、合作
+      </div>
+      <div style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">监控器已启动，有新信息将实时通知你</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('监控器已保存')">确认启用</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">编辑规则</button>
+      </div>
+    </div>`;
+  } else if (tool === 'schedule') {
+    return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">⏰ 定时任务已创建</div>
+      <div style="padding:10px; background:var(--bg-card); border-radius:6px; font-size:11px; line-height:1.8; margin-bottom:8px;">
+        <strong>任务内容：</strong>${msg}<br>
+        <strong>触发时间：</strong>每个工作日 09:00<br>
+        <strong>输出方式：</strong>消息推送 + 邮件摘要<br>
+        <strong>状态：</strong><span style="color:#00b894;">● 已启用</span>
+      </div>
+      <div style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">下次执行时间：明天 09:00</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('任务已保存')">确认</button>
+        <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">修改时间</button>
+      </div>
+    </div>`;
+  }
+  return `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:10px 14px; border-radius:10px; font-size:12px;">已收到，正在处理「${msg}」...</div>`;
+}
+
+function startEditElement(btn) {
+  const card = btn.closest('div[style*="align-self"]');
+  const body = document.getElementById('ai-right-chat-body');
+  body.innerHTML += `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%; font-size:12px;">
+    <div style="font-weight:600; margin-bottom:8px;">编辑图表元素</div>
+    <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+      <label style="font-size:11px; color:var(--text-muted);">标题</label>
+      <input id="edit-chart-title" value="" placeholder="修改图表标题..." style="border:1px solid var(--border); border-radius:4px; padding:6px 8px; font-size:12px; outline:none; background:var(--bg-card); color:var(--text-primary);" />
+      <label style="font-size:11px; color:var(--text-muted); margin-top:4px;">颜色方案</label>
+      <div style="display:flex; gap:6px;">
+        <span onclick="this.parentElement.querySelectorAll('span').forEach(s=>s.style.outline='none'); this.style.outline='2px solid var(--accent-blue)'" style="width:24px; height:24px; border-radius:4px; background:#2563eb; cursor:pointer; outline:2px solid var(--accent-blue);"></span>
+        <span onclick="this.parentElement.querySelectorAll('span').forEach(s=>s.style.outline='none'); this.style.outline='2px solid var(--accent-blue)'" style="width:24px; height:24px; border-radius:4px; background:#10b981; cursor:pointer;"></span>
+        <span onclick="this.parentElement.querySelectorAll('span').forEach(s=>s.style.outline='none'); this.style.outline='2px solid var(--accent-blue)'" style="width:24px; height:24px; border-radius:4px; background:#f59e0b; cursor:pointer;"></span>
+        <span onclick="this.parentElement.querySelectorAll('span').forEach(s=>s.style.outline='none'); this.style.outline='2px solid var(--accent-blue)'" style="width:24px; height:24px; border-radius:4px; background:#8b5cf6; cursor:pointer;"></span>
+      </div>
+      <label style="font-size:11px; color:var(--text-muted); margin-top:4px;">图表类型</label>
+      <div style="display:flex; gap:6px;">
+        <span class="tag tag-blue" style="font-size:10px; padding:3px 8px; cursor:pointer;" onclick="showToast('切换为折线图')">折线图</span>
+        <span class="tag" style="font-size:10px; padding:3px 8px; cursor:pointer; background:var(--bg-secondary); color:var(--text-secondary);" onclick="showToast('切换为柱状图')">柱状图</span>
+        <span class="tag" style="font-size:10px; padding:3px 8px; cursor:pointer; background:var(--bg-secondary); color:var(--text-secondary);" onclick="showToast('切换为面积图')">面积图</span>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="showToast('元素已更新'); this.closest('div[style*=align-self]').remove();" style="width:100%; font-size:11px;">应用修改</button>
+  </div>`;
+  body.scrollTop = body.scrollHeight;
+}
+
+function startEditPrompt(btn, originalPrompt) {
+  const body = document.getElementById('ai-right-chat-body');
+  body.innerHTML += `<div style="align-self:flex-start; background:var(--bg-secondary); border:1px solid var(--border); padding:14px; border-radius:10px; max-width:90%; font-size:12px;">
+    <div style="font-weight:600; margin-bottom:8px;">修改提示词</div>
+    <textarea id="edit-prompt-input" style="width:100%; height:60px; border:1px solid var(--border); border-radius:6px; padding:8px; font-size:12px; background:var(--bg-card); color:var(--text-primary); resize:none; outline:none; font-family:inherit; box-sizing:border-box;">${originalPrompt}</textarea>
+    <button class="btn btn-primary btn-sm" onclick="regenWithPrompt()" style="width:100%; margin-top:8px; font-size:11px;">重新生成</button>
+  </div>`;
+  body.scrollTop = body.scrollHeight;
+}
+
+function regenWithPrompt() {
+  const input = document.getElementById('edit-prompt-input');
+  const prompt = input ? input.value.trim() : '';
+  if (!prompt) return;
+  const body = document.getElementById('ai-right-chat-body');
+  body.innerHTML += `<div style="align-self:flex-end; background:var(--accent-blue); color:#fff; padding:10px 14px; border-radius:10px; font-size:12px; max-width:85%;">重新生成：${prompt}</div>`;
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => {
+    body.innerHTML += getRightChatReply('gallery', prompt);
+    body.scrollTop = body.scrollHeight;
+  }, 600);
+}
+
+function openAiFloatingLayer(type, id) {
+  const layer = document.getElementById('ai-floating-layer');
+  const body = document.getElementById('ai-floating-body');
+  const backBtn = document.getElementById('ai-floating-back');
+  backBtn.textContent = '← 返回' + (aiToolTitles[currentAiTool] || '');
+  layer.style.display = 'flex';
+
+  if (type === 'create') {
+    renderCreateFlow(body, currentAiTool);
+  } else if (type === 'meeting-detail') {
+    renderMeetingDetail(body, id);
+  } else if (type === 'gallery-detail') {
+    renderGalleryDetail(body, id);
+  } else if (type === 'stock-detail') {
+    renderStockAnalysisDetail(body, id);
+  } else if (type === 'joke-detail') {
+    renderJokeDetail(body, id);
+  } else if (type === 'outline-detail') {
+    renderOutlineDetail(body, id);
+  } else if (type === 'session') {
+    renderSessionDetail(body, id);
+  } else {
+    body.innerHTML = `<div class="ai-float-chat"><div class="ai-float-chat-body"><div style="text-align:center; padding:40px; color:var(--text-muted);">详情加载中...</div></div></div>`;
+  }
+}
+
+function closeAiFloatingLayer() {
+  document.getElementById('ai-floating-layer').style.display = 'none';
+}
+
+function renderCreateFlow(body, tool) {
+  if (tool === 'meeting-assistant') {
+    closeAiFloatingLayer();
+    openMeetingModal();
+    return;
+  } else if (tool === 'gallery') {
+    body.innerHTML = `<div class="ai-float-chat">
+      <div class="ai-float-chat-body" id="ai-create-chat-body">
+        <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">描述你想生成的图表内容，AI将为你创作</div>
+      </div>
+      <div class="ai-float-chat-footer">
+        <div class="ai-float-chat-input-row">
+          <input id="ai-create-input" placeholder="描述图表内容，如：寒武纪近一年PE走势图..." onkeydown="if(event.key==='Enter')sendCreateChat()" />
+          <button onclick="sendCreateChat()">生成</button>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    const placeholders = {
+      'stock-analysis': '输入个股名称或代码，如：千里科技...',
+      'joke': '描述点评主题，如：今日AI算力板块表现...',
+      'research-outline': '输入调研主题，如：阶跃星辰商业化进展...',
+      'monitor-center': '输入监控关键词...',
+      'schedule': '描述定时任务...'
+    };
+    body.innerHTML = `<div class="ai-float-chat">
+      <div class="ai-float-chat-body" id="ai-create-chat-body">
+        <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">输入内容，AI为你生成</div>
+      </div>
+      <div class="ai-float-chat-footer">
+        <div class="ai-float-chat-input-row">
+          <input id="ai-create-input" placeholder="${placeholders[tool] || '输入内容...'}" onkeydown="if(event.key==='Enter')sendCreateChat()" />
+          <button onclick="sendCreateChat()">生成</button>
+        </div>
+      </div>
+    </div>`;
+  }
+}
+
+function parseMeetingInfo() {
+  const input = document.getElementById('ai-meeting-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const parsed = document.getElementById('ai-meeting-parsed');
+  parsed.innerHTML = `<div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:20px; animation:fadeIn 0.3s;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+      <span style="color:var(--accent-cyan); font-size:14px;">✦</span>
+      <span style="font-size:13px; font-weight:600;">AI 解析结果</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:12px;">
+      <div><span style="color:var(--text-muted);">会议类型：</span>腾讯会议</div>
+      <div><span style="color:var(--text-muted);">时间：</span>2026-05-22 14:00</div>
+      <div><span style="color:var(--text-muted);">会议号：</span>886-429-5731</div>
+      <div><span style="color:var(--text-muted);">密码：</span>2026</div>
+      <div><span style="color:var(--text-muted);">主题：</span>英伟达H20产业链深度交流</div>
+      <div><span style="color:var(--text-muted);">主持人：</span>中信证券TMT组</div>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:12px;">
+      <label style="font-size:12px; display:flex; align-items:center; gap:6px;"><span style="color:var(--text-muted);">入会昵称：</span><input value="张明远-财跃" style="border:1px solid var(--border); border-radius:4px; padding:4px 8px; font-size:12px; width:120px; outline:none;" /></label>
+    </div>
+    <div style="margin-top:20px; display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="showToast('已确认托管，会前15分钟将自动提醒')">确认托管</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;">取消</button>
+    </div>
+  </div>`;
+}
+
+function sendCreateChat() {
+  const input = document.getElementById('ai-create-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const body = document.getElementById('ai-create-chat-body');
+  body.innerHTML += `<div style="align-self:flex-end; background:var(--accent-blue); color:#fff; padding:10px 14px; border-radius:10px; font-size:12px; max-width:80%;">${msg}</div>`;
+  setTimeout(() => {
+    const toolReplies = {
+      'gallery': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; margin-bottom:12px;">正在为你生成「${msg}」...</div><div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:20px; text-align:center; margin-bottom:12px;"><svg viewBox="0 0 400 200" style="width:100%;"><rect fill="#fff" width="400" height="200"/><text x="20" y="24" font-size="11" font-weight="bold" fill="#222">${msg.slice(0,15)}</text><line x1="30" y1="175" x2="370" y2="175" stroke="#cbd5e1" stroke-width="1"/><line x1="30" y1="60" x2="370" y2="60" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="30" y1="100" x2="370" y2="100" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><line x1="30" y1="140" x2="370" y2="140" stroke="#f1f5f9" stroke-width="0.5" stroke-dasharray="4"/><polyline fill="none" stroke="#2563eb" stroke-width="2" points="30,160 80,140 130,120 180,90 230,100 280,60 350,45"/><rect x="50" y="100" width="20" height="75" fill="#93c5fd" rx="2"/><rect x="100" y="80" width="20" height="95" fill="#93c5fd" rx="2"/><rect x="150" y="60" width="20" height="115" fill="#93c5fd" rx="2"/><rect x="200" y="50" width="20" height="125" fill="#60a5fa" rx="2"/><rect x="250" y="35" width="20" height="140" fill="#60a5fa" rx="2"/><rect x="300" y="25" width="20" height="150" fill="#2563eb" rx="2"/><text x="300" y="192" font-size="9" fill="#94a3b8">2026E</text></svg></div><div style="display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存到图库')">保存到图库</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">编辑元素</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">修改提示词</button></div></div>`,
+      'stock-analysis': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; font-weight:600; margin-bottom:8px;">📊 ${msg} · AI一页纸</div><div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px; padding:8px 10px; background:var(--bg-secondary); border-radius:6px;"><span style="font-size:18px; font-weight:700;">138.50</span><span style="font-size:13px; font-weight:600; color:#00b894;">+3.2%</span><span style="font-size:10px; color:var(--text-muted); margin-left:auto;">实时行情</span></div><div style="font-size:11px; color:var(--text-muted); line-height:1.8;">✓ 基本面数据拉取<br>✓ 产业链映射完成<br>✓ 竞争格局分析完成<br>✓ 市场空间测算完成<br>✓ 投资逻辑生成完成</div><div style="margin-top:10px; padding:10px; background:var(--bg-secondary); border-radius:6px; font-size:11px; line-height:1.8;"><strong>核心投资逻辑：</strong>AI端侧落地+业绩高增长<br><strong>行业：</strong>AI端侧芯片，TAM 280亿美元(+65%)<br><strong>产业链：</strong>中游芯片设计<br><strong>评级：</strong>买入 | <strong>目标价：</strong>¥160 | <strong>当前价：</strong>¥138.50</div><div style="font-size:10px; color:var(--text-muted); margin-top:6px;">含6大板块：投资逻辑/行业全景/产业链/市场空间/竞争格局/重点标的</div><div style="margin-top:10px; display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存到成果库')">保存</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button></div></div>`,
+      'joke': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; font-weight:600; margin-bottom:8px;">${msg}</div><div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">今日AI算力板块大涨3.2%，核心驱动来自英伟达H20出货预期上调。产业链验证显示，Q3算力需求将迎来集中释放期，建议重点关注服务器ODM和光模块环节。</div><div style="margin-top:10px; display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存')">保存</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button></div></div>`,
+      'research-outline': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; font-weight:600; margin-bottom:8px;">调研大纲：${msg}</div><div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">一、公司基本面<br>1.1 营收结构与增速<br>1.2 核心产品进展<br><br>二、行业竞争格局<br>2.1 市场份额变化<br>2.2 技术壁垒分析<br><br>三、关键验证点<br>3.1 客户拓展情况<br>3.2 产能利用率</div><div style="margin-top:10px; display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('已保存')">保存</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;" onclick="showAiShareMenu()">分享</button></div></div>`,
+      'monitor-center': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; font-weight:600; margin-bottom:8px;">📡 信源监控已配置</div><div style="font-size:12px; color:var(--text-secondary); line-height:1.8; margin-bottom:10px;"><strong>监控主题：</strong>${msg}<br><strong>信源范围：</strong>财联社、券商研报、雪球、微信公众号<br><strong>推送频率：</strong>实时推送<br><strong>关键词：</strong>自动提取中...</div><div style="padding:8px 10px; background:rgba(0,184,148,0.08); border-radius:6px; font-size:11px; color:#00b894; margin-bottom:10px;">✓ 监控器已就绪，将在触发时推送通知</div><div style="display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('监控已启用')">确认启用</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">编辑规则</button></div></div>`,
+      'schedule': `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:16px; border-radius:10px; max-width:90%;"><div style="font-size:12px; font-weight:600; margin-bottom:8px;">⏰ 定时任务已创建</div><div style="font-size:12px; color:var(--text-secondary); line-height:1.8; margin-bottom:10px;"><strong>任务内容：</strong>${msg}<br><strong>触发时间：</strong>每日 09:00<br><strong>输出方式：</strong>企微推送 + 站内通知<br><strong>状态：</strong>已激活</div><div style="padding:8px 10px; background:rgba(0,184,148,0.08); border-radius:6px; font-size:11px; color:#00b894; margin-bottom:10px;">✓ 下次执行：明日 09:00</div><div style="display:flex; gap:8px;"><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:rgba(45,127,249,0.1); border:1px solid rgba(45,127,249,0.2); color:var(--accent-blue); border-radius:6px; cursor:pointer;" onclick="showToast('任务已确认')">确认</button><button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">修改时间</button></div></div>`
+    };
+    body.innerHTML += toolReplies[currentAiTool] || `<div style="align-self:flex-start; background:var(--bg-card); border:1px solid var(--border); padding:10px 14px; border-radius:10px; font-size:12px;">已收到，正在处理「${msg}」...</div>`;
+    body.scrollTop = body.scrollHeight;
+  }, 600);
+  body.scrollTop = body.scrollHeight;
+}
+
+function openMeetingModal() {
+  const modal = document.getElementById('meeting-create-modal');
+  modal.style.display = 'flex';
+  switchMeetingTab('link');
+  const inp = document.getElementById('modal-meeting-input');
+  if (inp) inp.value = '';
+  const parsed = document.getElementById('modal-meeting-parsed');
+  if (parsed) parsed.innerHTML = '';
+  const audioStatus = document.getElementById('audio-upload-status');
+  if (audioStatus) audioStatus.innerHTML = '';
+}
+
+function closeMeetingModal() {
+  document.getElementById('meeting-create-modal').style.display = 'none';
+}
+
+function switchMeetingTab(tab) {
+  const linkTab = document.getElementById('meeting-tab-link');
+  const audioTab = document.getElementById('meeting-tab-audio');
+  const linkPanel = document.getElementById('meeting-modal-link-panel');
+  const audioPanel = document.getElementById('meeting-modal-audio-panel');
+  if (tab === 'link') {
+    linkTab.style.borderColor = 'var(--accent-blue)';
+    linkTab.style.background = 'rgba(45,127,249,0.06)';
+    audioTab.style.borderColor = 'var(--border)';
+    audioTab.style.background = 'var(--bg-card)';
+    linkPanel.style.display = '';
+    audioPanel.style.display = 'none';
+  } else {
+    audioTab.style.borderColor = 'var(--accent-blue)';
+    audioTab.style.background = 'rgba(45,127,249,0.06)';
+    linkTab.style.borderColor = 'var(--border)';
+    linkTab.style.background = 'var(--bg-card)';
+    linkPanel.style.display = 'none';
+    audioPanel.style.display = '';
+  }
+}
+
+function parseModalMeetingInfo() {
+  const input = document.getElementById('modal-meeting-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const parsed = document.getElementById('modal-meeting-parsed');
+  parsed.innerHTML = `<div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; animation:fadeIn 0.3s;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+      <span style="color:var(--accent-cyan); font-size:14px;">✦</span>
+      <span style="font-size:13px; font-weight:600;">AI 解析结果</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+      <div><span style="color:var(--text-muted);">会议类型：</span>腾讯会议</div>
+      <div><span style="color:var(--text-muted);">时间：</span>2026-05-22 14:00</div>
+      <div><span style="color:var(--text-muted);">会议号：</span>886-429-5731</div>
+      <div><span style="color:var(--text-muted);">密码：</span>2026</div>
+      <div><span style="color:var(--text-muted);">主题：</span>英伟达H20产业链深度交流</div>
+      <div><span style="color:var(--text-muted);">主持人：</span>中信证券TMT组</div>
+    </div>
+    <div style="margin-top:12px;">
+      <label style="font-size:12px; display:flex; align-items:center; gap:6px;"><span style="color:var(--text-muted);">入会昵称：</span><input value="张明远-财跃" style="border:1px solid var(--border); border-radius:4px; padding:4px 8px; font-size:12px; width:120px; outline:none; background:var(--bg-secondary); color:var(--text-primary);" /></label>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="showToast('已确认托管，会前15分钟将自动提醒'); closeMeetingModal();">确认托管</button>
+      <button class="btn btn-sm" onclick="closeMeetingModal()" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;">取消</button>
+    </div>
+  </div>`;
+}
+
+function handleAudioUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const status = document.getElementById('audio-upload-status');
+  const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+  status.innerHTML = `<div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; animation:fadeIn 0.3s;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+      <span style="font-size:20px;">🎵</span>
+      <div style="flex:1;">
+        <div style="font-size:13px; font-weight:600;">${file.name}</div>
+        <div style="font-size:11px; color:var(--text-muted);">${sizeMB} MB</div>
+      </div>
+      <span class="tag tag-cyan" style="font-size:10px; padding:2px 8px;">已上传</span>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <span style="font-size:11px; color:var(--text-muted);">AI转写进度</span>
+        <span style="font-size:11px; color:var(--accent-blue); font-weight:600;" id="audio-progress-text">0%</span>
+      </div>
+      <div style="height:4px; background:var(--bg-secondary); border-radius:2px; overflow:hidden;">
+        <div id="audio-progress-bar" style="height:100%; width:0%; background:var(--accent-blue); border-radius:2px; transition:width 0.3s;"></div>
+      </div>
+    </div>
+    <div id="audio-transcribe-result"></div>
+  </div>`;
+  simulateAudioTranscribe();
+  input.value = '';
+}
+
+function simulateAudioTranscribe() {
+  const bar = document.getElementById('audio-progress-bar');
+  const text = document.getElementById('audio-progress-text');
+  const result = document.getElementById('audio-transcribe-result');
+  let pct = 0;
+  const timer = setInterval(() => {
+    pct += Math.random() * 15 + 5;
+    if (pct >= 100) {
+      pct = 100;
+      clearInterval(timer);
+      if (bar) bar.style.width = '100%';
+      if (text) text.textContent = '100%';
+      if (result) result.innerHTML = `<div style="margin-top:12px; padding:12px; background:var(--bg-secondary); border-radius:8px;">
+        <div style="font-size:12px; font-weight:600; margin-bottom:8px; color:var(--accent-cyan);">✦ 转写完成</div>
+        <div style="font-size:12px; color:var(--text-secondary); line-height:1.7; max-height:120px; overflow-y:auto;">
+          <strong>会议主题：</strong>英伟达H20产业链深度交流<br>
+          <strong>时长：</strong>62分钟<br>
+          <strong>核心观点：</strong>H20芯片国内出货预期上调40%，产业链Q3有望迎来量价齐升。服务器ODM企业订单饱满，光模块800G加速放量。建议重点关注算力基础设施和配套环节。
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button class="btn btn-primary btn-sm" onclick="showToast('纪要已保存到纪要库'); closeMeetingModal();">保存纪要</button>
+          <button class="btn btn-sm" style="font-size:11px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); border-radius:6px; cursor:pointer;">导出全文</button>
+        </div>
+      </div>`;
+      return;
+    }
+    if (bar) bar.style.width = pct + '%';
+    if (text) text.textContent = Math.round(pct) + '%';
+  }, 400);
+}
+
+function renderMeetingDetail(body, id) {
+  const m = aiMeetingLibData.find(x => x.id === id);
+  if (!m) return;
+  if (m.status === 'done') {
+    body.innerHTML = `<div style="max-width:800px; margin:0 auto; padding:32px; width:100%;">
+      <div style="margin-bottom:24px;">
+        <div style="font-size:18px; font-weight:700; margin-bottom:8px;">${m.title}</div>
+        <div style="font-size:12px; color:var(--text-muted); display:flex; gap:16px; align-items:center;">
+          <span>${m.date}</span><span>${m.platform}</span><span>${m.duration}</span>
+          <span class="ai-lib-status ai-lib-status-done">纪要已生成</span>
+        </div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:24px;">
+        <div style="font-size:14px; font-weight:600; margin-bottom:16px;">会议纪要</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:2;">
+          <p><strong>核心观点：</strong>${m.summary}</p>
+          <p><strong>详细内容：</strong></p>
+          <p>1. 行业趋势：当前市场处于AI基础设施大规模建设周期，算力需求持续增长，产业链上下游协同效应明显。</p>
+          <p>2. 公司动态：相关公司在技术研发和市场拓展方面取得积极进展，订单饱满度较高。</p>
+          <p>3. 投资建议：建议重点关注具有核心技术壁垒和客户资源优势的标的，把握产业链投资机会。</p>
+        </div>
+      </div>
+      <div style="margin-top:20px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:20px;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:12px;">AI 追问</div>
+        <div style="display:flex; gap:8px;">
+          <input id="ai-meeting-qa" placeholder="对纪要内容追问..." style="flex:1; border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12px; outline:none; background:var(--bg-secondary);" onkeydown="if(event.key==='Enter')showToast('AI正在思考...')" />
+          <button class="btn btn-primary btn-sm" onclick="showToast('AI正在思考...')">提问</button>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    body.innerHTML = `<div style="max-width:640px; margin:0 auto; padding:32px; width:100%;">
+      <div style="font-size:18px; font-weight:700; margin-bottom:8px;">${m.title}</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:24px; display:flex; gap:16px;">
+        <span>${m.date}</span><span>${m.platform}</span>
+        <span class="ai-lib-status ${m.status==='running'?'ai-lib-status-running':'ai-lib-status-pending'}">${m.status==='running'?'参会中':'待参会'}</span>
+      </div>
+      <div style="text-align:center; padding:40px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px;">
+        <div style="font-size:32px; margin-bottom:12px;">${m.status==='running'?'🎙':'⏰'}</div>
+        <div style="font-size:14px; font-weight:600; margin-bottom:4px;">${m.status==='running'?'AI正在代为参会':'等待会议开始'}</div>
+        <div style="font-size:12px; color:var(--text-muted);">${m.status==='running'?'实时录音转写中...':'会前15分钟将自动入会'}</div>
+      </div>
+    </div>`;
+  }
+}
+
+function renderGalleryDetail(body, id) {
+  const g = aiGalleryLibData.find(x => x.id === id);
+  if (!g) return;
+  body.innerHTML = `<div style="max-width:800px; margin:0 auto; padding:32px; width:100%;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:16px;">${g.title}</div>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:20px;">
+      <img src="${g.thumb}" style="width:100%; height:auto; display:block;" />
+    </div>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">提示词</div>
+      <div style="font-size:12px; color:var(--text-secondary); background:var(--bg-secondary); padding:10px; border-radius:6px;">${g.prompt}</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="showToast('进入编辑模式')">编辑元素</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;">修改提示词重新生成</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;" onclick="showAiShareMenu()">分享</button>
+    </div>
+  </div>`;
+}
+
+function renderStockAnalysisDetail(body, id) {
+  const s = aiStockAnalysisLibData.find(x => x.id === id);
+  if (!s) return;
+  const sec = s.sections || {};
+  const priceData = sec.price || [];
+  const pMin = Math.min(...priceData), pMax = Math.max(...priceData), pRange = pMax - pMin || 1;
+  const svgW = 360, svgH = 80, padL = 5, padR = 5;
+  const points = priceData.map((v,i) => {
+    const x = padL + i * ((svgW - padL - padR) / (priceData.length - 1));
+    const y = svgH - 10 - ((v - pMin) / pRange) * (svgH - 20);
+    return `${x},${y}`;
+  }).join(' ');
+  const isUp = priceData.length > 1 && priceData[priceData.length-1] >= priceData[0];
+  const lineColor = isUp ? '#00b894' : '#e74c3c';
+  const fillColor = isUp ? 'rgba(0,184,148,0.1)' : 'rgba(231,76,60,0.1)';
+  const areaPoints = points + ` ${padL + (priceData.length-1)*((svgW-padL-padR)/(priceData.length-1))},${svgH} ${padL},${svgH}`;
+
+  const sectionStyle = 'background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:14px;';
+  const titleStyle = 'font-size:14px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px;';
+  const numStyle = 'display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--accent-blue); color:#fff; font-size:11px; font-weight:700;';
+  const contentStyle = 'font-size:12px; color:var(--text-secondary); line-height:1.9;';
+
+  body.innerHTML = `<div style="max-width:820px; margin:0 auto; padding:28px; width:100%; overflow-y:auto;">
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
+      <div style="font-size:22px; font-weight:700;">${s.stock}</div>
+      <span style="font-size:12px; color:var(--text-muted);">${s.code || ''}</span>
+      <span class="tag tag-gold" style="font-size:11px; padding:2px 10px;">${s.rating}</span>
+      ${s.target!=='-'?`<span style="font-size:14px; color:var(--accent-blue); font-weight:600;">目标价 ¥${s.target}</span>`:''}
+    </div>
+    <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:4px;">
+      <span style="font-size:24px; font-weight:700;">${s.price || '--'}</span>
+      <span style="font-size:14px; color:${(s.change||'').startsWith('-')?'#e74c3c':'#00b894'}; font-weight:600;">${s.change || ''}</span>
+    </div>
+    <div style="font-size:11px; color:var(--text-muted); margin-bottom:20px;">${s.date} 生成 · AI个股一页纸</div>
+
+    <!-- Price Chart -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="font-size:16px;">📈</span> 近期走势</div>
+      <svg viewBox="0 0 ${svgW} ${svgH}" style="width:100%; height:80px;">
+        <polygon points="${areaPoints}" fill="${fillColor}" />
+        <polyline points="${points}" fill="none" stroke="${lineColor}" stroke-width="1.5" />
+        <text x="${padL}" y="${svgH - 2}" font-size="9" fill="var(--text-muted)">${pMin.toFixed(1)}</text>
+        <text x="${svgW - padR}" y="10" font-size="9" fill="var(--text-muted)" text-anchor="end">${pMax.toFixed(1)}</text>
+      </svg>
+    </div>
+
+    <!-- 1. 核心投资逻辑 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">1</span> 核心投资逻辑</div>
+      <div style="${contentStyle}">${sec.logic || '--'}</div>
+    </div>
+
+    <!-- 2. 行业全景分析 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">2</span> 行业全景分析</div>
+      <div style="${contentStyle}">${sec.industry || '--'}</div>
+    </div>
+
+    <!-- 3. 产业链深度解析 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">3</span> 产业链深度解析</div>
+      <div style="${contentStyle}">${sec.chain || '--'}</div>
+    </div>
+
+    <!-- 4. 市场空间测算 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">4</span> 市场空间测算</div>
+      <div style="${contentStyle}">${sec.market || '--'}</div>
+    </div>
+
+    <!-- 5. 市场竞争格局 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">5</span> 市场竞争格局</div>
+      <div style="${contentStyle}">${sec.competition || '--'}</div>
+    </div>
+
+    <!-- 6. 重点投资标的 -->
+    <div style="${sectionStyle}">
+      <div style="${titleStyle}"><span style="${numStyle}">6</span> 重点投资标的</div>
+      <div style="${contentStyle}">${sec.targets || '--'}</div>
+    </div>
+
+    <!-- Actions -->
+    <div style="margin-top:6px; display:flex; gap:10px; padding-bottom:20px;">
+      <button class="btn btn-primary btn-sm" onclick="showAiShareMenu()">分享</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;" onclick="showToast('正在重新生成...')">重新生成</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;" onclick="showToast('已导出PDF')">导出PDF</button>
+    </div>
+  </div>`;
+}
+
+function renderJokeDetail(body, id) {
+  const j = aiJokeLibData.find(x => x.id === id);
+  if (!j) return;
+  body.innerHTML = `<div style="max-width:800px; margin:0 auto; padding:32px; width:100%;">
+    <div style="font-size:18px; font-weight:700; margin-bottom:8px;">${j.title}</div>
+    <div style="font-size:11px; color:var(--text-muted); margin-bottom:24px;">${j.date}</div>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:24px; font-size:13px; color:var(--text-secondary); line-height:2;">
+      ${j.summary}
+      <p style="margin-top:12px;">从资金面看，主力资金持续流入算力硬件和光模块板块，反映市场对AI产业链高景气度的认可。策略上建议保持超配，重点关注英伟达供应链和国产替代方向。</p>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="showAiShareMenu()">分享</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;" onclick="showToast('正在重新生成...')">重新生成</button>
+    </div>
+  </div>`;
+}
+
+function renderOutlineDetail(body, id) {
+  const r = aiResearchOutlineLibData.find(x => x.id === id);
+  if (!r) return;
+  body.innerHTML = `<div style="max-width:800px; margin:0 auto; padding:32px; width:100%;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+      <div style="font-size:18px; font-weight:700;">${r.title}</div>
+      <span class="tag tag-blue" style="font-size:11px; padding:2px 8px;">${r.type}</span>
+    </div>
+    <div style="font-size:11px; color:var(--text-muted); margin-bottom:24px;">${r.date}</div>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:24px; font-size:13px; color:var(--text-secondary); line-height:2;">
+      <p><strong>调研目标：</strong>${r.summary}</p>
+      <p style="margin-top:12px;"><strong>大纲：</strong></p>
+      <p>一、公司/行业基本面概述<br>&nbsp;&nbsp;1.1 核心业务与营收结构<br>&nbsp;&nbsp;1.2 近期业绩表现</p>
+      <p>二、核心验证点<br>&nbsp;&nbsp;2.1 技术路线与产品进展<br>&nbsp;&nbsp;2.2 客户/订单验证<br>&nbsp;&nbsp;2.3 竞争格局变化</p>
+      <p>三、问题清单<br>&nbsp;&nbsp;3.1 管理层对未来展望<br>&nbsp;&nbsp;3.2 潜在风险点</p>
+      <p>四、结论与投资建议</p>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:10px;">
+      <button class="btn btn-primary btn-sm" onclick="showAiShareMenu()">分享</button>
+      <button class="btn btn-sm" style="background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); cursor:pointer; padding:6px 14px; border-radius:6px; font-size:12px;" onclick="showToast('正在重新生成...')">重新生成</button>
+    </div>
+  </div>`;
+}
+
+function renderSessionDetail(body, id) {
+  const s = aiSessions.find(x => x.id === id);
+  if (!s) return;
+  body.innerHTML = `<div class="ai-float-chat">
+    <div class="ai-float-chat-body">
+      ${(s.messages || []).length ? s.messages.map(m => `<div style="align-self:${m.role==='user'?'flex-end':'flex-start'}; background:${m.role==='user'?'var(--accent-blue)':'var(--bg-card)'}; color:${m.role==='user'?'#fff':'var(--text-primary)'}; padding:10px 14px; border-radius:10px; font-size:12px; max-width:80%; ${m.role!=='user'?'border:1px solid var(--border);':''}">${m.text}</div>`).join('') : `<div style="text-align:center; padding:40px; color:var(--text-muted); font-size:12px;">「${s.title}」的历史会话</div>`}
+    </div>
+    <div class="ai-float-chat-footer">
+      <div class="ai-float-chat-input-row">
+        <input id="ai-create-input" placeholder="继续对话..." onkeydown="if(event.key==='Enter')sendCreateChat()" />
+        <button onclick="sendCreateChat()">发送</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function showAiShareMenu() {
+  showToast('分享功能：可生成链接或长图分享到微信');
+}
+
 function newAiSession(mode) {
-  const titles = { general: '新对话', 'meeting-assistant': '会议助手', gallery: '图库', 'stock-analysis': '个股一页纸', 'research-outline': '调研大纲', joke: '点评生成', 'monitor-center': '信源监控中心', schedule: '定时任务', report: '文档生成', ppt: 'PPT生成' };
-  currentSession = { id: Date.now(), mode, title: titles[mode] || '新对话', messages: [], documents: [...mockDocuments], progress: [] };
-  const modes = ['general','meeting-assistant','gallery','stock-analysis','research-outline','joke','monitor-center','schedule'];
-  document.querySelectorAll('.ai-global-action').forEach((el, i) => {
-    el.classList.toggle('active', modes[i] === mode);
-  });
-  hideProductView();
-  document.getElementById('ai-global-right-chat-body').innerHTML = '';
-  renderGlobalChat();
+  openAiGlobal();
+  const toolMap = { general:'meeting-assistant', 'meeting-assistant':'meeting-assistant', gallery:'gallery', 'stock-analysis':'stock-analysis', 'research-outline':'research-outline', joke:'joke', 'monitor-center':'monitor-center', schedule:'schedule' };
+  const tool = toolMap[mode] || 'meeting-assistant';
+  switchAiTool(tool);
+  if (mode !== 'monitor-center' && mode !== 'schedule') {
+    openAiFloatingLayer('create');
+  }
 }
 
 function handleFloatSuggestion(text) {
@@ -5407,134 +6555,18 @@ function sendFloatBarChat() {
   }, 200);
 }
 
-function renderHistory() {
-  const el = document.getElementById('ai-global-history');
-  if (!el) return;
-  const icons = { report: '📄', general: '💬', joke: '✦', ppt: '📊', 'monitor-center': '📡', schedule: '⏰', 'meeting-assistant': '🎙', gallery: '🖼', 'stock-analysis': '📊', 'research-outline': '📋' };
-  el.innerHTML = aiSessions.map(s => `<div class="ai-global-history-item${s.id === currentSession.id ? ' active' : ''}" onclick="loadSession(${s.id})">${icons[s.mode] || '💬'} ${s.title}</div>`).join('');
-}
-
+function renderHistory() {}
 function loadSession(id) {
-  const s = aiSessions.find(x => x.id === id);
-  if (!s) return;
-  currentSession = { ...s, messages: s.messages ? [...s.messages] : [{ role: 'ai', text: `这是「${s.title}」的历史对话记录。` }], documents: [...mockDocuments], progress: [...mockProgress] };
-  renderGlobalChat();
-  renderHistory();
+  openAiGlobal();
+  switchAiTool('history');
+  openAiFloatingLayer('session', id);
 }
 
-const modeCases = {
-  report: [
-    { icon:'📄', title:'AI产业链深度报告', desc:'整合多源数据，生成行业研究报告' },
-    { icon:'📋', title:'个股投资价值分析', desc:'基本面+技术面综合分析文档' },
-    { icon:'📑', title:'宏观经济月度总结', desc:'宏观指标解读与趋势研判' }
-  ],
-  ppt: [
-    { icon:'📊', title:'Q2投资策略路演', desc:'8-12页策略演示，含数据图表' },
-    { icon:'📈', title:'行业对比分析PPT', desc:'多维度行业横向对比展示' },
-    { icon:'🎯', title:'投委会汇报材料', desc:'项目进展与投资建议汇报' }
-  ],
-  joke: [
-    { icon:'✦', title:'今日市场点评', desc:'基于行情数据生成专业投资观点' },
-    { icon:'📊', title:'板块轮动点评', desc:'分析板块涨跌背后的产业逻辑' },
-    { icon:'🎯', title:'个股机会点评', desc:'挖掘值得关注的投资标的' }
-  ]
-};
-
-function renderGlobalChat() {
-  const header = document.getElementById('ai-global-chat-header');
-  const body = document.getElementById('ai-global-chat-body');
-  if (!header || !body) return;
-  header.textContent = currentSession.title;
-  if (currentSession.mode === 'schedule') { renderScheduleTasks(body); return; }
-  if (currentSession.mode === 'monitor-center') { renderMonitorCenter(body); return; }
-  if (currentSession.messages.length === 0) {
-    const cases = modeCases[currentSession.mode];
-    const casesHtml = cases ? `<div class="ai-global-cases">${cases.map(c => `<div class="ai-case-card" onclick="useCaseExample('${c.title}')"><div class="ai-case-card-icon">${c.icon}</div><div class="ai-case-card-title">${c.title}</div><div class="ai-case-card-desc">${c.desc}</div></div>`).join('')}</div>` : '';
-    body.innerHTML = `<div class="ai-global-empty">
-      <div class="ai-global-empty-icon">✦</div>
-      <div class="ai-global-empty-slogan">最懂AI的投研平台</div>
-      <div class="ai-global-empty-sub">输入你的需求，AI 帮你搞定一切</div>
-      ${casesHtml}
-    </div>`;
-  } else {
-    body.innerHTML = currentSession.messages.map(m => `<div class="ai-global-msg ${m.role === 'user' ? 'user' : 'ai'}"><div class="ai-global-msg-avatar">${m.role === 'user' ? '张' : '✦'}</div><div class="ai-global-msg-text">${m.text}</div></div>`).join('');
-  }
-  body.scrollTop = body.scrollHeight;
-}
-
-function useCaseExample(title) {
-  const input = document.getElementById('ai-global-input');
-  input.value = title;
-  sendGlobalChat();
-}
-
-function renderScheduleTasks(body) {
-  const upcoming = (typeof meetingCardsData !== 'undefined' ? meetingCardsData : []).filter(m => m.status === '未开始' || m.status === '报名中');
-  const customTasks = [
-    { title: '每日自选股早报', time: '每日 08:30', on: true },
-    { title: '周五策略周报生成', time: '每周五 17:00', on: true },
-    { title: '北向资金异动提醒', time: '实时', on: false },
-  ];
-  body.innerHTML = `<div style="padding:24px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
-      <span style="font-size:20px;">⏰</span>
-      <span style="font-size:16px;font-weight:600;color:var(--text-primary);">定时任务</span>
-    </div>
-    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;" id="schedule-tabs">
-      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:600;color:var(--accent-blue);border-bottom:2px solid var(--accent-blue);cursor:pointer;" onclick="switchScheduleTab(this,'tab-meetings')">会议预约 (${upcoming.length})</div>
-      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;" onclick="switchScheduleTab(this,'tab-custom')">自建任务 (${customTasks.length})</div>
-      <div class="schedule-tab-btn" style="padding:8px 16px;font-size:12px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;" onclick="switchScheduleTab(this,'tab-monitor')">信源监控 (${monitorSettings.length})</div>
-    </div>
-    <div id="tab-meetings">
-      ${upcoming.length === 0 ? '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">暂无会议预约</div>' : upcoming.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${m.title || '会议提醒'}</div>
-          <div style="font-size:11px;color:var(--text-muted);">${m.time || '待定'} · ${m.host || ''}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);cursor:pointer;" onclick="this.querySelector('span').textContent=this.querySelector('span').textContent==='已同步'?'同步飞书':'已同步';this.querySelector('span').style.color=this.querySelector('span').textContent==='已同步'?'var(--accent-cyan)':'var(--text-secondary)'">
-          <span style="color:${i < 1 ? 'var(--accent-cyan)' : 'var(--text-secondary)'};">${i < 1 ? '已同步' : '同步飞书'}</span> 📅
-        </div>
-        <label style="position:relative;width:36px;height:20px;display:inline-block;">
-          <input type="checkbox" ${i < 2 ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
-          <span style="position:absolute;inset:0;border-radius:10px;background:${i < 2 ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
-          <span style="position:absolute;top:2px;left:${i < 2 ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
-        </label>
-      </div>`).join('')}
-    </div>
-    <div id="tab-custom" style="display:none;">
-      ${customTasks.map((t, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${t.title}</div>
-          <div style="font-size:11px;color:var(--text-muted);">${t.time}</div>
-        </div>
-        <label style="position:relative;width:36px;height:20px;display:inline-block;">
-          <input type="checkbox" ${t.on ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
-          <span style="position:absolute;inset:0;border-radius:10px;background:${t.on ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
-          <span style="position:absolute;top:2px;left:${t.on ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
-        </label>
-      </div>`).join('')}
-      <div style="text-align:center;padding:16px;">
-        <button class="btn btn-outline btn-sm" onclick="showToast('请在对话中描述任务内容')">+ 新建任务</button>
-      </div>
-    </div>
-    <div id="tab-monitor" style="display:none;">
-      ${monitorSettings.map((m, i) => `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
-        <div style="flex:1;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:500;color:var(--text-primary);">${m.name}</span>
-            <span style="font-size:10px;padding:2px 6px;border-radius:6px;background:${m.on ? 'rgba(0,184,148,0.1)' : 'rgba(142,142,147,0.1)'};color:${m.on ? 'var(--accent-cyan)' : 'var(--text-muted)'};">${m.on ? '运行中' : '已暂停'}</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-muted);">${m.sources}</div>
-        </div>
-        <label style="position:relative;width:36px;height:20px;display:inline-block;">
-          <input type="checkbox" ${m.on ? 'checked' : ''} style="opacity:0;width:0;height:0;" onchange="this.parentElement.querySelector('span:first-of-type').style.background=this.checked?'var(--accent-blue)':'var(--border)';this.parentElement.querySelector('span:last-of-type').style.left=this.checked?'18px':'2px'">
-          <span style="position:absolute;inset:0;border-radius:10px;background:${m.on ? 'var(--accent-blue)' : 'var(--border)'};transition:0.2s;"></span>
-          <span style="position:absolute;top:2px;left:${m.on ? '18px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:0.2s;"></span>
-        </label>
-      </div>`).join('')}
-    </div>
-  </div>`;
-}
+function renderGlobalChat() {}
+function renderDocuments() {}
+function sendGlobalChat() {}
+function showProductView() {}
+function hideProductView() {}
 
 function switchScheduleTab(el, tabId) {
   el.parentElement.querySelectorAll('.schedule-tab-btn').forEach(t => {
@@ -5575,112 +6607,6 @@ function renderMonitorCenter(body) {
       </div>
     </div>`).join('')}
   </div>`;
-}
-
-function renderDocuments() {
-  const progressEl = document.getElementById('ai-global-progress');
-  const docsEl = document.getElementById('ai-global-documents');
-  if (progressEl) {
-    progressEl.innerHTML = mockProgress.map(p => {
-      const icon = p.status === 'done' ? '✓' : p.status === 'active' ? '●' : '○';
-      const cls = p.status === 'done' ? 'done' : p.status === 'active' ? 'active' : 'pending';
-      return `<div class="ai-global-progress-item ${cls}"><span>${icon}</span> ${p.text}</div>`;
-    }).join('');
-  }
-  if (docsEl) {
-    docsEl.innerHTML = mockDocuments.map(d => `<div class="ai-global-doc-item">${d.icon} ${d.title}</div>`).join('');
-  }
-}
-
-function sendGlobalChat() {
-  const input = document.getElementById('ai-global-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  currentSession.messages.push({ role: 'user', text: msg });
-  renderGlobalChat();
-  setTimeout(() => {
-    const replies = {
-      general: `好的，让我针对「${msg}」为你做分析...\n\n基于当前市场数据，这个问题涉及多个维度。建议关注近期机构调研动向和北向资金流向。`,
-      report: `正在基于「${msg}」生成报告草稿...\n\n正在整合信源数据、个股行情和产业链逻辑。`,
-      ppt: `正在生成PPT大纲...\n\n主题：${msg}\n预计包含8-12页，涵盖行业概述、数据分析和投资建议。`,
-      joke: `正在基于「${msg}」生成点评...\n\n已分析今日47条信源，为你提炼核心投资观点。`,
-      'monitor-center': `已为你启动信源监控中心。当前监控 ${msg} 相关信源变动。`,
-      schedule: `已创建定时任务：${msg}。将在指定时间提醒你。`
-    };
-    currentSession.messages.push({ role: 'ai', text: replies[currentSession.mode] || replies.general });
-    renderGlobalChat();
-    if (['report','ppt','general'].includes(currentSession.mode) && currentSession.messages.length >= 2) {
-      setTimeout(() => showProductView(currentSession.mode === 'ppt' ? 'ppt-1' : 'doc-1'), 600);
-    }
-  }, 500);
-}
-
-// ========== PRODUCT VIEW ==========
-const mockProducts = [
-  { id: 'doc-1', type: 'doc', icon: '📄', title: 'AI产业链深度报告.docx', content: `<div class="ai-product-doc"><h1>AI产业链深度研究报告</h1><div class="doc-meta">AI投研平台 · 2026年5月19日 · 自动生成</div><div class="doc-section-tag">核心观点</div><h2>算力基础设施持续扩张，应用层加速落地</h2><p>2026年以来，全球AI产业链呈现"基础设施先行、应用层加速跟进"的发展格局。上游算力芯片供不应求，中游云服务厂商加速扩容，下游应用场景从通用大模型向垂直行业快速渗透。</p><div class="doc-highlight"><div class="doc-stat-row"><div class="doc-stat"><div class="doc-stat-val">2.1万亿</div><div class="doc-stat-label">全球AI市场规模(2026E)</div></div><div class="doc-stat"><div class="doc-stat-val">+38%</div><div class="doc-stat-label">YoY增速</div></div><div class="doc-stat"><div class="doc-stat-val">67%</div><div class="doc-stat-label">中国AI企业渗透率</div></div></div></div><h2>产业链各环节投资机会</h2><h3>上游：算力芯片与服务器</h3><p>英伟达、AMD持续主导GPU市场，国产替代加速推进。中科曙光、寒武纪等国内厂商在推理芯片领域取得突破性进展。服务器ODM厂商（浪潮信息、新华三）订单饱满，2026年出货量预计增长45%。</p><h3>中游：云计算与模型服务</h3><p>阿里云、腾讯云、华为云持续加大AI算力投入，MaaS（模型即服务）模式加速普及。百度文心、阿里通义、字节豆包形成三足鼎立格局。</p><h3>下游：行业应用</h3><p>金融、医疗、制造业成为AI应用落地最快的三大领域。投研场景中，AI辅助研报生成、智能信源监控、自动会议纪要已成标配。</p></div>` },
-  { id: 'ppt-1', type: 'ppt', icon: '📊', title: 'Q2投资策略.pptx', content: `<div class="ai-product-doc"><h1>2026 Q2 AI投资策略</h1><div class="doc-meta">策略研究部 · 演示文稿 · 12页</div><div class="doc-section-tag">第1页 · 封面</div><h2>AI产业链Q2投资展望</h2><p>关键词：算力扩张 · 应用爆发 · 国产替代</p><div class="doc-section-tag">第2页 · 市场回顾</div><h2>Q1回顾：AI板块跑赢大盘18%</h2><div class="doc-highlight"><div class="doc-stat-row"><div class="doc-stat"><div class="doc-stat-val">+24.6%</div><div class="doc-stat-label">AI指数Q1涨幅</div></div><div class="doc-stat"><div class="doc-stat-val">+6.3%</div><div class="doc-stat-label">沪深300 Q1涨幅</div></div></div></div><p>算力硬件、模型应用双轮驱动，细分赛道分化明显。</p><div class="doc-section-tag">第3页 · Q2策略</div><h2>建议超配三大方向</h2><p>1. 国产算力替代（寒武纪、海光信息）</p><p>2. AI应用落地龙头（科大讯飞、金山办公）</p><p>3. 数据要素（易华录、海天瑞声）</p></div>` },
-  { id: 'data-1', type: 'data', icon: '📈', title: '个股筛选结果.xlsx', content: `<div class="ai-product-doc"><h1>AI个股筛选结果</h1><div class="doc-meta">筛选条件：AI相关 · 市值>100亿 · 近20日涨幅>10%</div><div class="doc-highlight"><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">代码</th><th style="text-align:left;padding:8px;">名称</th><th style="text-align:right;padding:8px;">涨幅</th><th style="text-align:right;padding:8px;">市值(亿)</th></tr><tr><td style="padding:8px;">002230</td><td>科大讯飞</td><td style="text-align:right;color:#e74c3c;">+18.6%</td><td style="text-align:right;">1,260</td></tr><tr><td style="padding:8px;">688111</td><td>金山办公</td><td style="text-align:right;color:#e74c3c;">+15.2%</td><td style="text-align:right;">1,580</td></tr><tr><td style="padding:8px;">000977</td><td>浪潮信息</td><td style="text-align:right;color:#e74c3c;">+12.8%</td><td style="text-align:right;">890</td></tr></table></div></div>` }
-];
-
-function showProductView(productId) {
-  const overlay = document.getElementById('ai-global');
-  overlay.classList.add('has-product');
-  overlay.classList.remove('no-product');
-  const product = mockProducts.find(p => p.id === productId) || mockProducts[0];
-  const fileList = document.getElementById('ai-product-file-list');
-  fileList.innerHTML = mockProducts.map(p => `<div class="ai-product-file-item${p.id === product.id ? ' active' : ''}" onclick="showProductView('${p.id}')""><span class="ai-product-file-icon">${p.icon}</span>${p.title}</div>`).join('');
-  document.getElementById('ai-product-preview').innerHTML = product.content;
-  const rightChat = document.getElementById('ai-global-right-chat');
-  rightChat.style.display = 'flex';
-  document.querySelector('.ai-global-right-default').style.display = 'none';
-  const productsEl = document.getElementById('ai-global-right-products');
-  productsEl.innerHTML = `<div class="ai-global-right-products-title">任务产物</div>` + mockProducts.map(p => `<span class="ai-global-right-product-badge" onclick="showProductView('${p.id}')">${p.icon} ${p.title.split('.')[0]}</span>`).join('');
-  if (!document.getElementById('ai-global-right-chat-body').innerHTML) {
-    document.getElementById('ai-global-right-chat-body').innerHTML = currentSession.messages.map(m => `<div class="ai-global-right-chat-msg ${m.role}">${m.text}</div>`).join('');
-  }
-}
-
-function hideProductView() {
-  const overlay = document.getElementById('ai-global');
-  overlay.classList.remove('has-product');
-  overlay.classList.add('no-product');
-  document.getElementById('ai-global-right-chat').style.display = 'none';
-  document.querySelector('.ai-global-right-default').style.display = 'none';
-}
-
-function switchProductTab(el, tab) {
-  el.parentElement.querySelectorAll('.ai-product-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  const preview = document.getElementById('ai-product-preview');
-  const fileList = document.getElementById('ai-product-file-list');
-  if (tab === 'products') {
-    fileList.style.display = '';
-    preview.innerHTML = (mockProducts.find(p => document.querySelector('.ai-product-file-item.active')?.textContent.includes(p.title)) || mockProducts[0]).content;
-  } else if (tab === 'files') {
-    fileList.style.display = '';
-    preview.innerHTML = `<div class="ai-product-doc"><h2>全部文件</h2><p style="color:var(--text-muted);">共 ${mockProducts.length} 个文件</p>${mockProducts.map(p => `<div style="padding:12px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showProductView('${p.id}')""><span style="font-size:20px;">${p.icon}</span><div><div style="font-size:13px;font-weight:500;">${p.title}</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">刚刚生成</div></div></div>`).join('')}</div>`;
-  } else if (tab === 'changes') {
-    fileList.style.display = 'none';
-    preview.innerHTML = `<div class="ai-product-doc"><h2>变更记录</h2><div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">最近变更</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;margin-bottom:8px;font-size:12px;"><span style="color:#27ae60;">+ 新增</span> AI产业链深度报告.docx</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;margin-bottom:8px;font-size:12px;"><span style="color:#27ae60;">+ 新增</span> Q2投资策略.pptx</div><div style="padding:12px;background:var(--bg-secondary);border-radius:8px;font-size:12px;"><span style="color:#f39c12;">● 修改</span> 个股筛选结果.xlsx</div></div>`;
-  } else if (tab === 'browser') {
-    fileList.style.display = 'none';
-    preview.innerHTML = `<div class="ai-product-doc"><h2>浏览器</h2><div style="background:var(--bg-secondary);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);margin-top:16px;"><div style="font-size:24px;margin-bottom:8px;">🌐</div><div style="font-size:12px;">内置浏览器 - 可预览在线文档和数据源</div><div style="margin-top:12px;padding:8px 16px;border:1px solid var(--border);border-radius:6px;display:inline-block;font-size:11px;cursor:pointer;">打开 URL</div></div></div>`;
-  }
-}
-
-function sendRightChat() {
-  const input = document.getElementById('ai-global-right-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  const body = document.getElementById('ai-global-right-chat-body');
-  body.innerHTML += `<div class="ai-global-right-chat-msg user">${msg}</div>`;
-  body.scrollTop = body.scrollHeight;
-  setTimeout(() => {
-    body.innerHTML += `<div class="ai-global-right-chat-msg ai">收到，正在处理「${msg}」的请求。已更新产物内容。</div>`;
-    body.scrollTop = body.scrollHeight;
-  }, 400);
 }
 
 // ========== GLOBAL AI PANEL ==========
@@ -5755,7 +6681,7 @@ function openGlobalAiPanel(mode, name) {
   } else if (mode === 'gallery') {
     chatMode = 'gallery';
     title.textContent = '🖼 AI 图库';
-    subtitle.textContent = 'AI画图 · 提示词引导 · 元素编辑';
+    subtitle.textContent = 'AI图库 · 提示词引导 · 元素编辑';
     resetAiChat('你好！我是AI图库助手，可以帮你：<br>• 用自然语言描述生成投研图表<br>• 生成数据可视化图片<br>• 编辑和添加水印<br><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="生成一张AI产业链全景图">「产业链全景图」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="画一张千里科技估值对比图">「估值对比图」</span><br><span style="color:var(--accent-blue); cursor:pointer;" class="ai-suggestion" data-text="浏览我的图库">「我的图库」</span>');
     bindSuggestions();
   } else if (mode === 'stock-analysis') {
@@ -6030,14 +6956,15 @@ const minutesData = [
 function renderMinutes(data) {
   const grid = document.getElementById('minutes-grid');
   if (!grid) return;
+  const typeColor = t => t==='expert' ? '#00b894' : '#2d7ff9';
   grid.innerHTML = data.map(m => `
-    <div class="card" style="padding:14px; cursor:pointer;" onclick="showToast('打开纪要详情：${m.title}')">
-      <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
-        <span class="tag ${m.type==='expert'?'tag-cyan':'tag-blue'}" style="font-size:9px; padding:2px 6px;">${m.type==='expert'?'专家纪要':'常规纪要'}</span>
+    <div class="card" style="padding:14px; border-left:4px solid ${typeColor(m.type)}; cursor:pointer;" onclick="showToast('打开纪要详情：${m.title}')">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="tag" style="font-size:9px; padding:2px 6px; background:${typeColor(m.type)}15; color:${typeColor(m.type)};">${m.type==='expert'?'专家纪要':'常规纪要'}</span>
         <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono);">${m.date}</span>
         ${m.org!=='internal'?`<span style="font-size:10px; color:var(--text-secondary);">${{zhongxin:'中信证券',huatai:'华泰证券',guotai:'国泰君安'}[m.org]||m.org}</span>`:'<span style="font-size:10px; color:var(--accent-cyan);">内部调研</span>'}
       </div>
-      <div style="font-size:13px; font-weight:600; margin-bottom:6px; line-height:1.4;">${m.title}</div>
+      <div style="font-size:13px; font-weight:600; margin-bottom:6px;">${m.title}</div>
       <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; margin-bottom:8px;">${m.summary}</div>
       <div style="display:flex; align-items:center; gap:6px;">
         ${m.expert?`<span style="font-size:10px; color:var(--accent-blue);">专家: ${m.expert}</span>`:''}
